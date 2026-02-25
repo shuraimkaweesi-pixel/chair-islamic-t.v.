@@ -15,10 +15,11 @@ body {
   width: 100%;
   z-index: 1000;
   transition: 0.4s;
+  background: #0b3d2e;
 }
 
 .navbar.scrolled {
-  background: #0b3d2e;
+  background: #145c42;
 }
 
 .logo {
@@ -71,17 +72,6 @@ body {
   }
 }
 
-/* HERO */
-.hero {
-  height: 100vh;
-  background: linear-gradient(
-      rgba(0,0,0,0.8),
-      rgba(11,61,46,0.8)
-    ),
-    url('hero.jpg') center/contain no-repeat;
-  background-color: black;
-}
-
 /* SECTIONS */
 section {
   padding: 80px 20px;
@@ -112,7 +102,7 @@ ul li {
   margin: 10px 0;
 }
 
-/* BUTTON */
+/* BUTTONS */
 a {
   display: inline-block;
   padding: 10px 20px;
