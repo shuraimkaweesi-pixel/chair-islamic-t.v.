@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #0b3d2e; /* Full green theme */
+  background: #0b3d2e;
   color: #fff;
 }
 
@@ -37,10 +37,12 @@ body {
 .nav-links a {
   color: white;
   text-decoration: none;
+  transition: 0.3s;
 }
 
 .nav-links a:hover {
   color: #d4af37;
+  transform: scale(1.05);
 }
 
 /* MOBILE MENU */
@@ -77,16 +79,36 @@ section {
   padding: 80px 20px;
   max-width: 1100px;
   margin: auto;
-  background: transparent; /* transparent sections */
+  background: transparent;
   margin-top: 40px;
   border-radius: 12px;
-  box-shadow: none; /* no shadow */
+  box-shadow: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-out;
 }
 
+section.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Headings with gold shimmer */
 h2 {
-  color: #d4af37; /* gold headings */
+  position: relative;
+  color: #d4af37;
   border-left: 5px solid #d4af37;
   padding-left: 15px;
+  background: linear-gradient(90deg, #d4af37 0%, #fff 50%, #d4af37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
 .post {
@@ -116,6 +138,7 @@ a {
 a:hover {
   background: #d4af37;
   color: #0b3d2e;
+  transform: scale(1.05);
 }
 
 /* LIVE SECTION */
@@ -136,6 +159,14 @@ footer {
   background: #145c42;
   color: white;
   margin-top: 50px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-out;
+}
+
+footer.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* WHATSAPP BUTTONS */
@@ -152,14 +183,19 @@ footer {
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   z-index: 1000;
   transition: 0.3s;
+  animation: bounce 2s infinite;
+}
+
+.whatsapp-btn.btn2 {
+  bottom: 80px;
 }
 
 .whatsapp-btn:hover {
   background: #128c5e;
 }
 
-/* SECOND WHATSAPP BUTTON */
-.whatsapp-btn.btn2 {
-  bottom: 80px; /* position above the first */
-  right: 20px;
+/* BOUNCE ANIMATION FOR WHATSAPP BUTTON */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
