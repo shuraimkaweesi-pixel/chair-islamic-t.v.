@@ -26,7 +26,7 @@
 </nav>
 
 <!-- FEATURED VIDEO -->
-<section id="featured">
+<section id="featured" class="fade-in">
   <h2>🌟 Featured Video</h2>
   <iframe width="100%" height="400"
     src="https://www.youtube.com/embed/HqTKlgAlW_0"
@@ -36,7 +36,7 @@
 </section>
 
 <!-- LATEST POSTS -->
-<section id="latest-posts">
+<section id="latest-posts" class="fade-in">
   <h2>📰 Latest Posts</h2>
 
   <div class="post">
@@ -51,7 +51,7 @@
 </section>
 
 <!-- TOPICS -->
-<section id="topics">
+<section id="topics" class="fade-in">
   <h2>📚 Popular Topics</h2>
   <ul>
     <li>📖 Quran Reflections</li>
@@ -62,7 +62,7 @@
 </section>
 
 <!-- LIVE -->
-<section id="live">
+<section id="live" class="fade-in">
   <h2>🔴 Upcoming Live Streams</h2>
   <p>Join us every Friday for Jumu'ah Khutbah.</p>
   <a href="https://youtube.com/@chairislamtv" target="_blank">
@@ -71,7 +71,7 @@
 </section>
 
 <!-- ABOUT -->
-<section id="about">
+<section id="about" class="fade-in">
   <h2>About Chair Islamic CRV TV</h2>
   <p>
     Chair Islamic TV is dedicated to spreading authentic Islamic knowledge,
@@ -81,7 +81,7 @@
 </section>
 
 <!-- CONTACTS -->
-<section id="contacts">
+<section id="contacts" class="fade-in">
   <h2>📞 Contact Us</h2>
   <p>Phone/WhatsApp 1: <a href="https://wa.me/256754178966" target="_blank">0754178966</a></p>
   <p>Phone/WhatsApp 2: <a href="https://wa.me/256704372147" target="_blank">0704372147</a></p>
@@ -92,7 +92,7 @@
 <a href="https://wa.me/256754178966" class="whatsapp-btn" target="_blank">💬 WhatsApp 1</a>
 <a href="https://wa.me/256704372147" class="whatsapp-btn btn2" target="_blank">💬 WhatsApp 2</a>
 
-<footer>
+<footer class="fade-in">
   © 2026 Chair Islamic TV | All Rights Reserved
 </footer>
 
@@ -101,8 +101,16 @@ function toggleMenu() {
   document.getElementById("navLinks").classList.toggle("active");
 }
 
+// Scroll animations
 window.addEventListener("scroll", function() {
   document.querySelector(".navbar").classList.toggle("scrolled", window.scrollY > 50);
+
+  document.querySelectorAll(".fade-in").forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 100) {
+      section.classList.add("show");
+    }
+  });
 });
 </script>
 
