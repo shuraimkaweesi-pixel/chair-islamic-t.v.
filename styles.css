@@ -199,3 +199,36 @@ footer.show {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+
+/* ASK ANYTHING ABOUT ISLAM */
+#ask-islam {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px 20px;
+  border-radius: 12px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+#ask-islam input {
+  width: 70%;
+  padding: 12px;
+  margin-right: 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+}
+
+#ask-islam button {
+  padding: 12px 20px;
+  background: #d4af37;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #0b3d2e;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#ask-islam button:hover {
+  background: #fff;
+}
