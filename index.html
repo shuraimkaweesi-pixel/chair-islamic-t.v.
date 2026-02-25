@@ -5,21 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chair Islamic TV</title>
 <link rel="stylesheet" href="styles.css">
-</head><style>
+
+<style>
 html {
   scroll-behavior: smooth;
 }
 </style>
+</head>
 
 <body>
 
-<header>
-  <h1>CHAIR ISLAMIC TV</h1>
-  <p>Empowering the Islamic Society Through Knowledge & Media</p>
-</header>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">CHAIR ISLAMIC TV</div>
 
-<!-- Featured Video Section -->
+  <div class="hamburger" onclick="toggleMenu()">
+    ☰
+  </div>
 
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#latest-posts">Posts</a></li>
+    <li><a href="#topics">Topics</a></li>
+    <li><a href="#live">Live</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+</section>
+
+<!-- FEATURED VIDEO -->
 <section id="featured">
   <h2>🌟 Featured Video</h2>
   <iframe width="100%" height="400"
@@ -28,28 +45,25 @@ html {
     allowfullscreen>
   </iframe>
 </section>
-<!-- Latest Posts Section -->
+
+<!-- LATEST POSTS -->
 <section id="latest-posts">
   <h2>📰 Latest Posts</h2>
 
   <div class="post">
     <h3>Reflection on Surah Al-Baqarah</h3>
-    <p>A deep reflection on patience and trust in Allah...</p>
-    <a href="#">Read More</a>
+    <p>A reminder about patience, sincerity, and trust in Allah.</p>
   </div>
 
   <div class="post">
     <h3>Hadith of the Week</h3>
-    <p>The Prophet ﷺ said: "The best among you are those who learn the Qur'an..."</p>
-    <a href="#">Read More</a>
+    <p>The best among you are those who learn the Qur'an and teach it.</p>
   </div>
-
 </section>
 
-<!-- Popular Topics -->
+<!-- TOPICS -->
 <section id="topics">
   <h2>📚 Popular Topics</h2>
-
   <ul>
     <li>📖 Quran Reflections</li>
     <li>🕌 Hadith of the Week</li>
@@ -58,30 +72,38 @@ html {
   </ul>
 </section>
 
-<!-- Live Streams -->
+<!-- LIVE -->
 <section id="live">
   <h2>🔴 Upcoming Live Streams</h2>
-  <p>Join us for Live Jumu'ah Khutbah every Friday.</p>
-  <p>📅 Next Live: Friday 1:30 PM</p>
+  <p>Join us every Friday for Jumu'ah Khutbah.</p>
   <a href="https://youtube.com/@chairislamtv" target="_blank">
-    Watch Live on YouTube
+    Watch Live
   </a>
 </section>
 
-<!-- About Us -->
+<!-- ABOUT -->
 <section id="about">
   <h2>About Chair Islamic CRV TV</h2>
   <p>
     Chair Islamic TV is dedicated to spreading authentic Islamic knowledge,
-    promoting unity in the Ummah, and empowering the Muslim community
-    through lectures, khutbahs, Quran reflections, and live events.
-    FOUNDED BY KAWEESI SHURAIM CEO CHAIR RECORDS
+    empowering the Muslim Ummah through lectures, khutbahs,
+    Quran reflections and live events.
   </p>
 </section>
 
 <footer>
-  <p>© 2026 Chair Islamic TV | All Rights Reserved</p>
+  © 2026 Chair Islamic TV | All Rights Reserved
 </footer>
+
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("active");
+}
+
+window.addEventListener("scroll", function() {
+  document.querySelector(".navbar").classList.toggle("scrolled", window.scrollY > 50);
+});
+</script>
 
 </body>
 </html>
