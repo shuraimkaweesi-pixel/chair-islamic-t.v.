@@ -1,104 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chair Islamic TV</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>CHAIR ISLAMIC TV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b3d2e;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      background: #06251c;
+      color: #d4af37;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #083a2c;
+      border-radius: 12px;
+    }
+
+    #chatBox {
+      text-align: left;
+      height: 300px;
+      overflow-y: auto;
+      background: #06251c;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 70%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 15px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: #d4af37;
+      color: #0b3d2e;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: white;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="logo">CHAIR ISLAMIC TV</div>
-  <div class="hamburger" onclick="toggleMenu()">☰</div>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#featured">Featured</a></li>
-    <li><a href="#latest-posts">Posts</a></li>
-    <li><a href="#topics">Topics</a></li>
-    <li><a href="#live">Live</a></li>
-    <li><a href="#ask-islam">Ask</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contacts">Contact</a></li>
-  </ul>
-</nav>
+  <header>CHAIR ISLAMIC TV</header>
 
-<!-- FEATURED VIDEO -->
-<section id="featured" class="fade-in">
-  <h2>🌟 Featured Video</h2>
-  <iframe width="100%" height="400"
-    src="https://www.youtube.com/embed/HqTKlgAlW_0"
-    frameborder="0"
-    allowfullscreen>
-  </iframe>
-</section>
+  <div class="chat-container">
+    <h2>Ask Anything About Islam</h2>
 
-<!-- LATEST POSTS -->
-<section id="latest-posts" class="fade-in">
-  <h2>📰 Latest Posts</h2>
-  <div class="post">
-    <h3>Reflection on Surah Al-Baqarah</h3>
-    <p>A reminder about patience, sincerity, and trust in Allah.</p>
+    <div id="chatBox"></div>
+
+    <input type="text" id="userInput" placeholder="Type your question here..." />
+    <button onclick="sendMessage()">Send</button>
   </div>
-  <div class="post">
-    <h3>Hadith of the Week</h3>
-    <p>The best among you are those who learn the Qur'an and teach it.</p>
-  </div>
-</section>
 
-<!-- TOPICS -->
-<section id="topics" class="fade-in">
-  <h2>📚 Popular Topics</h2>
-  <ul>
-    <li>📖 Quran Reflections</li>
-    <li>🕌 Hadith of the Week</li>
-    <li>💡 Islamic Advice</li>
-    <li>🌙 Ramadan Series</li>
-  </ul>
-</section>
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
 
-<!-- LIVE -->
-<section id="live" class="fade-in">
-  <h2>🔴 Upcoming Live Streams</h2>
-  <p>Join us every Friday for Jumu'ah Khutbah.</p>
-  <a href="https://youtube.com/@chairislamtv" target="_blank">Watch Live</a>
-</section>
+      if (!message) return;
 
-<!-- ASK ANYTHING ABOUT ISLAM -->
-<section id="ask-islam" class="fade-in">
-  <h2>🤔 Ask Anything You Need to Know About Islam</h2>
-  <input type="text" id="userQuestion" placeholder="Type your question here..." />
-  <button onclick="getAnswer()">Ask</button>
-  <p id="aiAnswer"></p>
-</section>
+      const chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML += "<p><strong>You:</strong> " + message + "</p>";
 
-<!-- ABOUT -->
-<section id="about" class="fade-in">
-  <h2>About Chair Islamic CRV TV</h2>
-  <p>
-    Chair Islamic TV is dedicated to spreading authentic Islamic knowledge,
-    empowering the Muslim Ummah through lectures, khutbahs,
-    Quran reflections and live events.
-  </p>
-</section>
+      input.value = "";
 
-<!-- CONTACTS -->
-<section id="contacts" class="fade-in">
-  <h2>📞 Contact Us</h2>
-  <p>Phone/WhatsApp 1: <a href="https://wa.me/256754178966" target="_blank">0754178966</a></p>
-  <p>Phone/WhatsApp 2: <a href="https://wa.me/256704372147" target="_blank">0704372147</a></p>
-  <p>Email: <a href="mailto:info@chairislamictv.com">info@chairislamictv.com</a></p>
-</section>
+      chatBox.innerHTML += "<p><em>Thinking...</em></p>";
 
-<!-- WhatsApp floating buttons -->
-<a href="https://wa.me/256754178966" class="whatsapp-btn" target="_blank">💬 WhatsApp 1</a>
-<a href="https://wa.me/256704372147" class="whatsapp-btn btn2" target="_blank">💬 WhatsApp 2</a>
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ message })
+        });
 
-<footer class="fade-in">
-  © 2026 Chair Islamic TV | All Rights Reserved
-</footer>
+        const data = await response.json();
 
-<script src="script.js"></script>
+        // Remove "Thinking..."
+        chatBox.innerHTML = chatBox.innerHTML.replace("<p><em>Thinking...</em></p>", "");
+
+        if (data.reply) {
+          chatBox.innerHTML += "<p><strong>AI:</strong> " + data.reply + "</p>";
+        } else {
+          chatBox.innerHTML += "<p style='color:red;'>Error: " + (data.error || "Something went wrong") + "</p>";
+        }
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+      } catch (error) {
+        chatBox.innerHTML += "<p style='color:red;'>Failed to connect to AI.</p>";
+      }
+    }
+  </script>
+
 </body>
 </html>
