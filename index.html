@@ -1,123 +1,278 @@
-<!DOCTYPE html>
+p<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CHAIR ISLAMIC TV</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chair Islamic TV</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b3d2e;
-      color: white;
-      text-align: center;
-    }
+<!-- FANCY COLORS & STYLE -->
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #06251c, #0b3d2e);
+    color: #fff;
+  }
 
-    header {
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
+  /* NAVBAR */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+
+  .navbar .logo {
+    color: #FFD700;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+  }
+
+  .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: #FFD700;
+    transform: scale(1.1);
+  }
+
+  /* MOBILE MENU */
+  .hamburger {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  @media(max-width:768px){
+    .nav-links {
+      position: absolute;
+      top: 70px;
+      right: 0;
       background: #06251c;
-      color: #d4af37;
-    }
-
-    .chat-container {
-      max-width: 600px;
-      margin: 40px auto;
+      flex-direction: column;
+      width: 200px;
+      display: none;
       padding: 20px;
-      background: #083a2c;
-      border-radius: 12px;
-    }
-
-    #chatBox {
-      text-align: left;
-      height: 300px;
-      overflow-y: auto;
-      background: #06251c;
-      padding: 15px;
       border-radius: 8px;
-      margin-bottom: 15px;
     }
 
-    input {
-      width: 70%;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-    }
+    .nav-links.active { display: flex; }
+    .hamburger { display: block; }
+  }
 
-    button {
-      padding: 10px 15px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background: #d4af37;
-      color: #0b3d2e;
-      font-weight: bold;
-    }
+  section {
+    padding: 100px 20px;
+    max-width: 1100px;
+    margin: auto;
+    margin-top: 60px;
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease-out;
+  }
 
-    button:hover {
-      background: white;
-    }
-  </style>
+  section.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  h2 {
+    color: #FFD700;
+    border-left: 5px solid #FFD700;
+    padding-left: 15px;
+    margin-bottom: 20px;
+  }
+
+  /* Featured video */
+  #featured iframe {
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    border: 3px solid #FFD700;
+  }
+
+  /* Posts */
+  .post {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    transition: 0.3s;
+  }
+
+  .post:hover {
+    background: rgba(255,215,0,0.1);
+    transform: scale(1.02);
+  }
+
+  /* Ask a Scholar form */
+  #ask-scholar input {
+    width: 70%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  #ask-scholar button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #FFD700;
+    color: #0b3d2e;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  #ask-scholar button:hover { background: white; }
+
+  footer {
+    text-align: center;
+    padding: 25px;
+    background: #145c42;
+    color: #fff;
+    margin-top: 50px;
+  }
+
+  /* WhatsApp buttons */
+  .whatsapp-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 50px;
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: 0.3s;
+  }
+
+  .whatsapp-btn.btn2 { bottom: 80px; }
+
+  .whatsapp-btn:hover { background: #128c5e; }
+</style>
 </head>
 
 <body>
 
-  <header>CHAIR ISLAMIC TV</header>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">CHAIR ISLAMIC TV</div>
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#latest-posts">Posts</a></li>
+    <li><a href="#topics">Topics</a></li>
+    <li><a href="#ask-scholar">Ask a Scholar</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contacts">Contact</a></li>
+  </ul>
+</nav>
 
-  <div class="chat-container">
-    <h2>Ask Anything About Islam</h2>
+<!-- FEATURED VIDEO -->
+<section id="featured" class="fade-in">
+  <h2>🌟 Featured Video</h2>
+  <iframe src="https://www.youtube.com/embed/HqTKlgAlW_0" allowfullscreen></iframe>
+</section>
 
-    <div id="chatBox"></div>
-
-    <input type="text" id="userInput" placeholder="Type your question here..." />
-    <button onclick="sendMessage()">Send</button>
+<!-- LATEST POSTS -->
+<section id="latest-posts" class="fade-in">
+  <h2>📰 Latest Posts</h2>
+  <div class="post">
+    <h3>Reflection on Surah Al-Baqarah</h3>
+    <p>A reminder about patience, sincerity, and trust in Allah.</p>
   </div>
+  <div class="post">
+    <h3>Hadith of the Week</h3>
+    <p>The best among you are those who learn the Qur'an and teach it.</p>
+  </div>
+</section>
 
-  <script>
-    async function sendMessage() {
-      const input = document.getElementById("userInput");
-      const message = input.value.trim();
+<!-- TOPICS -->
+<section id="topics" class="fade-in">
+  <h2>📚 Popular Topics</h2>
+  <ul>
+    <li>📖 Quran Reflections</li>
+    <li>🕌 Hadith of the Week</li>
+    <li>💡 Islamic Advice</li>
+    <li>🌙 Ramadan Series</li>
+  </ul>
+</section>
 
-      if (!message) return;
+<!-- ASK A SCHOLAR -->
+<section id="ask-scholar" class="fade-in">
+  <h2>🤔 Ask a Scholar</h2>
+  <form action="mailto:youremail@example.com" method="POST" enctype="text/plain">
+    <input type="text" name="question" placeholder="Type your question here..." required />
+    <button type="submit">Send</button>
+  </form>
+  <p>Shuraim Kaweesi, Founder of Chair Islamic TV, will personally answer your questions.</p>
+</section>
 
-      const chatBox = document.getElementById("chatBox");
-      chatBox.innerHTML += "<p><strong>You:</strong> " + message + "</p>";
+<!-- ABOUT -->
+<section id="about" class="fade-in">
+  <h2>About Chair Islamic TV</h2>
+  <p>
+    Chair Islamic TV is dedicated to spreading authentic Islamic knowledge,
+    empowering the Muslim Ummah through lectures, khutbahs, Quran reflections and live events.
+    <br><br>
+    <strong>Founder:</strong> Shuraim Kaweesi
+  </p>
+</section>
 
-      input.value = "";
+<!-- CONTACTS -->
+<section id="contacts" class="fade-in">
+  <h2>📞 Contact Us</h2>
+  <p>Phone/WhatsApp 1: <a href="https://wa.me/256754178966" target="_blank">0754178966</a></p>
+  <p>Phone/WhatsApp 2: <a href="https://wa.me/256704372147" target="_blank">0704372147</a></p>
+  <p>Email: <a href="mailto:info@chairislamictv.com">info@chairislamictv.com</a></p>
+</section>
 
-      chatBox.innerHTML += "<p><em>Thinking...</em></p>";
+<!-- WhatsApp floating buttons -->
+<a href="https://wa.me/256754178966" class="whatsapp-btn" target="_blank">💬 WhatsApp 1</a>
+<a href="https://wa.me/256704372147" class="whatsapp-btn btn2" target="_blank">💬 WhatsApp 2</a>
 
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ message })
-        });
+<footer class="fade-in">
+  © 2026 Chair Islamic TV | All Rights Reserved
+</footer>
 
-        const data = await response.json();
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("active");
+}
 
-        // Remove "Thinking..."
-        chatBox.innerHTML = chatBox.innerHTML.replace("<p><em>Thinking...</em></p>", "");
-
-        if (data.reply) {
-          chatBox.innerHTML += "<p><strong>AI:</strong> " + data.reply + "</p>";
-        } else {
-          chatBox.innerHTML += "<p style='color:red;'>Error: " + (data.error || "Something went wrong") + "</p>";
-        }
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-      } catch (error) {
-        chatBox.innerHTML += "<p style='color:red;'>Failed to connect to AI.</p>";
-      }
+// Scroll animations
+window.addEventListener("scroll", function() {
+  document.querySelectorAll(".fade-in").forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 100) {
+      section.classList.add("show");
     }
-  </script>
+  });
+});
+</script>
 
 </body>
 </html>
