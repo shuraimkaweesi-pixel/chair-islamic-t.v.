@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shuraimkaweesi-pixel.github.io/chair-islamic-t.v/sitemap.xml
