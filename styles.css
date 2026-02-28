@@ -1,3 +1,6 @@
+/* ==========================
+   BODY & GLOBAL STYLES
+========================== */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -5,7 +8,9 @@ body {
   color: #fff;
 }
 
-/* NAVBAR */
+/* ==========================
+   NAVBAR
+========================== */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -45,7 +50,9 @@ body {
   transform: scale(1.05);
 }
 
-/* MOBILE MENU */
+/* ==========================
+   MOBILE MENU
+========================== */
 .hamburger {
   display: none;
   font-size: 28px;
@@ -74,7 +81,9 @@ body {
   }
 }
 
-/* SECTIONS */
+/* ==========================
+   SECTIONS
+========================== */
 section {
   padding: 80px 20px;
   max-width: 1100px;
@@ -93,7 +102,9 @@ section.show {
   transform: translateY(0);
 }
 
-/* Headings with gold shimmer */
+/* ==========================
+   HEADINGS (GOLD SHIMMER)
+========================== */
 h2 {
   position: relative;
   color: #d4af37;
@@ -111,6 +122,9 @@ h2 {
   100% { background-position: 200% center; }
 }
 
+/* ==========================
+   POSTS & LISTS
+========================== */
 .post {
   margin-bottom: 20px;
 }
@@ -124,7 +138,9 @@ ul li {
   margin: 10px 0;
 }
 
-/* BUTTONS */
+/* ==========================
+   BUTTONS & LINKS
+========================== */
 a {
   display: inline-block;
   padding: 10px 20px;
@@ -141,7 +157,9 @@ a:hover {
   transform: scale(1.05);
 }
 
-/* LIVE SECTION */
+/* ==========================
+   LIVE SECTION
+========================== */
 #live {
   background: linear-gradient(135deg, #0b3d2e, #145c42);
   color: white;
@@ -152,7 +170,9 @@ a:hover {
   border-left: 5px solid white;
 }
 
-/* FOOTER */
+/* ==========================
+   FOOTER
+========================== */
 footer {
   text-align: center;
   padding: 25px;
@@ -169,7 +189,9 @@ footer.show {
   transform: translateY(0);
 }
 
-/* WHATSAPP BUTTONS */
+/* ==========================
+   WHATSAPP BUTTONS
+========================== */
 .whatsapp-btn {
   position: fixed;
   bottom: 20px;
@@ -194,41 +216,75 @@ footer.show {
   background: #128c5e;
 }
 
-/* BOUNCE ANIMATION FOR WHATSAPP BUTTON */
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
 
-/* ASK ANYTHING ABOUT ISLAM */
+/* ==========================
+   ASK ANYTHING ABOUT ISLAM (PREMIUM GOLD-GREEN)
+========================== */
 #ask-islam {
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, #0b3d0b, #145214);
   padding: 40px 20px;
-  border-radius: 12px;
-  margin-top: 40px;
+  border-radius: 15px;
+  margin: 50px auto;
+  max-width: 800px;
+  color: #f7d56f;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
   text-align: center;
 }
 
-#ask-islam input {
+#ask-islam h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ffd966;
+  text-shadow: 1px 1px 2px #000;
+}
+
+#ask-islam input[type="text"] {
   width: 70%;
-  padding: 12px;
-  margin-right: 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 16px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 2px solid #ffd966;
+  outline: none;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+#ask-islam input[type="text"]:focus {
+  border-color: #ffec99;
+  box-shadow: 0 0 10px #ffd966;
 }
 
 #ask-islam button {
-  padding: 12px 20px;
-  background: #d4af37;
+  padding: 12px 25px;
+  border-radius: 10px;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #0b3d2e;
+  background-color: #ffd966;
+  color: #0b3d0b;
   font-weight: bold;
-  transition: 0.3s;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 #ask-islam button:hover {
-  background: #fff;
+  background-color: #ffec99;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+#aiAnswer {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  min-height: 50px;
+  background-color: rgba(255, 255, 150, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #ffd966;
+  color: #fffde7;
+  line-height: 1.5;
+  transition: all 0.3s ease;
 }
