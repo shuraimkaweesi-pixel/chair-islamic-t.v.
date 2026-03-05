@@ -47,3 +47,18 @@ toggle.addEventListener("click", () => {
     document.body.classList.contains("light-mode") ? "🌞" : "🌙";
 });
 </script>
+<script>
+const sections = document.querySelectorAll("section");
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add("visible");
+    }
+  });
+});
+
+sections.forEach(section=>{
+  observer.observe(section);
+});
+</script>
