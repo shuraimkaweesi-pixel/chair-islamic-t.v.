@@ -1,35 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CHAIR ISLAMIC TV</title>
 
-<meta name="description" content="CHAIR ISLAMIC TV - Islamic reminders, Quran recitations and Islamic knowledge. Founded by Shuraim Kaweesi">
+<meta name="description" content="CHAIR ISLAMIC TV – Learn Islam through Quran, Hadith, and authentic teachings.">
 
-<meta name="google-site-verification" content="MoZqva1Hd1NewOo69A7hxId1dnainlfzWlWDZ6U7JQ4" />
+<!-- Google Adsense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 margin:0;
-background:var(--bg);
-color:var(--text);
-transition:0.3s;
-}
-
-:root{
---bg:white;
---text:black;
---card:#f5f5f5;
-}
-
-.dark{
---bg:#121212;
---text:white;
---card:#1e1e1e;
+background:#0f172a;
+color:white;
 }
 
 header{
@@ -37,8 +26,7 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:15px;
-background:#0c7a43;
-color:white;
+background:#020617;
 }
 
 .logo{
@@ -48,58 +36,59 @@ gap:10px;
 }
 
 .logo img{
-width:50px;
+width:45px;
 }
 
-button{
-padding:8px 12px;
-border:none;
-cursor:pointer;
+nav a{
+color:white;
+margin:10px;
+text-decoration:none;
 }
 
 .hero{
 text-align:center;
 padding:80px 20px;
-background:linear-gradient(45deg,#0c7a43,#0fae61);
-color:white;
+background:linear-gradient(120deg,#065f46,#0f172a);
+}
+
+.hero h1{
+font-size:42px;
 }
 
 .section{
 padding:50px 20px;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
+text-align:center;
 }
 
 .card{
-background:var(--card);
-padding:20px;
+background:#1e293b;
+padding:25px;
 border-radius:10px;
+margin:20px auto;
+max-width:600px;
 }
 
-.blog-post{
-margin-bottom:20px;
+button{
+background:#16a34a;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+color:white;
+cursor:pointer;
 }
 
 footer{
-background:#0c7a43;
-color:white;
-padding:30px;
-margin-top:40px;
+background:#020617;
+padding:40px;
+text-align:center;
+margin-top:50px;
 }
 
-.footer-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-}
-
-a{
-color:#ffd700;
-text-decoration:none;
+.darkToggle{
+cursor:pointer;
+background:#334155;
+padding:8px 15px;
+border-radius:6px;
 }
 
 </style>
@@ -112,10 +101,19 @@ text-decoration:none;
 
 <div class="logo">
 <img src="logo.png">
-<h2>CHAIR ISLAMIC TV</h2>
+<strong>CHAIR ISLAMIC TV</strong>
 </div>
 
-<button onclick="toggleMode()">🌙</button>
+<nav>
+
+<a href="#">Home</a>
+<a href="#blog">Blog</a>
+<a href="#ask">Ask</a>
+<a href="#donate">Donate</a>
+
+</nav>
+
+<div class="darkToggle" onclick="toggleMode()">Mode</div>
 
 </header>
 
@@ -123,29 +121,73 @@ text-decoration:none;
 
 <h1>Welcome to CHAIR ISLAMIC TV</h1>
 
-<p>Islamic reminders, Quran recitations and knowledge.</p>
+<p>Spreading authentic Islamic knowledge through Quran and Sunnah.</p>
 
 <p><strong>Founder: Shuraim Kaweesi</strong></p>
 
 </section>
 
-<section class="section">
+<section id="blog" class="section">
 
-<h2>Latest Blog Posts</h2>
+<h2>Islamic Articles</h2>
 
-<div class="cards">
-
-<div class="card blog-post">
+<div class="card">
 <h3>The Importance of Salah</h3>
-<p>Salah is the pillar of Islam and the connection between the servant and Allah.</p>
-<a href="blog/salah.html">Read More</a>
+<p>Salah is the pillar of Islam and the first deed to be judged on the Day of Judgment.</p>
 </div>
 
-<div class="card blog-post">
+<div class="card">
 <h3>Ramadan Blessings</h3>
-<p>Ramadan is the month of mercy, forgiveness and freedom from the hellfire.</p>
-<a href="blog/ramadan.html">Read More</a>
+<p>Ramadan is the month of mercy, forgiveness, and salvation.</p>
 </div>
+
+</section>
+
+<section id="ask" class="section">
+
+<h2>Ask an Islamic Question</h2>
+
+<div class="card">
+
+<p>Send your Islamic question and it will be answered.</p>
+
+<form action="mailto:chairislamictv@gmail.com">
+
+<input type="text" placeholder="Your Name" required style="width:90%;padding:10px;margin:10px">
+
+<br>
+
+<textarea placeholder="Your Question" required style="width:90%;height:120px;padding:10px"></textarea>
+
+<br>
+
+<button type="submit">Send Question</button>
+
+</form>
+
+</div>
+
+</section>
+
+<section id="donate" class="section">
+
+<h2>Support CHAIR ISLAMIC TV</h2>
+
+<div class="card">
+
+<p>Your support helps spread Islamic knowledge worldwide.</p>
+
+<h3>Mobile Money Donation</h3>
+
+<p><strong>Send to:</strong> 0754178966</p>
+
+<p>Name: Shuraim Kaweesi</p>
+
+<button onclick="copyNumber()">Copy Number</button>
+
+<p id="copied" style="display:none;color:lightgreen">
+Number copied!
+</p>
 
 </div>
 
@@ -153,15 +195,11 @@ text-decoration:none;
 
 <section class="section">
 
-<h2>Support CHAIR ISLAMIC TV</h2>
+<h2>Follow Us</h2>
 
 <div class="card">
 
-<p>If you would like to support this dawah project you can donate.</p>
-
-<p>Mobile Money: <strong>075417896666</strong></p>
-
-<p>Your support helps spread Islamic knowledge.</p>
+<a href="https://youtube.com/@chairislamtv">YouTube Channel</a>
 
 </div>
 
@@ -169,37 +207,33 @@ text-decoration:none;
 
 <footer>
 
-<div class="footer-grid">
+<p>© 2026 CHAIR ISLAMIC TV</p>
 
-<div>
-<h3>CHAIR ISLAMIC TV</h3>
-<p>Spreading Islamic knowledge online.</p>
-<p>Founder: Shuraim Kaweesi</p>
-</div>
+<p>Founded by Shuraim Kaweesi</p>
 
-<div>
-<h3>Links</h3>
-<p><a href="#">Home</a></p>
-<p><a href="blog.html">Blog</a></p>
-</div>
-
-<div>
-<h3>Follow</h3>
-<p><a href="https://youtube.com/@chairislamtv">YouTube</a></p>
-</div>
-
-</div>
-
-<p style="text-align:center;margin-top:20px;">
-© 2026 CHAIR ISLAMIC TV
-</p>
+<p>Spreading Islamic Knowledge Worldwide</p>
 
 </footer>
 
 <script>
 
 function toggleMode(){
-document.body.classList.toggle("dark")
+
+if(document.body.style.background=="white"){
+document.body.style.background="#0f172a"
+document.body.style.color="white"
+}
+
+else{
+document.body.style.background="white"
+document.body.style.color="black"
+}
+
+}
+
+function copyNumber(){
+navigator.clipboard.writeText("0754178966");
+document.getElementById("copied").style.display="block";
 }
 
 </script>
