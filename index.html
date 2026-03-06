@@ -1,105 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CHAIR ISLAMIC TV</title>
 
-<meta name="description" content="CHAIR ISLAMIC TV – Learn Islam through Quran, Hadith, and authentic teachings.">
-
-<!-- Google Adsense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
 <style>
 
 body{
-font-family:Arial;
 margin:0;
-background:#0f172a;
+font-family:Arial;
+background:#0b0b0b;
 color:white;
 }
-<!-- ISLAMIC RADIO SECTION -->
-<section class="radio-section">
 
-<h2>📻 CHAIR ISLAMIC RADIO</h2>
-<p class="radio-sub">Live Quran Recitation • Islamic Lectures • Nasheeds</p>
-
-<div class="radio-player">
-<span class="live">🔴 LIVE</span>
-
-<audio controls>
-<source src="https://stream.radiojar.com/8s5u5tpdtwzuv" type="audio/mpeg">
-Your browser does not support the audio element.
-</audio>
-
-</div>
-
-<p class="radio-founder">Founder: Shuraim Kaweesi</p>
-
-</section>
-
-<style>
-
-.radio-section{
-background: linear-gradient(135deg,#0a0a0a,#1a1a1a,#000);
-padding:60px 20px;
-text-align:center;
-color:white;
-border-top:3px solid gold;
-border-bottom:3px solid gold;
-}
-
-.radio-section h2{
-font-size:34px;
-color:gold;
-margin-bottom:10px;
-letter-spacing:1px;
-}
-
-.radio-sub{
-color:#ddd;
-margin-bottom:30px;
-font-size:16px;
-}
-
-.radio-player{
-background:#111;
-border:2px solid gold;
-border-radius:12px;
-padding:30px;
-max-width:400px;
-margin:auto;
-box-shadow:0 0 20px rgba(255,215,0,0.3);
-}
-
-.live{
-display:block;
-color:red;
-font-weight:bold;
-margin-bottom:15px;
-font-size:14px;
-}
-
-audio{
-width:100%;
-filter:drop-shadow(0 0 8px gold);
-}
-
-.radio-founder{
-margin-top:25px;
-font-size:14px;
-color:#bbb;
-}
-
-</style>
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:15px;
-background:#020617;
+padding:15px 40px;
+background:#000;
 }
 
 .logo{
@@ -109,59 +31,138 @@ gap:10px;
 }
 
 .logo img{
-width:45px;
+height:45px;
 }
 
 nav a{
 color:white;
-margin:10px;
 text-decoration:none;
+margin:0 15px;
+}
+
+nav a:hover{
+color:gold;
 }
 
 .hero{
 text-align:center;
-padding:80px 20px;
-background:linear-gradient(120deg,#065f46,#0f172a);
+padding:100px 20px;
+background:linear-gradient(#000,#111);
 }
 
 .hero h1{
-font-size:42px;
+font-size:48px;
+color:gold;
+}
+
+.hero p{
+color:#ccc;
+}
+
+.btn{
+display:inline-block;
+margin-top:20px;
+padding:12px 25px;
+background:gold;
+color:black;
+text-decoration:none;
+border-radius:6px;
 }
 
 .section{
-padding:50px 20px;
+padding:70px 20px;
 text-align:center;
 }
 
-.card{
-background:#1e293b;
-padding:25px;
-border-radius:10px;
-margin:20px auto;
-max-width:600px;
+.section h2{
+color:gold;
+margin-bottom:20px;
 }
 
-button{
-background:#16a34a;
-border:none;
-padding:10px 20px;
-border-radius:6px;
-color:white;
-cursor:pointer;
+.arabic{
+font-size:30px;
+direction:rtl;
+}
+
+.radio{
+background:#111;
+padding:60px;
+border-radius:10px;
+max-width:600px;
+margin:auto;
+}
+
+.blog-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.blog-card{
+background:#111;
+padding:20px;
+border-radius:10px;
+}
+
+.blog-card a{
+color:gold;
+text-decoration:none;
+}
+
+.donate-box{
+border:2px solid gold;
+padding:30px;
+max-width:350px;
+margin:auto;
+border-radius:10px;
 }
 
 footer{
-background:#020617;
-padding:40px;
-text-align:center;
-margin-top:50px;
+background:#000;
+padding:40px 20px;
+margin-top:60px;
 }
 
-.darkToggle{
+.footer-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+footer h3{
+color:gold;
+}
+
+footer a{
+color:#ccc;
+text-decoration:none;
+display:block;
+margin:6px 0;
+}
+
+footer a:hover{
+color:white;
+}
+
+.toggle{
 cursor:pointer;
-background:#334155;
-padding:8px 15px;
+border:1px solid gold;
+padding:5px 10px;
 border-radius:6px;
+}
+
+.light{
+background:white;
+color:black;
+}
+
+.light header{
+background:#eee;
+}
+
+.light nav a{
+color:black;
 }
 
 </style>
@@ -174,19 +175,18 @@ border-radius:6px;
 
 <div class="logo">
 <img src="logo.png">
-<strong>CHAIR ISLAMIC TV</strong>
+<h3>CHAIR ISLAMIC TV</h3>
 </div>
 
 <nav>
-
 <a href="#">Home</a>
+<a href="#radio">Radio</a>
 <a href="#blog">Blog</a>
-<a href="#ask">Ask</a>
 <a href="#donate">Donate</a>
-
+<a href="#contact">Contact</a>
 </nav>
 
-<div class="darkToggle" onclick="toggleMode()">Mode</div>
+<div class="toggle" onclick="toggleMode()">🌙</div>
 
 </header>
 
@@ -194,130 +194,108 @@ border-radius:6px;
 
 <h1>Welcome to CHAIR ISLAMIC TV</h1>
 
-<p>Spreading authentic Islamic knowledge through Quran and Sunnah.</p>
+<p>Spreading Islamic knowledge through Quran, lectures and reminders.</p>
 
-<p><strong>Founder: Shuraim Kaweesi</strong></p>
-
-</section>
-
-<section id="blog" class="section">
-
-<h2>Islamic Articles</h2>
-
-<div class="card">
-<h3>The Importance of Salah</h3>
-<p>Salah is the pillar of Islam and the first deed to be judged on the Day of Judgment.</p>
-</div>
-
-<div class="card">
-<h3>Ramadan Blessings</h3>
-<p>Ramadan is the month of mercy, forgiveness, and salvation.</p>
-</div>
-
-</section>
-
-<section id="ask" class="section">
-
-<h2>Ask an Islamic Question</h2>
-
-<div class="card">
-
-<p>Send your Islamic question and it will be answered.</p>
-
-<form action="mailto:chairislamictv@gmail.com">
-
-<input type="text" placeholder="Your Name" required style="width:90%;padding:10px;margin:10px">
-
-<br>
-
-<textarea placeholder="Your Question" required style="width:90%;height:120px;padding:10px"></textarea>
-
-<br>
-
-<button type="submit">Send Question</button>
-<section id="blog">
-<h2>Islamic Articles</h2>
-<div id="posts"></div>
-</section>
-
-<script>
-fetch('posts.json')
-.then(response => response.json())
-.then(data => {
-const container = document.getElementById('posts');
-
-data.forEach(post => {
-const article = document.createElement('div');
-
-article.innerHTML = `
-<h3>${post.title}</h3>
-<p><i>${post.date} | ${post.author}</i></p>
-<p>${post.content}</p>
-<hr>
-`;
-
-container.appendChild(article);
-});
-});
-</script>
-</form>
-
-</div>
-
-</section>
-
-<section id="donate" class="section">
-
-<h2>Support CHAIR ISLAMIC TV</h2>
-
-<div class="card">
-
-<p>Your support helps spread Islamic knowledge worldwide.</p>
-
-<h3>Mobile Money Donation</h3>
-
-<p><strong>Send to:</strong> 0704372147</p>
-
-<p>Name: Shuraim Kaweesi</p>
-
-<button onclick="copyNumber()">Copy Number</button>
-
-<p id="copied" style="display:none;color:lightgreen">
-Number copied!
-</p>
-<section id="radio">
-<h2>📻 CHAIR ISLAMIC RADIO</h2>
-<p>Listen to Quran Recitation & Islamic Lectures</p>
-
-<audio controls autoplay>
-  <source src="https://stream.radiojar.com/8s5u5tpdtwzuv" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-
-</section>
-</div>
+<a class="btn" href="#radio">Listen Live</a>
 
 </section>
 
 <section class="section">
 
-<h2>Follow Us</h2>
+<h2>📖 Quran Verse</h2>
 
-<div class="card">
+<p class="arabic">
+إِنَّ مَعَ الْعُسْرِ يُسْرًا
+</p>
 
-<a href="https://youtube.com/@chairislamtv">YouTube Channel</a>
+<p>
+Indeed with hardship comes ease.  
+(Surah Ash-Sharh 94:6)
+</p>
+
+</section>
+
+<section class="section" id="radio">
+
+<h2>📻 Islamic Radio</h2>
+
+<div class="radio">
+
+<p>Listen to Quran and Islamic lectures</p>
+
+<audio controls style="width:100%">
+<source src="radio.mp3" type="audio/mpeg">
+</audio>
 
 </div>
 
 </section>
 
-<footer>
+<section class="section" id="blog">
 
-<p>© 2026 CHAIR ISLAMIC TV</p>
+<h2>📰 Latest Articles</h2>
 
-<p>Founded by Shuraim Kaweesi</p>
+<div class="blog-container">
 
-<p>Spreading Islamic Knowledge Worldwide</p>
+<div class="blog-card">
+<h3>Benefits of Ramadan</h3>
+<p>Ramadan is the month of mercy and forgiveness.</p>
+<a href="blog/post1.html">Read More</a>
+</div>
+
+<div class="blog-card">
+<h3>The Importance of Salah</h3>
+<p>Salah is the pillar of Islam and connection with Allah.</p>
+<a href="blog/post2.html">Read More</a>
+</div>
+
+</div>
+
+</section>
+
+<section class="section" id="donate">
+
+<h2>🤲 Support CHAIR ISLAMIC TV</h2>
+
+<div class="donate-box">
+
+<p>Airtel Money</p>
+
+<h3>0754178966</h3>
+
+<p>Name: CHAIR ISLAMIC TV</p>
+
+</div>
+
+</section>
+
+<footer id="contact">
+
+<div class="footer-grid">
+
+<div>
+<h3>CHAIR ISLAMIC TV</h3>
+<p>Sharing Islamic knowledge worldwide.</p>
+</div>
+
+<div>
+<h3>Links</h3>
+<a href="#">Home</a>
+<a href="#blog">Blog</a>
+<a href="#radio">Radio</a>
+</div>
+
+<div>
+<h3>Contact</h3>
+<p>Phone: 0754178966</p>
+<a href="https://youtube.com/@chairislamtv">YouTube</a>
+</div>
+
+</div>
+
+<p style="text-align:center;margin-top:30px;color:#777;">
+© 2026 CHAIR ISLAMIC TV
+</p>
 
 </footer>
 
@@ -325,24 +303,12 @@ Number copied!
 
 function toggleMode(){
 
-if(document.body.style.background=="white"){
-document.body.style.background="#0f172a"
-document.body.style.color="white"
-}
+document.body.classList.toggle("light")
 
-else{
-document.body.style.background="white"
-document.body.style.color="black"
-}
-
-}
-
-function copyNumber(){
-navigator.clipboard.writeText("0754178966");
-document.getElementById("copied").style.display="block";
 }
 
 </script>
 
 </body>
+
 </html>
