@@ -2,18 +2,30 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHAIR ISLAMIC TV</title>
+<title>CHAIR ISLAMIC TV | Quran • Lectures • Islamic Radio</title>
+
+<meta name="description" content="CHAIR ISLAMIC TV spreading Quran, Islamic lectures and reminders worldwide.">
+
+<!-- GOOGLE ADSENSE (replace with your code later) -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Arial;
-background:#0b0b0b;
+}
+
+body{
+background:#0c0c0c;
 color:white;
+line-height:1.6;
 }
 
 header{
@@ -22,6 +34,9 @@ justify-content:space-between;
 align-items:center;
 padding:15px 40px;
 background:#000;
+position:sticky;
+top:0;
+z-index:1000;
 }
 
 .logo{
@@ -38,21 +53,30 @@ nav a{
 color:white;
 text-decoration:none;
 margin:0 15px;
+font-weight:500;
 }
 
 nav a:hover{
 color:gold;
 }
 
+.toggle{
+cursor:pointer;
+border:1px solid gold;
+padding:6px 12px;
+border-radius:6px;
+}
+
 .hero{
 text-align:center;
-padding:100px 20px;
+padding:120px 20px;
 background:linear-gradient(#000,#111);
 }
 
 .hero h1{
-font-size:48px;
+font-size:50px;
 color:gold;
+margin-bottom:10px;
 }
 
 .hero p{
@@ -61,95 +85,120 @@ color:#ccc;
 
 .btn{
 display:inline-block;
-margin-top:20px;
-padding:12px 25px;
+margin-top:25px;
+padding:12px 30px;
 background:gold;
 color:black;
-text-decoration:none;
 border-radius:6px;
+text-decoration:none;
+font-weight:bold;
 }
 
 .section{
-padding:70px 20px;
+padding:80px 20px;
 text-align:center;
+max-width:1100px;
+margin:auto;
 }
 
 .section h2{
 color:gold;
-margin-bottom:20px;
+margin-bottom:25px;
 }
 
 .arabic{
-font-size:30px;
+font-size:32px;
 direction:rtl;
+margin-bottom:10px;
 }
 
-.radio{
+.radio-box{
 background:#111;
-padding:60px;
+padding:40px;
 border-radius:10px;
 max-width:600px;
 margin:auto;
 }
 
-.blog-container{
+.blog-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:20px;
-padding:20px;
 }
 
 .blog-card{
 background:#111;
 padding:20px;
 border-radius:10px;
+text-align:left;
+}
+
+.blog-card h3{
+color:gold;
 }
 
 .blog-card a{
-color:gold;
+color:#fff;
 text-decoration:none;
+font-size:14px;
+}
+
+.blog-card a:hover{
+color:gold;
+}
+
+.prayer-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:15px;
+}
+
+.prayer{
+background:#111;
+padding:15px;
+border-radius:8px;
 }
 
 .donate-box{
 border:2px solid gold;
-padding:30px;
-max-width:350px;
-margin:auto;
+padding:35px;
 border-radius:10px;
+max-width:400px;
+margin:auto;
 }
 
 footer{
 background:#000;
-padding:40px 20px;
-margin-top:60px;
+margin-top:80px;
+padding:50px 20px;
 }
 
 .footer-grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
+gap:30px;
 }
 
 footer h3{
 color:gold;
+margin-bottom:10px;
 }
 
 footer a{
+display:block;
 color:#ccc;
 text-decoration:none;
-display:block;
-margin:6px 0;
+margin:5px 0;
 }
 
 footer a:hover{
 color:white;
 }
 
-.toggle{
-cursor:pointer;
-border:1px solid gold;
-padding:5px 10px;
-border-radius:6px;
+.copy{
+text-align:center;
+margin-top:30px;
+color:#777;
 }
 
 .light{
@@ -181,9 +230,9 @@ color:black;
 <nav>
 <a href="#">Home</a>
 <a href="#radio">Radio</a>
+<a href="#prayer">Prayer Times</a>
 <a href="#blog">Blog</a>
 <a href="#donate">Donate</a>
-<a href="#contact">Contact</a>
 </nav>
 
 <div class="toggle" onclick="toggleMode()">🌙</div>
@@ -192,25 +241,23 @@ color:black;
 
 <section class="hero">
 
-<h1>Welcome to CHAIR ISLAMIC TV</h1>
+<h1>CHAIR ISLAMIC TV</h1>
 
-<p>Spreading Islamic knowledge through Quran, lectures and reminders.</p>
+<p>Spreading Quran, Islamic Knowledge and Reminders</p>
 
-<a class="btn" href="#radio">Listen Live</a>
+<a class="btn" href="#radio">Listen Live Radio</a>
 
 </section>
 
 <section class="section">
 
-<h2>📖 Quran Verse</h2>
+<h2>📖 Quran Reminder</h2>
 
-<p class="arabic">
-إِنَّ مَعَ الْعُسْرِ يُسْرًا
-</p>
+<p class="arabic">لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا</p>
 
 <p>
-Indeed with hardship comes ease.  
-(Surah Ash-Sharh 94:6)
+Allah does not burden a soul beyond that it can bear  
+(Surah Al-Baqarah 2:286)
 </p>
 
 </section>
@@ -219,9 +266,9 @@ Indeed with hardship comes ease.
 
 <h2>📻 Islamic Radio</h2>
 
-<div class="radio">
+<div class="radio-box">
 
-<p>Listen to Quran and Islamic lectures</p>
+<p>Listen to Quran Recitations and Islamic Lectures</p>
 
 <audio controls style="width:100%">
 <source src="radio.mp3" type="audio/mpeg">
@@ -231,23 +278,46 @@ Indeed with hardship comes ease.
 
 </section>
 
+<section class="section" id="prayer">
+
+<h2>🕌 Prayer Times (Kampala)</h2>
+
+<div class="prayer-grid">
+
+<div class="prayer">
+<h4>Fajr</h4>
+<p id="fajr">--</p>
+</div>
+
+<div class="prayer">
+<h4>Dhuhr</h4>
+<p id="dhuhr">--</p>
+</div>
+
+<div class="prayer">
+<h4>Asr</h4>
+<p id="asr">--</p>
+</div>
+
+<div class="prayer">
+<h4>Maghrib</h4>
+<p id="maghrib">--</p>
+</div>
+
+<div class="prayer">
+<h4>Isha</h4>
+<p id="isha">--</p>
+</div>
+
+</div>
+
+</section>
+
 <section class="section" id="blog">
 
-<h2>📰 Latest Articles</h2>
+<h2>📰 Islamic Blog</h2>
 
-<div class="blog-container">
-
-<div class="blog-card">
-<h3>Benefits of Ramadan</h3>
-<p>Ramadan is the month of mercy and forgiveness.</p>
-<a href="blog/post1.html">Read More</a>
-</div>
-
-<div class="blog-card">
-<h3>The Importance of Salah</h3>
-<p>Salah is the pillar of Islam and connection with Allah.</p>
-<a href="blog/post2.html">Read More</a>
-</div>
+<div class="blog-grid" id="blogPosts">
 
 </div>
 
@@ -259,30 +329,32 @@ Indeed with hardship comes ease.
 
 <div class="donate-box">
 
-<p>Airtel Money</p>
+<p>Support Islamic Da'wah</p>
 
-<h3>0754178966</h3>
+<h3>Airtel Money</h3>
 
-<p>Name: CHAIR ISLAMIC TV</p>
+<h2>0754178966</h2>
+
+<p>CHAIR ISLAMIC TV</p>
 
 </div>
 
 </section>
 
-<footer id="contact">
+<footer>
 
 <div class="footer-grid">
 
 <div>
 <h3>CHAIR ISLAMIC TV</h3>
-<p>Sharing Islamic knowledge worldwide.</p>
+<p>Sharing Quran and Islamic knowledge worldwide.</p>
 </div>
 
 <div>
-<h3>Links</h3>
-<a href="#">Home</a>
+<h3>Explore</h3>
+<a href="#radio">Islamic Radio</a>
 <a href="#blog">Blog</a>
-<a href="#radio">Radio</a>
+<a href="#prayer">Prayer Times</a>
 </div>
 
 <div>
@@ -293,19 +365,72 @@ Indeed with hardship comes ease.
 
 </div>
 
-<p style="text-align:center;margin-top:30px;color:#777;">
-© 2026 CHAIR ISLAMIC TV
-</p>
+<p class="copy">© 2026 CHAIR ISLAMIC TV</p>
 
 </footer>
 
 <script>
 
 function toggleMode(){
-
 document.body.classList.toggle("light")
+}
+
+async function prayerTimes(){
+
+let res = await fetch("https://api.aladhan.com/v1/timingsByCity?city=Kampala&country=Uganda&method=2")
+let data = await res.json()
+
+document.getElementById("fajr").innerText=data.data.timings.Fajr
+document.getElementById("dhuhr").innerText=data.data.timings.Dhuhr
+document.getElementById("asr").innerText=data.data.timings.Asr
+document.getElementById("maghrib").innerText=data.data.timings.Maghrib
+document.getElementById("isha").innerText=data.data.timings.Isha
 
 }
+
+prayerTimes()
+
+let posts=[
+
+{
+title:"The Importance of Salah",
+desc:"Salah is the pillar of Islam and the first deed judged on the Day of Judgment.",
+link:"#"
+},
+
+{
+title:"Virtues of Ramadan",
+desc:"Ramadan is the month of mercy, forgiveness and liberation from the fire.",
+link:"#"
+},
+
+{
+title:"Power of Dua",
+desc:"Dua is the weapon of the believer and connection with Allah.",
+link:"#"
+}
+
+]
+
+let blog=document.getElementById("blogPosts")
+
+posts.forEach(p=>{
+
+blog.innerHTML+=`
+
+<div class="blog-card">
+
+<h3>${p.title}</h3>
+
+<p>${p.desc}</p>
+
+<a href="${p.link}">Read More →</a>
+
+</div>
+
+`
+
+})
 
 </script>
 
