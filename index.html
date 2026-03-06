@@ -162,7 +162,31 @@ border-radius:6px;
 <br>
 
 <button type="submit">Send Question</button>
+<section id="blog">
+<h2>Islamic Articles</h2>
+<div id="posts"></div>
+</section>
 
+<script>
+fetch('posts.json')
+.then(response => response.json())
+.then(data => {
+const container = document.getElementById('posts');
+
+data.forEach(post => {
+const article = document.createElement('div');
+
+article.innerHTML = `
+<h3>${post.title}</h3>
+<p><i>${post.date} | ${post.author}</i></p>
+<p>${post.content}</p>
+<hr>
+`;
+
+container.appendChild(article);
+});
+});
+</script>
 </form>
 
 </div>
