@@ -1,11 +1,16 @@
 /* =======================
    BODY & GENERAL
 ======================= */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #0c0c0c; /* deep black for luxury feel */
-  color: #ffffff; /* default text color */
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+color:white;
+
+background-image:url("images/background.jpg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+background-attachment:fixed;
 }
 
 /* =======================
