@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chair Islamic TV</title>
+<title>Chair Islamic TV – Authentic Islamic Knowledge</title>
 
-<!-- PWA Manifest -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFD700">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- SEO Meta -->
+<meta name="description" content="Chair Islamic TV – Learn authentic Islamic knowledge through lectures, khutbahs, Quran reflections, and Islamic advice. Founded by Shuraim Kaweesi.">
+<meta name="keywords" content="Islam, Quran, Hadith, Islamic TV, Shuraim Kaweesi, Islamic Advice, Ramadan, Muslim Knowledge">
+<meta name="author" content="Shuraim Kaweesi">
+<meta name="google-site-verification" content="MoZqva1Hd1NewOo69A7hxId1dnainlfzWlWDZ6U7JQ4" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Chair Islamic TV">
+<meta property="og:description" content="Authentic Islamic knowledge, lectures and reflections. Ask your questions directly.">
+<meta property="og:type" content="website">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chair Islamic TV">
+<meta name="twitter:description" content="Authentic Islamic lectures and Quran reflections.">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Chair Islamic TV",
+  "founder": "Shuraim Kaweesi"
+}
+</script>
 
 <style>
-/* =======================
-   BODY & GENERAL
-======================= */
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
   color:white;
-  background:
-    linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.8)),
-    url("images/background.jpg");
+  background: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.8)), url("images/background.jpg");
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
 }
 
-/* =======================
-   NAVBAR
-======================= */
+/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -42,27 +54,22 @@ body{
   backdrop-filter: blur(10px);
   z-index: 1000;
 }
-
 .nav-links {
   list-style: none;
   display: flex;
   gap: 25px;
 }
-
 .nav-links a {
   color: #ffffff;
   text-decoration: none;
   font-weight: bold;
   transition: 0.3s;
 }
-
 .nav-links a:hover {
   color: #FFD700;
 }
 
-/* =======================
-   HERO SECTION
-======================= */
+/* Hero */
 .hero {
   padding-top: 120px;
   text-align: center;
@@ -70,13 +77,11 @@ body{
   background: #0a0a0a;
   border-bottom: 3px solid #FFD700;
 }
-
 .hero h1 {
   font-size: 42px;
   color: #FFD700;
   text-shadow: 0 0 10px #FFD700;
 }
-
 .hero p {
   max-width: 700px;
   margin: 20px auto 0 auto;
@@ -85,29 +90,26 @@ body{
   line-height: 1.6;
 }
 
-/* =======================
-   SECTIONS
-======================= */
+/* Sections */
 section {
   max-width: 1100px;
   margin: 60px auto;
   padding: 40px 20px;
   background: rgba(0,0,0,0.75);
-  border-left:5px solid gold;
-  border-radius:10px;
+  border-left: 5px solid gold;
+  border-radius: 10px;
+  text-align: center;
 }
 
-section h2 {
+/* Headings */
+h2 {
   color: #FFD700;
-  text-align: center;
+  margin-bottom: 20px;
   font-size: 28px;
   text-shadow: 0 0 5px #FFD700;
-  margin-bottom: 20px;
 }
 
-/* =======================
-   CARDS / POSTS
-======================= */
+/* Cards */
 .card {
   background: rgba(0,0,0,0.7);
   padding: 20px;
@@ -116,15 +118,12 @@ section h2 {
   border-left: 5px solid #FFD700;
   transition: 0.3s;
 }
-
 .card:hover {
   background: rgba(255,215,0,0.1);
   transform: scale(1.02);
 }
 
-/* =======================
-   VIDEO EMBED
-======================= */
+/* Video Embed */
 iframe {
   width: 100%;
   height: 400px;
@@ -132,251 +131,207 @@ iframe {
   border: 3px solid #FFD700;
 }
 
-/* =======================
-   RADIO
-======================= */
-audio {
-  width: 100%;
-  margin-top: 10px;
+/* Ask Email Section */
+#ask-question input {
+  width: 70%;
+  padding: 12px;
   border-radius: 8px;
+  border:none;
+  background: #111;
+  color: #bfffc1;
+}
+#ask-question button {
+  padding:12px 20px;
+  border:none;
+  border-radius:8px;
+  background:#FFD700;
+  color:#0c0c0c;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+#ask-question button:hover {
+  background:#e6c200;
 }
 
-/* =======================
-   ASK SCHOLAR / INPUTS
-======================= */
-#ask-scholar {
-  text-align: center;
-  padding: 30px;
-  background: rgba(0,0,0,0.85);
+/* Radio Section */
+#radioPlayer {
+  width: 100%;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(255,215,0,0.3);
+  border: 3px solid #FFD700;
+  box-shadow: 0 0 10px rgba(255,215,0,0.2);
+  transition: 0.5s box-shadow;
+}
+#radioPlayer.playing {
+  box-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700, 0 0 60px #FFD700;
+}
+#radioStatus {
+  text-align: center;
+  color: #FFD700;
+  margin-top: 10px;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity:1; }
+  50% { transform: scale(1.1); opacity:0.7; }
+  100% { transform: scale(1); opacity:1; }
 }
 
+/* Ask Scholar */
 #ask-scholar input {
   width: 60%;
   padding: 12px;
   border-radius: 8px;
-  border: none;
-  background: #111;
+  border:none;
+  background:#111;
   color: #bfffc1;
 }
-
 #ask-scholar button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  background: #FFD700;
-  color: #0c0c0c;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+  padding:12px 20px;
+  border:none;
+  border-radius:8px;
+  background:#FFD700;
+  color:#0c0c0c;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
 }
-
 #ask-scholar button:hover {
-  background: #e6c200;
+  background:#e6c200;
 }
 
-/* =======================
-   FOOTER
-======================= */
+/* Footer */
 footer {
   text-align: center;
   padding: 40px 20px;
   background: #0f4d3a;
   color: #ffffff;
   font-weight: bold;
-  letter-spacing: 1px;
-  border-top: 3px solid #FFD700;
+  letter-spacing:1px;
+  border-top:3px solid #FFD700;
 }
-
 footer a {
-  color: #FFD700;
-  text-decoration: none;
+  color:#FFD700;
+  text-decoration:none;
 }
-
 footer a:hover {
-  text-decoration: underline;
-}
-
-/* =======================
-   QURAN
-======================= */
-#quranText{
-  line-height:2;
-  font-size:18px;
-  direction:rtl;
-  text-align:right;
-}
-#quranText span{
-  display:block;
-  direction:ltr;
-  text-align:left;
-  margin-bottom:20px;
+  text-decoration:underline;
 }
 </style>
-
+</head>
 <body>
 
-<!-- NAVBAR -->
+<!-- Navbar -->
 <nav class="navbar">
-  <a href="#home"><img src="logo.png" height="50"></a>
+  <div class="logo">CHAIR ISLAMIC TV</div>
   <ul class="nav-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="#live">Live</a></li>
-    <li><a href="#youtube">YouTube</a></li>
-    <li><a href="#radio">Radio</a></li>
-    <li><a href="#quran">Quran</a></li>
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#posts">Posts</a></li>
+    <li><a href="#ask-question">Ask</a></li>
+    <li><a href="#ask-scholar">Scholar</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
-<section id="home" class="hero">
-  <h1>Chair Islamic TV</h1>
-  <p>Spreading Islamic knowledge through Quran, lectures, live streams and radio.</p>
+<!-- Hero -->
+<div class="hero">
+  <h1>Chair Islamic TV – Authentic Islamic Knowledge</h1>
+  <p>Spreading Quran, Sunnah and beneficial reminders to empower the Ummah. Founded by Shuraim Kaweesi.</p>
+</div>
+
+<!-- Featured Video -->
+<section id="featured">
+  <h2>Featured Lecture</h2>
+  <iframe src="https://www.youtube.com/embed/zGIBIOMA0PQ?si=v092ktNEtmo-8l5f" allowfullscreen></iframe>
 </section>
 
-<!-- TIKTOK LIVE -->
-<section id="live">
-  <h2>TikTok Live</h2>
-  <div class="card" id="tiktokStatus">
-    <p id="liveText">Checking live status...</p>
-    <a href="https://www.tiktok.com/@chairislamictv/live" target="_blank">
-      <button>Watch Live on TikTok</button>
-    </a>
-  </div>
-</section>
-
-<!-- YOUTUBE VIDEOS -->
-<section id="youtube">
-  <h2>Latest Video</h2>
+<!-- Latest Reflections -->
+<section id="posts">
+  <h2>Latest Reflections</h2>
   <div class="card">
-    <iframe src="https://www.youtube.com/embed/zGIBIOMA0PQ" frameborder="0" allowfullscreen></iframe>
+    <h3>Reflection on Surah Al-Baqarah</h3>
+    <p>A reminder about patience and trust in Allah.</p>
   </div>
-  <a href="https://youtube.com/@chairislamtv" target="_blank">
-    <button>Visit YouTube Channel</button>
-  </a>
+  <div class="card">
+    <h3>Hadith of the Week</h3>
+    <p>The best among you are those who learn the Qur'an and teach it.</p>
+  </div>
 </section>
 
-<!-- RADIO -->
+<!-- Ask Question to Email -->
+<section id="ask-question">
+  <h2>Ask a Question</h2>
+  <div class="card">
+    <input type="text" id="userQuestion" placeholder="Type your question here...">
+    <button onclick="sendQuestion()">Send Question</button>
+    <p id="questionStatus"></p>
+  </div>
+</section>
+
+<!-- Live Radio -->
 <section id="radio">
-  <h2>Islamic Radio</h2>
-  <div class="card">
-    <p>Listen to our Islamic radio broadcast.</p>
-    <audio controls>
-      <source src="https://streaming.radio.co/s82a6f97f9/listen" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-  </div>
+  <h2>Live Islamic Radio</h2>
+  <audio id="radioPlayer" controls>
+    <source src="https://streaming.radio.co/s82a6f97f9/listen" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <p id="radioStatus">📻 Live Radio Online</p>
 </section>
 
-<!-- FULL QURAN WITH AUDIO -->
-<section id="quran">
-  <h2>Holy Quran</h2>
-  <p>Select a Surah to read and listen.</p>
-  <select id="surahSelect"></select>
-  <div id="quranText" class="card"></div>
+<!-- Ask Scholar -->
+<section id="ask-scholar">
+  <h2>Ask a Question to Scholar</h2>
+  <input type="text" id="question" placeholder="Type your question...">
+  <button onclick="reply()">Ask</button>
+  <p id="answer"></p>
+  <p><strong>Founder:</strong> Shuraim Kaweesi</p>
 </section>
 
-<!-- INSTALL APP -->
-<section>
-  <h2>Install Chair Islamic TV App</h2>
-  <button id="installApp">Install App</button>
+<!-- Contact Info -->
+<section id="contact">
+  <h2>Contact Information</h2>
+  <p>Email: <a href="mailto:shuraimkaweesi@gmail.com">shuraimkaweesi@gmail.com</a></p>
+  <p>Phone/WhatsApp: <a href="tel:+256754178966">0754178966</a></p>
+  <p>Follow us on <a href="https://youtube.com/@chairislamtv?si=JhxtruR_p9HxolTu" target="_blank">YouTube</a> | <a href="https://www.tiktok.com/@chairislamictv" target="_blank">TikTok</a></p>
 </section>
 
-<!-- FOOTER -->
+<!-- Footer -->
 <footer>
-  <p>© 2026 Chair Islamic TV</p>
+  © 2026 Chair Islamic TV | Founded by Shuraim Kaweesi
 </footer>
 
-<!-- =======================
-   SCRIPTS
-======================= -->
-
+<!-- Scripts -->
 <script>
-// TikTok live status
-const liveText = document.getElementById("liveText");
-function checkLive(){
-  const now = new Date().getHours();
-  if(now >= 18 && now <= 22){
-    liveText.innerHTML = "🔴 Chair Islamic TV is LIVE on TikTok!";
-  } else {
-    liveText.innerHTML = "⚫ Currently offline. Follow us on TikTok.";
+const responses = {
+  "what is islam":"Islam is submission to Allah based on the Qur'an and Sunnah.",
+  "who is muhammad":"Prophet Muhammad (peace be upon him) is the final messenger of Allah.",
+  "what is ramadan":"Ramadan is the month of fasting and spiritual reflection."
+};
+
+function reply(){
+  const q = document.getElementById("question").value.toLowerCase();
+  document.getElementById("answer").innerText =
+    responses[q] || "Thank you for your question. Shuraim Kaweesi will respond soon, inshaAllah.";
+}
+
+// Send question to email
+function sendQuestion() {
+  const question = document.getElementById("userQuestion").value.trim();
+  if(question === "") {
+    document.getElementById("questionStatus").innerText = "⚠️ Please type your question first.";
+    return;
   }
-}
-checkLive();
-</script>
-
-<script>
-// App install
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("installApp").style.display="block";
-});
-document.getElementById("installApp").addEventListener("click", () => {
-  deferredPrompt.prompt();
-});
-</script>
-
-<script>
-// Full Quran with correct audio
-const surahSelect = document.getElementById("surahSelect");
-const quranText = document.getElementById("quranText");
-
-// Load surah list
-fetch("https://api.alquran.cloud/v1/surah")
-.then(res => res.json())
-.then(data => {
-  data.data.forEach(surah => {
-    let option = document.createElement("option");
-    option.value = surah.number;
-    option.text = surah.number + ". " + surah.englishName;
-    surahSelect.appendChild(option);
-  });
-  loadSurah(1);
-});
-
-// Load surah with audio per ayah
-function loadSurah(number){
-  quranText.innerHTML = "Loading surah...";
-  fetch("https://api.alquran.cloud/v1/surah/" + number + "/editions/quran-uthmani,en.sahih,ar.alafasy")
-  .then(res => res.json())
-  .then(data => {
-    let arabic = data.data[0].ayahs;
-    let english = data.data[1].ayahs;
-    let audioAyahs = data.data[2].ayahs;
-
-    quranText.innerHTML = "";
-    for(let i=0;i<arabic.length;i++){
-      let verse = document.createElement("p");
-      verse.innerHTML =
-        "<b>" + (i+1) + "</b> " +
-        arabic[i].text +
-        "<br><span style='color:#9fe89f'>" +
-        english[i].text +
-        "</span>" +
-        "<br><audio controls src='" + audioAyahs[i].audio + "'></audio>";
-      quranText.appendChild(verse);
-    }
-  });
+  const mailtoLink = `mailto:shuraimkaweesi@gmail.com?subject=Question from Chair Islamic TV&body=${encodeURIComponent(question)}`;
+  window.location.href = mailtoLink;
+  document.getElementById("questionStatus").innerText = "✅ Your email client should open now. You can send your question!";
 }
 
-surahSelect.addEventListener("change", () => {
-  loadSurah(surahSelect.value);
-});
+// Radio glow animation
+const radio = document.getElementById("radioPlayer");
+radio.addEventListener("play", ()=>radio.classList.add("playing"));
+radio.addEventListener("pause", ()=>radio.classList.remove("playing"));
+radio.addEventListener("ended", ()=>radio.classList.remove("playing"));
 </script>
-
-<script>
-// Register service worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/chair-islamic-t.v./sw.js')
-      .then(reg => console.log('Service Worker registered.', reg))
-      .catch(err => console.log('Service Worker registration failed:', err));
-  });
-}
-</script>
-
 </body>
 </html>
