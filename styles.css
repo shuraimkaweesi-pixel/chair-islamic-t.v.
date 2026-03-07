@@ -228,3 +228,16 @@ margin-bottom:10px;
 }
 
 }
+#quranText{
+line-height:2;
+font-size:18px;
+direction:rtl;
+text-align:right;
+}
+
+#quranText span{
+display:block;
+direction:ltr;
+text-align:left;
+margin-bottom:20px;
+}
