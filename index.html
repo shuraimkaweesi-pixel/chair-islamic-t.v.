@@ -31,6 +31,47 @@
   "name": "Chair Islamic TV",
   "founder": "Shuraim Kaweesi"
 }
+  <section id="prayer-times" style="padding:60px 20px;text-align:center">
+
+<h2 style="color:gold">🕌 Prayer Times – Kampala</h2>
+
+<div id="prayers" style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:15px;
+max-width:700px;
+margin:auto;
+margin-top:30px;
+">
+
+<div class="prayer">
+<h3>Fajr</h3>
+<p id="fajr">--</p>
+</div>
+
+<div class="prayer">
+<h3>Dhuhr</h3>
+<p id="dhuhr">--</p>
+</div>
+
+<div class="prayer">
+<h3>Asr</h3>
+<p id="asr">--</p>
+</div>
+
+<div class="prayer">
+<h3>Maghrib</h3>
+<p id="maghrib">--</p>
+</div>
+
+<div class="prayer">
+<h3>Isha</h3>
+<p id="isha">--</p>
+</div>
+
+</div>
+
+</section>
 </script>
 
 <link rel="icon" href="logo.png" />
@@ -46,6 +87,27 @@ document.body.classList.toggle("light")
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js")
 }
+</script>
+  <script>
+
+async function loadPrayerTimes(){
+
+let response = await fetch("https://api.aladhan.com/v1/timingsByCity?city=Kampala&country=Uganda&method=2")
+
+let data = await response.json()
+
+let times = data.data.timings
+
+document.getElementById("fajr").innerText = times.Fajr
+document.getElementById("dhuhr").innerText = times.Dhuhr
+document.getElementById("asr").innerText = times.Asr
+document.getElementById("maghrib").innerText = times.Maghrib
+document.getElementById("isha").innerText = times.Isha
+
+}
+
+loadPrayerTimes()
+
 </script>
 /* GENERAL */
 body {
