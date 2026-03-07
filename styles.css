@@ -311,3 +311,23 @@ section.visible{
   opacity:1;
   transform:translateY(0);
 }
+<style>
+body{
+background:#0c0c0c;
+color:white;
+transition:0.4s;
+}
+
+body.light{
+background:white;
+color:black;
+}
+
+header{
+background:#000;
+}
+
+body.light header{
+background:#eee;
+}
+</style>
