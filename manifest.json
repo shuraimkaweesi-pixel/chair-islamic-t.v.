@@ -1,7 +1,7 @@
 {
   "name": "Chair Islamic TV",
-  "short_name": "CITV",
-  "description": "Authentic Islamic knowledge, lectures, Quran, and live radio.",
+  "short_name": "ChairTV",
+  "description": "Authentic Islamic knowledge, lectures, and reflections.",
   "start_url": "/chair-islamic-t.v./index.html",
   "display": "standalone",
   "background_color": "#000000",
