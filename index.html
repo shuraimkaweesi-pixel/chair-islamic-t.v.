@@ -1,64 +1,187 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Chair Islamic TV</title><link rel="stylesheet" href="styles.css"><meta name="theme-color" content="#000000">
-<meta name="mobile-web-app-capable" content="yes"></head><body><!-- NAVBAR --><nav class="navbar"><a href="#home">
-<img src="logo.png" height="50">
-</a><ul class="nav-links"><li><a href="#home">Home</a></li>
-<li><a href="#live">Live</a></li>
-<li><a href="#youtube">YouTube</a></li>
-<li><a href="#radio">Radio</a></li>
-<li><a href="#quran">Quran</a></li></ul></nav><!-- HERO --><section id="home" class="hero"><h1>Chair Islamic TV</h1><p>Spreading Islamic knowledge through Quran, lectures, live streams and radio.</p></section><!-- TIKTOK LIVE --><section id="live"><h2>TikTok Live</h2><div class="card" id="tiktokStatus"><p id="liveText">Checking live status...</p><a href="https://www.tiktok.com/@chairislamictv/live" target="_blank"><button>Watch Live on TikTok</button>
+<!DOCTYPE html>
+<html lang="en">
 
-</a></div></section><!-- YOUTUBE VIDEOS --><section id="youtube"><h2>Latest Videos</h2><div class="card"><iframe
-width="100%"
-<section id="quran"><h2>Holy Quran</h2><p>Select a Surah to read.</p><select id="surahSelect"></select>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<div id="quranText" class="card"></div></section>
-src="https://www.youtube.com/embed/4Weg8qZJb3U"
-frameborder="0"
-allowfullscreen>
-</iframe></div></section><!-- INSTALL APP --><section><h2>Install Chair Islamic TV App</h2><button id="installApp">Install App</button>
+<title>Chair Islamic TV</title>
+<link rel="stylesheet" href="styles.css">
 
-</section><!-- FOOTER --><footer><p>© 2026 Chair Islamic TV</p></footer><!-- SCRIPTS --><script>
+<!-- Android App Ready -->
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="#home"><img src="logo.png" height="50"></a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#live">Live</a></li>
+    <li><a href="#youtube">YouTube</a></li>
+    <li><a href="#radio">Radio</a></li>
+    <li><a href="#quran">Quran</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <h1>Chair Islamic TV</h1>
+  <p>Spreading Islamic knowledge through Quran, lectures, live streams and radio.</p>
+</section>
+
+<!-- TIKTOK LIVE -->
+<section id="live">
+  <h2>TikTok Live</h2>
+  <div class="card" id="tiktokStatus">
+    <p id="liveText">Checking live status...</p>
+    <a href="https://www.tiktok.com/@chairislamictv/live" target="_blank">
+      <button>Watch Live on TikTok</button>
+    </a>
+  </div>
+</section>
+
+<!-- YOUTUBE VIDEOS -->
+<section id="youtube">
+  <h2>Latest Videos</h2>
+  <div class="card">
+    <iframe
+      width="100%"
+      height="400"
+      src="https://www.youtube.com/embed?listType=user_uploads&list=chairislamtv"
+      frameborder="0"
+      allowfullscreen>
+    </iframe>
+  </div>
+  <br>
+  <a href="https://youtube.com/@chairislamtv" target="_blank">
+    <button>Visit YouTube Channel</button>
+  </a>
+</section>
+
+<!-- RADIO -->
+<section id="radio">
+  <h2>Islamic Radio</h2>
+  <div class="card">
+    <p>Listen to our Islamic radio broadcast.</p>
+    <audio controls>
+      <source src="YOUR-RADIO-STREAM-LINK" type="audio/mpeg">
+    </audio>
+  </div>
+</section>
+
+<!-- FULL QURAN -->
+<section id="quran">
+  <h2>Holy Quran</h2>
+  <p>Select a Surah to read.</p>
+  <select id="surahSelect"></select>
+  <div id="quranText" class="card"></div>
+</section>
+
+<!-- INSTALL APP -->
+<section>
+  <h2>Install Chair Islamic TV App</h2>
+  <button id="installApp">Install App</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Chair Islamic TV</p>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+// TikTok live status
 const liveText = document.getElementById("liveText");
-
 function checkLive(){
-
-const now = new Date().getHours();
-
-if(now >= 18 && now <= 22){
-
-liveText.innerHTML = "🔴 Chair Islamic TV is LIVE on TikTok!";
-
-}else{
-
-liveText.innerHTML = "⚫ Currently offline. Follow us on TikTok.";
-
+  const now = new Date().getHours();
+  if(now >= 18 && now <= 22){
+    liveText.innerHTML = "🔴 Chair Islamic TV is LIVE on TikTok!";
+  } else {
+    liveText.innerHTML = "⚫ Currently offline. Follow us on TikTok.";
+  }
 }
-
-}
-
 checkLive();
+</script>
 
-</script><script>
-
+<script>
+// App install
 let deferredPrompt;
-
 window.addEventListener('beforeinstallprompt', (e) => {
-
-e.preventDefault();
-
-deferredPrompt = e;
-
-document.getElementById("installApp").style.display="block";
-
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installApp").style.display="block";
 });
-
-
 document.getElementById("installApp").addEventListener("click", () => {
+  deferredPrompt.prompt();
+});
+</script>
 
-deferredPrompt.prompt();
+<script>
+// Full Quran render
+const surahSelect = document.getElementById("surahSelect");
+const quranText = document.getElementById("quranText");
 
+// Load surah list
+fetch("https://api.alquran.cloud/v1/surah")
+.then(res => res.json())
+.then(data => {
+  data.data.forEach(surah => {
+    let option = document.createElement("option");
+    option.value = surah.number;
+    option.text = surah.number + ". " + surah.englishName;
+    surahSelect.appendChild(option);
+  });
+  loadSurah(1); // default first surah
 });
 
-</script></body></html>
+// Load surah verses
+function loadSurah(number){
+  quranText.innerHTML = "Loading surah...";
+  fetch("https://api.alquran.cloud/v1/surah/" + number + "/editions/quran-uthmani,en.sahih")
+  .then(res => res.json())
+  .then(data => {
+    let arabic = data.data[0].ayahs;
+    let english = data.data[1].ayahs;
+    quranText.innerHTML = "";
+    for(let i=0;i<arabic.length;i++){
+      let verse = document.createElement("p");
+      verse.innerHTML =
+        "<b>" + (i+1) + "</b> " +
+        arabic[i].text +
+        "<br><span style='color:#9fe89f'>" +
+        english[i].text +
+        "</span>";
+      quranText.appendChild(verse);
+    }
+  });
+}
+
+surahSelect.addEventListener("change", () => {
+  loadSurah(surahSelect.value);
+});
+</script>
+
+<style>
+/* Quran styling */
+#quranText{
+  line-height:2;
+  font-size:18px;
+  direction:rtl;
+  text-align:right;
+}
+#quranText span{
+  display:block;
+  direction:ltr;
+  text-align:left;
+  margin-bottom:20px;
+}
+</style>
+
+</body>
+</html>
