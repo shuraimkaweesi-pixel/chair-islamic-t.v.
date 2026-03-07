@@ -42,6 +42,11 @@ document.body.classList.toggle("light")
 }
 </script>
 <style>
+  <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+}
+</script>
 /* GENERAL */
 body {
   margin:0;
