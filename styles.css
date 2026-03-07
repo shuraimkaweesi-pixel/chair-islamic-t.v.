@@ -317,7 +317,21 @@ background:#0c0c0c;
 color:white;
 transition:0.4s;
 }
+.prayer{
+background:#111;
+padding:20px;
+border-radius:10px;
+border:1px solid gold;
+}
 
+.prayer h3{
+color:gold;
+margin-bottom:10px;
+}
+
+.light .prayer{
+background:#f0f0f0;
+}
 body.light{
 background:white;
 color:black;
