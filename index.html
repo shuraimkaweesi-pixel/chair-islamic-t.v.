@@ -1,123 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chair Islamic TV – Authentic Islamic Knowledge</title>
+
+<title>Chair Islamic TV</title>
+
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFD700">
+
 <style>
-/* General Body */
+
 body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  color:white;
-  background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.8)),url("images/background.jpg");
-  background-size:cover;
-  background-position:center;
-  background-attachment:fixed;
+font-family:Arial;
+margin:0;
+background:#000;
+color:white;
 }
 
-/* Navbar */
-.navbar {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px 40px;
-  position:fixed;
-  width:100%;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(10px);
-  z-index:1000;
-}
-.nav-links{
-  list-style:none;
-  display:flex;
-  gap:25px;
-}
-.nav-links a{
-  color:#ffffff;
-  text-decoration:none;
-  font-weight:bold;
-  transition:0.3s;
-}
-.nav-links a:hover{
-  color:#FFD700;
+header{
+background:#111;
+padding:20px;
+text-align:center;
+color:#FFD700;
 }
 
-/* Hero */
-.hero{
-  padding-top:120px;
-  text-align:center;
-  padding-bottom:60px;
-}
-.hero h1{
-  font-size:42px;
-  color:#FFD700;
-  text-shadow:0 0 10px #FFD700;
-}
-.hero p{
-  max-width:700px;
-  margin:20px auto 0 auto;
-  color:#bfffc1;
-  font-size:18px;
-  line-height:1.6;
+nav{
+display:flex;
+justify-content:center;
+gap:20px;
+background:#222;
+padding:10px;
 }
 
-/* Sections */
+nav a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+}
+
 section{
-  max-width:1100px;
-  margin:60px auto;
-  padding:40px;
-  background: rgba(0,0,0,0.75);
-  border-left:5px solid #FFD700;
-  border-radius:12px;
-  box-shadow:0 0 20px rgba(255,215,0,0.2);
-}
-h2{
-  color:#FFD700;
-  margin-bottom:20px;
-  font-size:28px;
-  text-shadow:0 0 5px #FFD700;
+padding:40px;
+border-bottom:1px solid #333;
 }
 
-/* Cards / Posts */
-.card{
-  background: rgba(0,0,0,0.7);
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:20px;
-  border-left:5px solid #FFD700;
-  transition:0.3s;
-}
-.card:hover{
-  background: rgba(255,215,0,0.1);
-  transform:scale(1.02);
+button{
+padding:10px 15px;
+background:#FFD700;
+border:none;
+cursor:pointer;
 }
 
-/* Iframes */
-iframe{
-  width:100%;
-  height:400px;
-  border-radius:12px;
-  border:3px solid #FFD700;
+input,select{
+padding:10px;
+margin:5px;
 }
 
-/* Radio Glow */
-#radioPlayer.playing{
-  animation:glow 1.5s infinite alternate;
+#quranText{
+margin-top:20px;
+line-height:2;
 }
-@keyframes glow{
-  0%{box-shadow:0 0 10px #FFD700;}
-  50%{box-shadow:0 0 25px #FFD700;}
-  100%{box-shadow:0 0 10px #FFD700;}
+
+.ayah{
+margin-bottom:15px;
 }
-  <section id="prayer">
+
+.arabic{
+font-size:22px;
+direction:rtl;
+text-align:right;
+}
+
+.translation{
+color:#9cff9c;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Chair Islamic TV</h1>
+<p>Authentic Islamic Knowledge</p>
+
+</header>
+
+<nav>
+
+<a href="#radio">Radio</a>
+<a href="#youtube">YouTube</a>
+<a href="#tiktok">TikTok</a>
+<a href="#prayer">Prayer</a>
+<a href="#quran">Quran</a>
+
+</nav>
+
+<section id="radio">
+
+<h2>📻 Islamic Radio</h2>
+
+<audio controls style="width:100%">
+<source src="https://stream.radiojar.com/8s5u5tpdtwzuv" type="audio/mpeg">
+</audio>
+
+</section>
+
+<section id="youtube">
+
+<h2>📺 Latest Lecture</h2>
+
+<iframe width="100%" height="400"
+src="https://www.youtube.com/embed/zGIBIOMA0PQ"
+allowfullscreen>
+</iframe>
+
+</section>
+
+<section id="tiktok">
+
+<h2>🎵 TikTok</h2>
+
+<p>Watch our TikTok channel:</p>
+
+<a href="https://www.tiktok.com/@chairislamictv" target="_blank">
+
+<button>Open TikTok</button>
+
+</a>
+
+</section>
+
+<section id="prayer">
+
 <h2>🕌 Prayer Times</h2>
 
-<p>Enter your city:</p>
-
-<input type="text" id="cityInput" placeholder="e.g. Kampala">
+<input id="cityInput" placeholder="Enter city (e.g Kampala)">
 
 <button onclick="getPrayerTimes()">Get Prayer Times</button>
 
@@ -125,148 +146,30 @@ iframe{
 
 </section>
 
-/* Quran Section */
-#quranReader{
-  display:none;
-  padding:20px;
-  background: rgba(0,0,0,0.85);
-  border-radius:12px;
-  max-width:1100px;
-  margin:auto;
-  color:white;
-}
-.ayah{margin-bottom:15px;}
-.ayah .arabic{font-size:22px;direction:rtl;text-align:right;}
-.ayah .translation{font-size:16px;color:#bfffc1;}
-.audioBtn{padding:5px 10px;margin-top:5px;border:none;border-radius:5px;background:#FFD700;cursor:pointer;}
-.audioBtn:hover{background:#e6c200;}
-
-/* Ask Section */
-#ask input,#ask button{
-  padding:10px 15px;
-  margin:5px 0;
-  border-radius:5px;
-  border:none;
-}
-#ask button{
-  background:#FFD700;
-  font-weight:bold;
-  cursor:pointer;
-}
-#ask button:hover{background:#e6c200;}
-
-/* Footer */
-footer{
-  text-align:center;
-  padding:40px 20px;
-  background:#0f4d3a;
-  color:#fff;
-  font-weight:bold;
-  letter-spacing:1px;
-  border-top:3px solid #FFD700;
-}
-footer a{
-  color:#FFD700;
-  text-decoration:none;
-}
-footer a:hover{text-decoration:underline;}
-</style>
-</head>
-<body>
-
-<!-- Navbar -->
-<nav class="navbar">
-  <ul class="nav-links">
-    <li><a href="#featured">Featured</a></li>
-    <li><a href="#posts">Posts</a></li>
-    <li><a href="#radio">Radio</a></li>
-    <li><a href="#youtube">YouTube</a></li>
-    <li><a href="#tiktok">TikTok</a></li>
-    <li><a href="#quran">Quran</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- Hero -->
-<div class="hero">
-  <h1>Chair Islamic TV – Authentic Islamic Knowledge</h1>
-  <p>Spreading Quran, Sunnah and beneficial reminders to empower the Ummah. Founded by Shuraim Kaweesi.</p>
-</div>
-
-<!-- Featured Lecture -->
-<section id="featured">
-  <h2>Featured Lecture</h2>
-  <iframe src="https://www.youtube.com/embed/zGIBIOMA0PQ" allowfullscreen></iframe>
-</section>
-
-<!-- Latest Posts -->
-<section id="posts">
-  <h2>Latest Reflections</h2>
-  <div class="card">
-    <h3>Reflection on Surah Al-Baqarah</h3>
-    <p>A reminder about patience and trust in Allah.</p>
-  </div>
-</section>
-
-<!-- Radio -->
-<section id="radio">
-  <h2>Live Radio</h2>
-  <audio id="radioPlayer" controls autoplay loop>
-    <source src="https://example.com/live-stream.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-</section>
-
-<!-- YouTube Section -->
-<section id="youtube">
-  <h2>YouTube Channel</h2>
-  <iframe src="https://www.youtube.com/embed?listType=playlist&list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG" allowfullscreen></iframe>
-</section>
-
-<!-- TikTok Section -->
-<section id="tiktok">
-  <h2>TikTok Live</h2>
-  <p>Follow the live stream:</p>
-  <a href="https://www.tiktok.com/@chairislamictv/live" target="_blank" style="color:#FFD700;font-weight:bold;text-decoration:underline;">Go Live on TikTok</a>
-</section>
-
-<!-- Ask Question -->
-<section id="ask">
-  <h2>Ask a Question</h2>
-  <input type="text" id="userQuestion" placeholder="Type your question...">
-  <button onclick="sendQuestion()">Send via Email</button>
-  <p id="questionStatus"></p>
-</section>
-
-<!-- Quran Section -->
 <section id="quran">
-  <h2>Quran</h2>
-  <button onclick="openQuranReader()">Open Quran Reader</button>
-  <div id="quranReader">
-    <select id="surahSelect"><option value="">Select Surah</option></select>
-    <select id="reciterSelect">
-      <option value="afasy">Mishary Al-Afasy</option>
-      <option value="abdulbasit">Abdul Basit</option>
-      <option value="saad">Saad Al-Ghamdi</option>
-    </select>
-    <button onclick="closeQuranReader()">Close</button>
-    <div id="ayahContainer"></div>
-  </div>
+
+<h2>📖 Quran Reader</h2>
+
+<select id="surahSelect">
+<option value="">Select Surah</option>
+</select>
+
+<select id="reciterSelect">
+
+<option value="afasy">Mishary Al-Afasy</option>
+<option value="sudais">Abdul Rahman Al-Sudais</option>
+<option value="ghamdi">Saad Al-Ghamdi</option>
+
+</select>
+
+<button onclick="loadSurah()">Load Surah</button>
+
+<div id="audioPlayer"></div>
+
+<div id="quranText"></div>
+
 </section>
 
-<!-- Contact -->
-<section id="contact">
-  <h2>Contact</h2>
-  <p>Email: <a href="mailto:shuraimkaweesi@gmail.com">shuraimkaweesi@gmail.com</a></p>
-  <p>Phone/WhatsApp: 0754178966</p>
-</section>
-
-<!-- Footer -->
-<footer>
-  © 2026 Chair Islamic TV | Founded by Shuraim Kaweesi
-</footer>
-
-<!-- Script -->
 <script src="script.js"></script>
 
 </body>
