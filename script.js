@@ -211,3 +211,34 @@ const choice = await deferredPrompt.userChoice;
 deferredPrompt = null;
 
 });
+// ======================
+// SEND QUESTION
+// ======================
+
+function sendQuestion(){
+
+const name = document.getElementById("userName").value;
+
+const email = document.getElementById("userEmail").value;
+
+const question = document.getElementById("userQuestion").value;
+
+if(!question){
+
+document.getElementById("questionStatus").innerText = "Please type your question.";
+
+return;
+
+}
+
+const subject = "Islamic Question from Website";
+
+const body = `Name: ${name}
+Email: ${email}
+
+Question:
+${question}`;
+
+window.location.href = `mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+}
