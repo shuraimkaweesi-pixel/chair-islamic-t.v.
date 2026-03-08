@@ -1,4 +1,4 @@
-// SERVICE WORKER
+// --------------------- SERVICE WORKER ---------------------
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
@@ -7,7 +7,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// INSTALL APP
+// --------------------- INSTALL APP ---------------------
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -21,7 +21,7 @@ installBtn.addEventListener('click', async () => {
   deferredPrompt = null;
 });
 
-// YOUTUBE LATEST
+// --------------------- YOUTUBE LATEST ---------------------
 const youtubeVideosDiv = document.getElementById('youtubeVideos');
 const latestYouTubeVideo = "https://www.youtube.com/embed/zGIBIOMA0PQ?autoplay=0";
 youtubeVideosDiv.innerHTML = `
@@ -30,7 +30,7 @@ youtubeVideosDiv.innerHTML = `
   allowfullscreen></iframe>
 `;
 
-// PRAYER TIMES
+// --------------------- PRAYER TIMES ---------------------
 async function getPrayerTimes() {
   const city = document.getElementById('cityInput').value;
   if (!city) return alert("Please enter a city.");
@@ -52,7 +52,7 @@ async function getPrayerTimes() {
   }
 }
 
-// ASK QUESTION
+// --------------------- ASK QUESTION ---------------------
 function sendQuestion() {
   const name = document.getElementById('userName').value;
   const email = document.getElementById('userEmail').value;
@@ -66,21 +66,25 @@ function sendQuestion() {
   document.getElementById('questionStatus').innerText = "Email client opened. You can send your question now!";
 }
 
-// QURAN READER
+// --------------------- QURAN READER ---------------------
 const surahSelect = document.getElementById('surahSelect');
 const reciterSelect = document.getElementById('reciterSelect');
 const audioPlayerDiv = document.getElementById('audioPlayer');
 const quranTextDiv = document.getElementById('quranText');
 
-// Populate surahs
-for (let i = 1; i <= 114; i++) {
-  const option = document.createElement('option');
-  option.value = i;
-  option.textContent = `Surah ${i}`;
-  surahSelect.appendChild(option);
-}
+// Populate surahs with proper names
+fetch("https://alquran-api.pages.dev/api/quran?lang=en")
+  .then(res => res.json())
+  .then(data => {
+    data.surahs.forEach(s => {
+      const option = document.createElement('option');
+      option.value = s.id;
+      option.textContent = `${s.id}. ${s.name.arabic} (${s.name.english})`;
+      surahSelect.appendChild(option);
+    });
+  });
 
-// Reciters audio base URLs (reliable source)
+// Reciters audio base URLs
 const reciters = {
   afasy: 'https://cdn.islamic.network/quran/audio-surah/ar.alafasy/',
   sudais: 'https://cdn.islamic.network/quran/audio-surah/ar.abdulrahmanalsudais/',
@@ -101,15 +105,15 @@ async function loadSurah() {
 
   // Arabic + English translation
   try {
-    const res = await fetch(`https://api.alquran.cloud/v1/surah/${surah}/en.asad`);
+    const res = await fetch(`https://alquran-api.pages.dev/api/quran/surah/${surah}?lang=en`);
     const data = await res.json();
     quranTextDiv.innerHTML = '';
-    data.data.ayahs.forEach(a => {
+    data.verses.forEach(v => {
       const ayahDiv = document.createElement('div');
       ayahDiv.classList.add('ayah');
       ayahDiv.innerHTML = `
-        <div class="arabic">${a.text}</div>
-        <div class="translation">${a.translation}</div>
+        <div class="arabic">${v.text}</div>
+        <div class="translation">${v.translation || ""}</div>
       `;
       quranTextDiv.appendChild(ayahDiv);
     });
@@ -117,4 +121,4 @@ async function loadSurah() {
     console.log(err);
     quranTextDiv.innerHTML = "Unable to load Quran text. Try again.";
   }
-}
+        }
