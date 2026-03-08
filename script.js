@@ -146,3 +146,25 @@ txt.includes(input) ? "block" : "none"
 }
 
 }
+async function loadHadith(){
+
+try{
+
+let res=await fetch("https://api.hadith.gading.dev/books/muslim?range=1-5")
+
+let data=await res.json()
+
+let hadith=data.data.hadiths[Math.floor(Math.random()*data.data.hadiths.length)]
+
+document.getElementById("hadithBox").innerHTML=
+`<p>${hadith.arab}</p><p>${hadith.id}</p>`
+
+}catch{
+
+document.getElementById("hadithBox").innerHTML="Could not load hadith"
+
+}
+
+}
+
+loadHadith()
