@@ -3,84 +3,61 @@
 // ----------------------
 
 // ----------------------
-// 1. Quran Reader
+// 1. Quran Reader (Full)
 // ----------------------
 const surahSelect = document.getElementById('surahSelect');
 const reciterSelect = document.getElementById('reciterSelect');
 const quranText = document.getElementById('quranText');
 
-async function loadSurahList() {
-  // All 114 Surahs
-  const surahs = [
-    { number: 1, name: "الفاتحة", english: "Al-Fatiha" },
-    { number: 2, name: "البقرة", english: "Al-Baqarah" },
-    { number: 3, name: "آل عمران", english: "Aal-i-Imran" },
-    { number: 4, name: "النساء", english: "An-Nisa" },
-    { number: 5, name: "المائدة", english: "Al-Ma'idah" },
-    { number: 6, name: "الأنعام", english: "Al-An'am" },
-    { number: 7, name: "الأعراف", english: "Al-A'raf" },
-    { number: 8, name: "الأنفال", english: "Al-Anfal" },
-    { number: 9, name: "التوبة", english: "At-Tawbah" },
-    { number: 10, name: "يونس", english: "Yunus" },
-    // ... add all surahs up to 114 here
-  ];
+let quranData = null;
 
-  surahs.forEach(s => {
+// Load complete Quran JSON
+async function loadQuranData() {
+  try {
+    const res = await fetch('quran-complete.json'); // Root JSON
+    quranData = await res.json();
+    populateSurahList();
+  } catch (err) {
+    console.error("Failed to load Quran JSON:", err);
+    alert("Failed to load Quran JSON. Make sure 'quran-complete.json' is in the root.");
+  }
+}
+
+// Populate dropdown with all 114 Surahs
+function populateSurahList() {
+  quranData.surahs.forEach(s => {
     const option = document.createElement('option');
-    option.value = s.number.toString().padStart(3, '0');
+    option.value = s.number;
     option.textContent = `${s.number}. ${s.name} (${s.english})`;
     surahSelect.appendChild(option);
   });
 }
 
-// Load Surah with ayah numbering and audio
-async function loadSurah() {
-  const surahNum = surahSelect.value;
+// Load selected surah and display ayahs
+function loadSurah() {
+  const surahNum = parseInt(surahSelect.value);
   const reciter = reciterSelect.value;
-  if (!surahNum) return alert("Please select a Surah!");
+  if (!surahNum) return;
 
-  try {
-    const res = await fetch(`/quran/${surahNum}.json`);
-    const data = await res.json();
+  const surah = quranData.surahs.find(s => s.number === surahNum);
+  if (!surah) return alert("Surah not found!");
 
-    quranText.innerHTML = '';
+  quranText.innerHTML = '';
 
-    data.ayahs.forEach((a, index) => {
-      const ayahDiv = document.createElement('div');
-      ayahDiv.classList.add('ayah');
-
-      // Arabic + numbering
-      const arabicDiv = document.createElement('div');
-      arabicDiv.classList.add('arabic');
-      arabicDiv.textContent = `${index + 1}. ${a.text}`;
-
-      // English translation + numbering
-      const transDiv = document.createElement('div');
-      transDiv.classList.add('translation');
-      transDiv.textContent = `${index + 1}. ${a.translation}`;
-
-      // Audio per ayah
-      const audioDiv = document.createElement('div');
-      audioDiv.classList.add('audio');
-      if (a.audio && a.audio[reciter]) {
-        audioDiv.innerHTML = `
-          <audio controls style="width:100%">
-            <source src="${a.audio[reciter]}" type="audio/mpeg">
-          </audio>
-        `;
-      }
-
-      ayahDiv.appendChild(arabicDiv);
-      ayahDiv.appendChild(transDiv);
-      ayahDiv.appendChild(audioDiv);
-
-      quranText.appendChild(ayahDiv);
-    });
-
-  } catch (err) {
-    console.error("Error loading Surah:", err);
-    alert("Failed to load Quran Surah. Check your JSON files.");
-  }
+  surah.ayahs.forEach((a, index) => {
+    const ayahDiv = document.createElement('div');
+    ayahDiv.classList.add('ayah');
+    ayahDiv.innerHTML = `
+      <div class="arabic"><strong>${index + 1}.</strong> ${a.text}</div>
+      <div class="translation"><strong>${index + 1}.</strong> ${a.translation}</div>
+      <div class="audio">
+        <audio controls style="width:100%">
+          <source src="${a.audio[reciter]}" type="audio/mpeg">
+        </audio>
+      </div>
+    `;
+    quranText.appendChild(ayahDiv);
+  });
 }
 
 // ----------------------
@@ -90,7 +67,9 @@ const youtubeDiv = document.getElementById('youtubeVideos');
 
 async function loadLatestYouTube() {
   try {
-    const channelId = "UC5_wjk8WksHOOZHflU9heJQ";
+    const channelId = "UC5_wjk8WksHOOZHflU9heJQ"; // Your channel ID
+
+    // Using RSS feed via rss2json proxy
     const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
     const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
@@ -153,9 +132,8 @@ function sendQuestion() {
 // 5. Initialize Everything
 // ----------------------
 document.addEventListener('DOMContentLoaded', () => {
-  loadSurahList();
-  loadLatestYouTube();
-
+  loadQuranData();
   surahSelect.addEventListener('change', loadSurah);
   reciterSelect.addEventListener('change', loadSurah);
+  loadLatestYouTube();
 });
