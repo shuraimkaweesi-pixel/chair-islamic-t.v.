@@ -1,22 +1,21 @@
 // ----------------------
-// script.js (Auto Latest YouTube + Full Features)
+// script.js - Chair Islamic TV Full Features
 // ----------------------
 
+// ----------------------
+// 1. Quran Reader
+// ----------------------
 const surahSelect = document.getElementById('surahSelect');
 const reciterSelect = document.getElementById('reciterSelect');
 const audioPlayer = document.getElementById('audioPlayer');
 const quranText = document.getElementById('quranText');
-const youtubeDiv = document.getElementById('youtubeVideos');
 
-// ----------------------
-// 1. Populate Surah List
-// ----------------------
 async function loadSurahList() {
   const surahs = [
-    {number: 1, name: "الفاتحة", english: "Al-Fatiha"},
-    {number: 2, name: "البقرة", english: "Al-Baqarah"},
-    {number: 3, name: "آل عمران", english: "Aal-i-Imran"},
-    // ... up to 114
+    { number: 1, name: "الفاتحة", english: "Al-Fatiha" },
+    { number: 2, name: "البقرة", english: "Al-Baqarah" },
+    { number: 3, name: "آل عمران", english: "Aal-i-Imran" }
+    // ... add all 114 Surahs here
   ];
 
   surahs.forEach(s => {
@@ -27,9 +26,6 @@ async function loadSurahList() {
   });
 }
 
-// ----------------------
-// 2. Load Quran Surah JSON
-// ----------------------
 async function loadSurah() {
   const surahNum = surahSelect.value;
   const reciter = reciterSelect.value;
@@ -39,12 +35,14 @@ async function loadSurah() {
     const res = await fetch(`/quran/${surahNum}.json`);
     const data = await res.json();
 
+    // Load audio
     audioPlayer.innerHTML = `
       <audio controls style="width:100%">
         <source src="${data.audio[reciter]}" type="audio/mpeg">
       </audio>
     `;
 
+    // Load Arabic + translation
     quranText.innerHTML = '';
     data.ayahs.forEach(a => {
       quranText.innerHTML += `
@@ -61,16 +59,19 @@ async function loadSurah() {
 }
 
 // ----------------------
-// 3. Fetch Latest YouTube Video Automatically
+// 2. Auto Latest YouTube Video
 // ----------------------
+const youtubeDiv = document.getElementById('youtubeVideos');
+
 async function loadLatestYouTube() {
   try {
-    // Replace this with your actual channel ID
-    const channelId = "UC-chairislamictv"; 
+    // Replace with your actual channel ID
+    const channelId = "UC-chairislamictv";
 
-    // Using YouTube Data API v3 requires an API key; for now, we'll embed latest video via channel RSS feed
+    // Using RSS feed via rss2json proxy
     const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
     const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
     const response = await fetch(proxyUrl);
     const data = await response.json();
 
@@ -89,7 +90,7 @@ async function loadLatestYouTube() {
 }
 
 // ----------------------
-// 4. Prayer Times
+// 3. Prayer Times
 // ----------------------
 async function getPrayerTimes() {
   const city = document.getElementById('cityInput').value;
@@ -114,7 +115,7 @@ async function getPrayerTimes() {
 }
 
 // ----------------------
-// 5. Ask a Question
+// 4. Ask a Question via Email
 // ----------------------
 function sendQuestion() {
   const name = document.getElementById('userName').value;
@@ -122,12 +123,13 @@ function sendQuestion() {
   const question = document.getElementById('userQuestion').value;
   if (!name || !email || !question) return alert("All fields are required!");
 
+  // Open default mail client
   window.location.href = `mailto:shuraimkaweesi@gmail.com?subject=Question from ${name}&body=${encodeURIComponent(question + "\n\nEmail: " + email)}`;
   document.getElementById('questionStatus').textContent = "Email opened in your mail client.";
 }
 
 // ----------------------
-// 6. Initialize
+// 5. Initialize Everything
 // ----------------------
 document.addEventListener('DOMContentLoaded', () => {
   loadSurahList();
