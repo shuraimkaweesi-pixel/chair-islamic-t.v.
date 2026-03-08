@@ -148,7 +148,7 @@ async function loadLatestYouTube() {
 
   try {
 
-    const channelId = "UC-chairislamictv";
+    const channelId = "UC5_wjk8WksHOOZHflU9heJQ";
 
     const rssUrl =
       `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
@@ -168,9 +168,27 @@ async function loadLatestYouTube() {
       youtubeDiv.innerHTML = `
       <iframe width="100%" height="315"
       src="https://www.youtube.com/embed/${latestVideoId}"
-      frameborder="0" allowfullscreen>
+      frameborder="0"
+      allowfullscreen>
       </iframe>
       `;
+
+    } else {
+
+      youtubeDiv.innerHTML = "<p>No videos found.</p>";
+
+    }
+
+  } catch (error) {
+
+    console.error("YouTube load error:", error);
+
+    youtubeDiv.innerHTML =
+      "<p>Failed to load latest video.</p>";
+
+  }
+
+}
 
     } else {
 
