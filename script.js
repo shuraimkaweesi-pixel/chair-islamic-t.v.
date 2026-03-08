@@ -1,8 +1,9 @@
-// ==========================
-// Quran Reader Upgrade
-// ==========================
+// ======================
+// SURAH LIST
+// ======================
 
-const surahs = [
+const surahs=[
+
 "Al-Fatiha","Al-Baqarah","Al-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
 "Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha",
 "Al-Anbiya","Al-Hajj","Al-Mu'minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum",
@@ -15,22 +16,38 @@ const surahs = [
 "Ash-Shams","Al-Lail","Ad-Dhuha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat",
 "Al-Qaria","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraish","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
+
 ];
 
-const surahSelect = document.getElementById("surahSelect");
+// populate dropdown
 
-surahs.forEach((name, index)=>{
+const surahSelect=document.getElementById("surahSelect");
+
+surahs.forEach((s,i)=>{
+
 const option=document.createElement("option");
-option.value=index+1;
-option.textContent=`${index+1}. ${name}`;
+
+option.value=i+1;
+
+option.textContent=(i+1)+" "+s;
+
 surahSelect.appendChild(option);
+
 });
+
+
+// ======================
+// LOAD SURAH
+// ======================
 
 function loadSurah(){
 
 const surahNumber=document.getElementById("surahSelect").value;
 
 if(!surahNumber) return;
+
+
+// LOAD TEXT
 
 fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,en.sahih`)
 .then(res=>res.json())
@@ -44,11 +61,15 @@ let html="";
 for(let i=0;i<arabic.length;i++){
 
 html+=`
+
 <div class="ayah">
-<p style="font-size:22px;direction:rtl;text-align:right">${arabic[i].text}</p>
-<p style="color:#bfffc1">${translation[i].text}</p>
-<hr>
+
+<p class="arabic">${arabic[i].text}</p>
+
+<p class="translation">${translation[i].text}</p>
+
 </div>
+
 `;
 
 }
@@ -57,19 +78,19 @@ document.getElementById("quranText").innerHTML=html;
 
 });
 
-loadAudio();
 
-}
+// ======================
+// AUDIO
+// ======================
 
-function loadAudio(){
-
-const surahNumber=document.getElementById("surahSelect").value;
 const reciter=document.getElementById("reciterSelect").value;
 
 const reciters={
+
 afasy:"https://server8.mp3quran.net/afs/",
-sudais:"https://server7.mp3quran.net/sds/",
+sudais:"https://server11.mp3quran.net/sds/",
 ghamdi:"https://server7.mp3quran.net/s_gmd/"
+
 };
 
 const surahCode=String(surahNumber).padStart(3,"0");
@@ -77,38 +98,45 @@ const surahCode=String(surahNumber).padStart(3,"0");
 const audioURL=reciters[reciter]+surahCode+".mp3";
 
 document.getElementById("audioPlayer").innerHTML=
+
 `
 <h3>Surah Audio</h3>
+
 <audio controls style="width:100%">
+
 <source src="${audioURL}" type="audio/mpeg">
+
 </audio>
+
 `;
 
 }
-// ==========================
-// Prayer Times
-// ==========================
+
+
+// ======================
+// PRAYER TIMES
+// ======================
 
 function getPrayerTimes(){
 
 const city=document.getElementById("cityInput").value || "Kampala";
 
 fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
+
 .then(res=>res.json())
+
 .then(data=>{
 
 const t=data.data.timings;
 
 document.getElementById("prayerTimes").innerHTML=
-`
-<h3>Prayer Times for ${city}</h3>
 
-<p>🕌 Fajr: ${t.Fajr}</p>
-<p>🌅 Sunrise: ${t.Sunrise}</p>
-<p>🕌 Dhuhr: ${t.Dhuhr}</p>
-<p>🌇 Asr: ${t.Asr}</p>
-<p>🌆 Maghrib: ${t.Maghrib}</p>
-<p>🌙 Isha: ${t.Isha}</p>
+`
+<p>Fajr: ${t.Fajr}</p>
+<p>Dhuhr: ${t.Dhuhr}</p>
+<p>Asr: ${t.Asr}</p>
+<p>Maghrib: ${t.Maghrib}</p>
+<p>Isha: ${t.Isha}</p>
 `;
 
 });
