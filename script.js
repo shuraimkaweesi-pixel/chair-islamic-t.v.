@@ -1,170 +1,254 @@
-// ======================
+// ===============================
 // SURAH LIST
-// ======================
-const surahs = [
-"Al-Fatiha","Al-Baqarah","Al-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
+// ===============================
+
+const surahNames = [
+"Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
 "Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha",
-"Al-Anbiya","Al-Hajj","Al-Mu'minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum",
-"Luqman","As-Sajda","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir",
+"Al-Anbiya","Al-Hajj","Al-Mu’minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum",
+"Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir",
 "Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf",
-"Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqia","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahina",
-"As-Saff","Al-Jumua","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haaqqa","Al-Maarij",
-"Nuh","Al-Jinn","Al-Muzzammil","Al-Muddaththir","Al-Qiyama","Al-Insan","Al-Mursalat","An-Naba","An-Naziat","Abasa",
-"At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-Ala","Al-Ghashiyah","Al-Fajr","Al-Balad",
-"Ash-Shams","Al-Lail","Ad-Dhuha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat",
-"Al-Qaria","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraish","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
+"Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah",
+"As-Saff","Al-Jumu’ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij",
+"Nuh","Al-Jinn","Al-Muzzammil","Al-Muddathir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","Abasa",
+"At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad",
+"Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat",
+"Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
-];
+]
 
-// populate dropdown
-const surahSelect = document.getElementById("surahSelect");
-surahs.forEach((s, i) => {
-    const option = document.createElement("option");
-    option.value = i + 1;
-    option.textContent = `${i + 1}. ${s}`;
-    surahSelect.appendChild(option);
-});
+// ===============================
+// POPULATE SURAH DROPDOWN
+// ===============================
 
-// ======================
-// LOAD SURAH
-// ======================
-async function loadSurah() {
-    const surahNumber = surahSelect.value;
-    const reciter = document.getElementById("reciterSelect").value;
-    if (!surahNumber) return alert("Please select a Surah!");
+const surahSelect = document.getElementById("surahSelect")
 
-    try {
-        // Fetch Quran Arabic + English from local json
-        const resArabic = await fetch("quran.json");
-        const resEnglish = await fetch("quran_en.json");
-        const quranArabic = await resArabic.json();
-        const quranEnglish = await resEnglish.json();
+surahNames.forEach((name,i)=>{
+let option=document.createElement("option")
+option.value=i+1
+option.textContent=(i+1)+" - "+name
+surahSelect.appendChild(option)
+})
 
-        const arabicAyahs = quranArabic[surahNumber - 1].ayahs;
-        const englishAyahs = quranEnglish[surahNumber - 1].ayahs;
 
-        let html = "";
-        for (let i = 0; i < arabicAyahs.length; i++) {
-            html += `
-            <div class="ayah">
-                <p class="arabic">${i+1}. ${arabicAyahs[i].text}</p>
-                <p class="translation">${i+1}. ${englishAyahs[i].text}</p>
-            </div>
-            `;
-        }
-        document.getElementById("quranText").innerHTML = html;
+// ===============================
+// SURAH SEARCH
+// ===============================
 
-        // Audio
-        const reciters = {
-            afasy: "https://server8.mp3quran.net/afs/",
-            baset: "https://server8.mp3quran.net/bas/",
-            ghamdi: "https://server7.mp3quran.net/s_gmd/"
-        };
-        const surahCode = String(surahNumber).padStart(3, "0");
-        const audioURL = reciters[reciter] + surahCode + ".mp3";
-        document.getElementById("audioPlayer").innerHTML = `
-            <h3>Surah Audio</h3>
-            <audio controls>
-                <source src="${audioURL}" type="audio/mpeg">
-            </audio>
-        `;
-
-    } catch (err) {
-        console.error(err);
-        alert("Failed to load Quran. Make sure quran.json and quran_en.json exist in root.");
-    }
-}
-
-// ======================
-// PRAYER TIMES
-// ======================
-function getPrayerTimes() {
-    const city = document.getElementById("cityInput").value || "Kampala";
-    fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
-        .then(res => res.json())
-        .then(data => {
-            const t = data.data.timings;
-            document.getElementById("prayerTimes").innerHTML = `
-                <p>🕌 Fajr: ${t.Fajr}</p>
-                <p>🌅 Sunrise: ${t.Sunrise}</p>
-                <p>🕌 Dhuhr: ${t.Dhuhr}</p>
-                <p>🌇 Asr: ${t.Asr}</p>
-                <p>🌆 Maghrib: ${t.Maghrib}</p>
-                <p>🌙 Isha: ${t.Isha}</p>
-            `;
-        })
-        .catch(err => console.error(err));
-}
-
-// ======================
-// SEND QUESTION
-// ======================
-function sendQuestion() {
-    const name = document.getElementById("userName").value;
-    const email = document.getElementById("userEmail").value;
-    const question = document.getElementById("userQuestion").value;
-    if (!question) return document.getElementById("questionStatus").innerText = "Please type your question.";
-
-    const subject = "Islamic Question from Website";
-    const body = `Name: ${name}\nEmail: ${email}\n\nQuestion:\n${question}`;
-    window.location.href = `mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
-// ======================
-// AUTO YOUTUBE VIDEOS
-// ======================
-const channelID = "UC5_wjk8WksHOOZHflU9heJQ"; // Chair Islamic TV
-const youtubeContainer = document.getElementById("youtubeVideos");
-
-fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
-    .then(response => response.text())
-    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-    .then(data => {
-        const entries = data.querySelectorAll("entry");
-        let html = "";
-        for (let i = 0; i < Math.min(entries.length, 3); i++) {
-            const videoID = entries[i].querySelector("yt\\:videoId").textContent;
-            html += `
-                <iframe src="https://www.youtube.com/embed/${videoID}" allowfullscreen></iframe>
-            `;
-        }
-        youtubeContainer.innerHTML = html;
-    });
 function searchSurah(){
 
 let input=document.getElementById("surahSearch").value.toLowerCase()
 
-let select=document.getElementById("surahSelect")
+for(let i=0;i<surahSelect.options.length;i++){
 
-for(let i=0;i<select.options.length;i++){
+let txt=surahSelect.options[i].text.toLowerCase()
 
-let txt=select.options[i].text.toLowerCase()
-
-select.options[i].style.display=
-txt.includes(input) ? "block" : "none"
+surahSelect.options[i].style.display=
+txt.includes(input) ? "block":"none"
 
 }
 
 }
+
+
+// ===============================
+// LOAD SURAH
+// ===============================
+
+async function loadSurah(){
+
+let surahNumber=surahSelect.value
+
+if(!surahNumber){
+
+alert("Select Surah")
+
+return
+
+}
+
+try{
+
+let arabicRes=await fetch("quran.json")
+let englishRes=await fetch("quran_en.json")
+
+let arabic=await arabicRes.json()
+let english=await englishRes.json()
+
+let arabicAyahs=arabic[surahNumber-1].ayahs
+let englishAyahs=english[surahNumber-1].ayahs
+
+let html=""
+
+for(let i=0;i<arabicAyahs.length;i++){
+
+html+=`
+
+<div class="ayah">
+
+<div class="arabic">
+${i+1}. ${arabicAyahs[i].text}
+</div>
+
+<div class="translation">
+${i+1}. ${englishAyahs[i]?.text || ""}
+</div>
+
+</div>
+
+`
+
+}
+
+document.getElementById("quranText").innerHTML=html
+
+
+// ===============================
+// AUDIO PLAYER
+// ===============================
+
+let surahCode=String(surahNumber).padStart(3,'0')
+
+let reciter=document.getElementById("reciterSelect").value
+
+let reciters={
+afasy:"https://server8.mp3quran.net/afs/",
+baset:"https://server8.mp3quran.net/bas/",
+ghamdi:"https://server7.mp3quran.net/s_gmd/"
+}
+
+let audioURL=reciters[reciter]+surahCode+".mp3"
+
+document.getElementById("audioPlayer").innerHTML=`
+
+<h3>Surah Audio</h3>
+
+<audio controls>
+<source src="${audioURL}" type="audio/mpeg">
+</audio>
+
+`
+
+}catch(e){
+
+console.log(e)
+
+alert("Error loading Quran")
+
+}
+
+}
+
+
+// ===============================
+// PRAYER TIMES
+// ===============================
+
+function getPrayerTimes(){
+
+let city=document.getElementById("cityInput").value || "Kampala"
+
+fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
+.then(r=>r.json())
+.then(data=>{
+
+let t=data.data.timings
+
+document.getElementById("prayerTimes").innerHTML=`
+
+Fajr: ${t.Fajr}<br>
+Dhuhr: ${t.Dhuhr}<br>
+Asr: ${t.Asr}<br>
+Maghrib: ${t.Maghrib}<br>
+Isha: ${t.Isha}
+
+`
+
+})
+
+}
+
+
+// ===============================
+// ASK QUESTION EMAIL
+// ===============================
+
+function sendQuestion(){
+
+let name=document.getElementById("userName").value
+let email=document.getElementById("userEmail").value
+let q=document.getElementById("userQuestion").value
+
+let subject="Question from Chair Islamic TV"
+
+let body=`Name: ${name}
+
+Email: ${email}
+
+Question:
+${q}`
+
+window.location.href=`mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
+}
+
+
+// ===============================
+// DAILY HADITH
+// ===============================
+
 async function loadHadith(){
 
 try{
 
-let res=await fetch("https://api.hadith.gading.dev/books/muslim?range=1-5")
+let res=await fetch("https://api.hadith.gading.dev/books/muslim?range=1-10")
 
 let data=await res.json()
 
 let hadith=data.data.hadiths[Math.floor(Math.random()*data.data.hadiths.length)]
 
-document.getElementById("hadithBox").innerHTML=
-`<p>${hadith.arab}</p><p>${hadith.id}</p>`
+document.getElementById("hadithBox").innerHTML=`
+
+<p>${hadith.arab}</p>
+<p>${hadith.id}</p>
+
+`
 
 }catch{
 
-document.getElementById("hadithBox").innerHTML="Could not load hadith"
+document.getElementById("hadithBox").innerText="Could not load Hadith"
 
 }
 
 }
 
 loadHadith()
+
+
+// ===============================
+// YOUTUBE VIDEOS
+// ===============================
+
+const channelID="UC5_wjk8WksHOOZHflU9heJQ"
+
+const youtubeContainer=document.getElementById("youtubeVideos")
+
+fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
+
+.then(r=>r.json())
+
+.then(data=>{
+
+let html=""
+
+data.items.slice(0,3).forEach(v=>{
+
+let id=v.link.split("v=")[1]
+
+html+=`<iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe>`
+
+})
+
+youtubeContainer.innerHTML=html
+
+})
