@@ -1,27 +1,59 @@
-const CACHE_NAME = "chair-tv-cache-v1";
+// sw.js - Chair Islamic TV Service Worker
+const CACHE_NAME = 'chair-islamic-tv-v1';
 const urlsToCache = [
-  "/chair-islamic-t.v./index.html",
-  "/chair-islamic-t.v./images/background.jpg",
-  "/chair-islamic-t.v./logo.png",
-  "/chair-islamic-t.v./offline-message.mp3"
+  '/',
+  '/index.html',
+  '/script.js',
+  '/manifest.json',
+  '/images/background.jpg',
+  // Add any other static assets like CSS files or logos
 ];
 
-self.addEventListener("install", event => {
+// Install event - caching static assets
+self.addEventListener('install', (event) => {
+  console.log('[ServiceWorker] Install');
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[ServiceWorker] Caching app shell');
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
-self.addEventListener("fetch", event => {
+// Activate event - cleanup old caches
+self.addEventListener('activate', (event) => {
+  console.log('[ServiceWorker] Activate');
+  event.waitUntil(
+    caches.keys().then((keyList) =>
+      Promise.all(
+        keyList.map((key) => {
+          if (key !== CACHE_NAME) {
+            console.log('[ServiceWorker] Removing old cache', key);
+            return caches.delete(key);
+          }
+        })
+      )
+    )
+  );
+});
+
+// Fetch event - respond with cached content when offline
+self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request).catch(() => {
-        // Fallback offline message for radio
-        if(event.request.url.includes(".mp3")) {
-          return caches.match("/chair-islamic-t.v./offline-message.mp3");
-        }
-        return caches.match("/chair-islamic-t.v./index.html");
+    caches.match(event.request).then((response) => {
+      if (response) {
+        return response; // serve cached
+      }
+      return fetch(event.request).then((networkResponse) => {
+        // Optional: cache new requests dynamically
+        return caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
       });
+    }).catch(() => {
+      // Fallback offline page if needed
+      return caches.match('/index.html');
     })
   );
 });
