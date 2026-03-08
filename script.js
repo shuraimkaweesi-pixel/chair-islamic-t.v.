@@ -130,3 +130,19 @@ fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
         }
         youtubeContainer.innerHTML = html;
     });
+function searchSurah(){
+
+let input=document.getElementById("surahSearch").value.toLowerCase()
+
+let select=document.getElementById("surahSelect")
+
+for(let i=0;i<select.options.length;i++){
+
+let txt=select.options[i].text.toLowerCase()
+
+select.options[i].style.display=
+txt.includes(input) ? "block" : "none"
+
+}
+
+}
