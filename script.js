@@ -1,30 +1,36 @@
-// ==============================
-// Chair Islamic TV - Full Script
-// ==============================
+// ===============================
+// Chair Islamic TV - Main Script
+// ===============================
 
-// Register Service Worker (PWA offline caching)
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log('Service Worker Registered'))
-    .catch((err) => console.log('SW registration failed:', err));
+// Register Service Worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch((err) => console.log("SW registration failed:", err));
 }
 
-// Ask a question via email
+// ===============================
+// Ask Question via Email
+// ===============================
 function sendQuestion() {
-  const question = document.getElementById('userQuestion').value;
+  const question = document.getElementById("userQuestion").value;
+
   if (!question.trim()) {
-    document.getElementById('questionStatus').innerText = 'Please type a question.';
+    document.getElementById("questionStatus").innerText =
+      "Please type your question first.";
     return;
   }
-  window.location.href = `mailto:shuraimkaweesi@gmail.com?subject=Question from Chair Islamic TV&body=${encodeURIComponent(question)}`;
-  document.getElementById('questionStatus').innerText = 'Opening email client...';
+
+  window.location.href =
+    "mailto:shuraimkaweesi@gmail.com?subject=Question from Chair Islamic TV&body=" +
+    encodeURIComponent(question);
 }
 
-// ==============================
+// ===============================
 // Quran Reader Logic
-// ==============================
+// ===============================
 
-// Full 114 Surah Names
 const surahs = [
 "Al-Fatiha","Al-Baqarah","Al-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
 "Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha",
@@ -40,51 +46,52 @@ const surahs = [
 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
 ];
 
-// DOM Elements
+// Reciters (working servers)
+const reciters = {
+  afasy: "https://server8.mp3quran.net/afs/",
+  sudais: "https://server7.mp3quran.net/sds/",
+  ghamdi: "https://server7.mp3quran.net/s_gmd/"
+};
+
 const surahSelect = document.getElementById("surahSelect");
 const reciterSelect = document.getElementById("reciterSelect");
 const ayahContainer = document.getElementById("ayahContainer");
 
-// Populate Surah dropdown
-surahs.forEach((s, i) => {
-  const opt = document.createElement("option");
-  opt.value = i + 1;
-  opt.text = `${i + 1}. ${s}`;
-  surahSelect.appendChild(opt);
-});
+// Populate Surah Dropdown
+if (surahSelect) {
+  surahs.forEach((name, index) => {
+    const option = document.createElement("option");
+    option.value = index + 1;
+    option.textContent = `${index + 1}. ${name}`;
+    surahSelect.appendChild(option);
+  });
+}
 
-// Open/Close Quran Reader
+// Open Quran Reader
 function openQuranReader() {
   document.getElementById("quranReader").style.display = "block";
 }
 
+// Close Quran Reader
 function closeQuranReader() {
   document.getElementById("quranReader").style.display = "none";
 }
 
-// Quran Audio URLs
-const audioBaseURL = "https://everyayah.com/data/";
+// Play Surah
+surahSelect.addEventListener("change", function () {
 
-function getSurahAudioUrl(surah, reciter) {
-  // surah number padded 001-114
-  return `${audioBaseURL}${reciter}/${String(surah).padStart(3, '0')}.mp3`;
-}
-
-// Handle Surah selection change
-surahSelect.addEventListener("change", () => {
   const surahNumber = surahSelect.value;
-  const reciter = reciterSelect.value;
+  const reciterKey = reciterSelect.value;
 
-  if (!surahNumber) {
-    ayahContainer.innerHTML = "";
-    return;
-  }
+  if (!surahNumber) return;
 
-  const audioURL = getSurahAudioUrl(surahNumber, reciter);
+  const surahCode = String(surahNumber).padStart(3, "0");
+  const audioURL = reciters[reciterKey] + surahCode + ".mp3";
+
   ayahContainer.innerHTML = `
-    <p style="color:#FFD700;font-weight:bold;">Playing Surah ${surahNumber} — ${reciter.toUpperCase()}</p>
-    <audio controls autoplay src="${audioURL}" style="width:100%; border-radius:10px;">
-      Your browser does not support audio.
+    <h3>Playing Surah ${surahs[surahNumber - 1]}</h3>
+    <audio controls autoplay style="width:100%;">
+      <source src="${audioURL}" type="audio/mpeg">
     </audio>
   `;
 });
