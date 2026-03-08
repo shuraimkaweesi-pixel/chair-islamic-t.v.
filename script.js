@@ -247,7 +247,7 @@ let id = video.link.split("v=")[1]
 
 html += `
 <iframe
-src="https://www.youtube.com/embed/${id}"
+src="https://youtu.be/zGIBIOMA0PQ?si=uD3OB8C-eFJKwQCn/embed/${id}"
 allowfullscreen
 ></iframe>
 `
