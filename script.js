@@ -91,15 +91,15 @@ async function loadSurah() {
     const arabicAyahs = arabicSurah.ayahs || arabicSurah.verses || [];
     const englishAyahs = englishSurah?.ayahs || englishSurah?.verses || [];
 
-    let html = "";
+let html = "";
 
 for (let i = 0; i < arabicAyahs.length; i++) {
 
-const arabicText = arabicAyahs[i].text || arabicAyahs[i];
+const arabicText = arabicAyahs[i].text;
 
 const englishText =
+englishAyahs[i]?.translation ||
 englishAyahs[i]?.text ||
-englishAyahs[i] ||
 "Translation unavailable";
 
 html += `
