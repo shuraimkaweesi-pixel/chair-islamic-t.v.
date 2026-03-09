@@ -241,3 +241,10 @@ direction:ltr;
 text-align:left;
 margin-bottom:20px;
 }
+#biography{
+background:#141414;
+padding:15px;
+border-radius:8px;
+line-height:1.6;
+color:#eee;
+}
