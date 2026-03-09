@@ -256,5 +256,3 @@ function loadYouTubeVideos() {
 }
 
 loadYouTubeVideos();
-
-<link rel="icon" href="images/logo-192.png" type="image/png">
