@@ -1,5 +1,14 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Chair Islamic TV</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#d4af37"><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Chair Islamic TV</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#d4af37">
+
+<style>
 
 body{
 background:#0f0f0f;
@@ -70,25 +79,82 @@ width:100%;
 margin-top:10px;
 }
 
-</style></head><body><div class="container"><!-- A. INFO --><h1>Chair Islamic TV</h1><p>
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- A. INFO -->
+
+<h1>Chair Islamic TV</h1>
+
+<p>
 Welcome to Chair Islamic TV.
 Read the Quran, listen to recitations, watch Islamic videos,
 check prayer times and ask Islamic questions.
-</p><hr><!-- B. LATEST INFO -->
-  Loading videos...
+</p>
 
-</div><hr><!-- DAILY HADITH --><h2>Daily Hadith</h2><div id="hadithBox">
+<hr>
+
+<!-- DAILY HADITH -->
+
+<h2>Daily Hadith</h2>
+
+<div id="hadithBox">
 Loading hadith...
-</div><hr><!-- C. ASK QUESTION --><h2>Ask a Question</h2><input id="userName" placeholder="Your Name"><input id="userEmail" placeholder="Your Email"><textarea id="userQuestion" placeholder="Your Question"></textarea><button onclick="sendQuestion()">
-Send Question
-</button><p id="questionStatus"></p><hr><!-- D. PRAYER TIME --><h2>Prayer Times</h2><input id="cityInput" placeholder="Enter City (example Kampala)"><button onclick="getPrayerTimes()">
-Get Prayer Times
-</button><div id="prayerTimes"></div>
+</div>
 
-  <h2>Latest Videos</h2>
-<div id="youtubeVideos"></div>
-  
-  <hr><!-- QURAN READER --><h2>Quran Reader</h2><input
+<hr>
+
+<!-- C. ASK QUESTION -->
+
+<h2>Ask a Question</h2>
+
+<input id="userName" placeholder="Your Name">
+
+<input id="userEmail" placeholder="Your Email">
+
+<textarea id="userQuestion" placeholder="Your Question"></textarea>
+
+<button onclick="sendQuestion()">
+Send Question
+</button>
+
+<p id="questionStatus"></p>
+
+<hr>
+
+<!-- D. PRAYER TIME -->
+
+<h2>Prayer Times</h2>
+
+<input id="cityInput" placeholder="Enter City (example Kampala)">
+
+<button onclick="getPrayerTimes()">
+Get Prayer Times
+</button>
+
+<div id="prayerTimes"></div>
+
+<hr>
+
+<!-- B. LATEST VIDEOS -->
+
+<h2>Latest Videos</h2>
+
+<div id="youtubeVideos">
+Loading videos...
+</div>
+
+<hr>
+
+<!-- QURAN READER -->
+
+<h2>Quran Reader</h2>
+
+<input
 id="surahSearch"
 placeholder="Search Surah..."
 onkeyup="searchSurah()"
@@ -96,6 +162,25 @@ onkeyup="searchSurah()"
 
 <select id="surahSelect">
 <option value="">Select Surah</option>
-</select><select id="reciterSelect"><option value="afasy">Mishary Alafasy</option><option value="baset">Abdul Baset</option><option value="ghamdi">Saad Al-Ghamdi</option></select><button onclick="loadSurah()">
+</select>
+
+<select id="reciterSelect">
+<option value="afasy">Mishary Alafasy</option>
+<option value="baset">Abdul Baset</option>
+<option value="ghamdi">Saad Al-Ghamdi</option>
+</select>
+
+<button onclick="loadSurah()">
 Load Surah
-</button><div id="audioPlayer"></div><div id="quranText"></div></div><script src="script.js"></script></body></html>
+</button>
+
+<div id="audioPlayer"></div>
+
+<div id="quranText"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
