@@ -93,18 +93,30 @@ async function loadSurah() {
 
     let html = "";
 
-    for (let i = 0; i < arabicAyahs.length; i++) {
+for (let i = 0; i < arabicAyahs.length; i++) {
 
-      const arabicText = arabicAyahs[i].text || arabicAyahs[i];
-      const englishText = englishAyahs[i]?.text || englishAyahs[i] || "";
+const arabicText = arabicAyahs[i].text || arabicAyahs[i];
 
-      html += `
-        <div class="ayah">
-          <div class="arabic">${i + 1}. ${arabicText}</div>
-          <div class="translation">${i + 1}. ${englishText}</div>
-        </div>
-      `;
-    }
+const englishText =
+englishAyahs[i]?.text ||
+englishAyahs[i] ||
+"Translation unavailable";
+
+html += `
+<div class="ayah">
+
+<div class="arabic">
+${i + 1}. ${arabicText}
+</div>
+
+<div class="translation">
+${i + 1}. ${englishText}
+</div>
+
+</div>
+`;
+
+}
 
     document.getElementById("quranText").innerHTML = html;
 
