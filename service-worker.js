@@ -1,4 +1,4 @@
-const CACHE = "chair-islamic-tv-v2";
+const CACHE = "chair-islamic-tv-v3";
 
 const urlsToCache = [
   "/",
