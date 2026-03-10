@@ -2,7 +2,7 @@
   "name": "Chair Islamic TV",
   "short_name": "ChairTV",
   "description": "Authentic Islamic knowledge, lectures, Quran recitations, and reflections.",
-  "start_url": "/",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#FFD700",
