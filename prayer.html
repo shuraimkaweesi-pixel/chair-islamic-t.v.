@@ -77,4 +77,98 @@ border-top:1px solid #333;
 .bottom-nav a{
 color:#FFD700;
 text-decoration:none;
-font-size:14px
+font-size:14px;
+flex:1;
+text-align:center;
+}
+
+.bottom-nav a:hover{
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Prayer Times</h1>
+
+<p>Check daily prayer times for your city</p>
+
+<input id="cityInput" placeholder="Enter city (example: Kampala)">
+
+<button onclick="getPrayerTimes()">
+Get Prayer Times
+</button>
+
+<div id="prayerTimes" class="prayer-box">
+Prayer times will appear here
+</div>
+
+</div>
+
+<!-- Bottom Navigation -->
+
+<div class="bottom-nav">
+
+<a href="index.html">🏠 Home</a>
+
+<a href="quran.html">📖 Quran</a>
+
+<a href="hadith.html">📜 Hadith</a>
+
+<a href="prayer.html">🕌 Prayer</a>
+
+<a href="videos.html">🎥 Videos</a>
+
+</div>
+
+<script>
+
+async function getPrayerTimes(){
+
+const city=document.getElementById("cityInput").value;
+
+if(city===""){
+alert("Please enter a city");
+return;
+}
+
+try{
+
+const response=await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda`);
+
+const data=await response.json();
+
+const t=data.data.timings;
+
+document.getElementById("prayerTimes").innerHTML=`
+
+<b>Fajr:</b> ${t.Fajr}<br><br>
+
+<b>Dhuhr:</b> ${t.Dhuhr}<br><br>
+
+<b>Asr:</b> ${t.Asr}<br><br>
+
+<b>Maghrib:</b> ${t.Maghrib}<br><br>
+
+<b>Isha:</b> ${t.Isha}
+
+`;
+
+}catch(error){
+
+document.getElementById("prayerTimes").innerHTML="Could not load prayer times.";
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
