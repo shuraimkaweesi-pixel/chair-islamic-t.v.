@@ -350,3 +350,18 @@ margin-bottom:10px;
 }
 
 }
+#installBtn{
+background:#FFD700;
+color:black;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+margin:10px auto;
+display:block;
+}
+
+#installBtn:hover{
+background:white;
+}
