@@ -206,59 +206,59 @@ window.location.href=`mailto:shuraimkaweesi@gmail.com?subject=${encodeURICompone
 // ===============================
 
 async function loadHadith(){
+  try{
+    let today = new Date().toDateString();
+    let storedDate = localStorage.getItem("hadithDate");
+    let storedHadith = localStorage.getItem("hadithContent");
 
-try{
+    if(storedDate === today && storedHadith){
+      document.getElementById("hadithBox").innerHTML = storedHadith;
+      return;
+    }
 
-let today = new Date().toDateString()
+    // Primary API
+    let res = await fetch("https://api.hadith.sutanlab.id/books/muslim?range=1-300");
+    if(!res.ok) throw new Error("Primary API failed");
 
-let storedDate = localStorage.getItem("hadithDate")
-let storedHadith = localStorage.getItem("hadithContent")
+    let data = await res.json();
+    let hadiths = data.data.hadiths;
+    let randomHadith = hadiths[Math.floor(Math.random()*hadiths.length)];
 
-if(storedDate === today && storedHadith){
+    let hadithHTML = `
+      <div class="arabic">${randomHadith.arab}</div>
+      <div class="translation">${randomHadith.id || randomHadith.translation}</div>
+      <p style="color:#FFD700">Sahih Muslim ${randomHadith.number || ''}</p>
+    `;
 
-document.getElementById("hadithBox").innerHTML = storedHadith
-return
+    document.getElementById("hadithBox").innerHTML = hadithHTML;
+    localStorage.setItem("hadithDate", today);
+    localStorage.setItem("hadithContent", hadithHTML);
 
+  } catch(err) {
+    // Fallback API
+    try{
+      let res = await fetch("https://api.hadith.gading.dev/books/muslim?range=1-10");
+      let data = await res.json();
+      let hadiths = data.data.hadiths;
+      let randomHadith = hadiths[Math.floor(Math.random()*hadiths.length)];
+
+      let hadithHTML = `
+        <div class="arabic">${randomHadith.arab}</div>
+        <div class="translation">${randomHadith.id}</div>
+        <p style="color:#FFD700">Sahih Muslim ${randomHadith.number || ''}</p>
+      `;
+
+      document.getElementById("hadithBox").innerHTML = hadithHTML;
+      localStorage.setItem("hadithDate", new Date().toDateString());
+      localStorage.setItem("hadithContent", hadithHTML);
+
+    } catch(e){
+      document.getElementById("hadithBox").innerText="Could not load Hadith";
+    }
+  }
 }
 
-let res = await fetch("https://api.hadith.sutanlab.id/books/muslim?range=1-300")
-
-let data = await res.json()
-
-let hadiths = data.data.hadiths
-
-let randomHadith = hadiths[Math.floor(Math.random()*hadiths.length)]
-
-let hadithHTML = `
-
-<div class="arabic">
-${randomHadith.arab}
-</div>
-
-<div class="translation">
-${randomHadith.id}
-</div>
-
-<p style="color:#FFD700">
-Sahih Muslim ${randomHadith.number}
-</p>
-
-`
-
-document.getElementById("hadithBox").innerHTML = hadithHTML
-
-localStorage.setItem("hadithDate", today)
-localStorage.setItem("hadithContent", hadithHTML)
-
-}catch{
-
-document.getElementById("hadithBox").innerText="Could not load Hadith"
-
-}
-
-}
-
-loadHadith()
+loadHadith();
 
 
 // ===============================
