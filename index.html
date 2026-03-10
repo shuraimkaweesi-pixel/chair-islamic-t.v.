@@ -3,111 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chair Islamic TV</title>
+<title>Chair Islamic TV - Home</title>
 
-<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FFD700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="logo.png">
 
 <style>
-body{
+body {
   background:#0f0f0f;
   color:#FFD700;
-  font-family:Arial, sans-serif;
+  font-family: Arial, sans-serif;
   margin:0;
   padding:20px;
   text-align:center;
 }
 
-.container{
+.container {
   max-width:900px;
   margin:auto;
 }
 
-h1,h2{
+h1,h2 {
   color:#FFD700;
 }
 
-input,select,textarea,button{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border:none;
-  border-radius:6px;
-}
-
-button{
+button {
+  width:80%;
+  padding:15px;
+  margin:10px auto;
   background:#FFD700;
   color:black;
   font-weight:bold;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
   cursor:pointer;
 }
 
-button:hover{
+button:hover {
   opacity:0.9;
-}
-
-hr{
-  border:1px solid #333;
-  margin:30px 0;
-}
-
-.arabic{
-  font-size:24px;
-  direction:rtl;
-  text-align:right;
-  color:white;
-  margin-bottom:20px;
-}
-
-.translation{
-  font-size:18px;
-  color:#ddd;
-}
-
-.ayah{
-  border-bottom:1px solid #333;
-  padding:10px 0;
-}
-
-iframe{
-  width:100%;
-  height:315px;
-  border:none;
-  margin-bottom:20px;
-}
-
-audio{
-  width:100%;
-  margin-top:10px;
-}
-
-.donate-btn{
-  display:inline-block;
-  background:#FFD700;
-  color:black;
-  padding:12px 20px;
-  margin:10px;
-  border-radius:8px;
-  text-decoration:none;
-  font-weight:bold;
-}
-
-.donate-btn:hover{
-  background:#e6c200;
-}
-
-/* Install button */
-#installBtn{
-  background:#FFD700;
-  color:black;
-  padding:12px 20px;
-  margin:15px 0;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-  display:none;
 }
 
 /* Bottom Navigation */
@@ -122,7 +59,6 @@ audio{
   padding:12px 0;
   border-top:1px solid #333;
 }
-
 .bottom-nav a{
   color:#FFD700;
   text-decoration:none;
@@ -130,7 +66,6 @@ audio{
   flex:1;
   text-align:center;
 }
-
 .bottom-nav a:hover{
   color:white;
 }
@@ -140,125 +75,39 @@ audio{
 <body>
 <div class="container">
 
-<!-- Header -->
-<div class="header">
-  <img src="logo.png" alt="Chair Islamic TV Logo" class="logo" width="150">
-  <h1>Chair Islamic TV</h1>
-</div>
+<h1>Welcome to Chair Islamic TV</h1>
+<p>Read Quran, view Hadith, check Prayer Times, watch Islamic Videos.</p>
 
-<p>
-Welcome to Chair Islamic TV.
-Read the Quran, listen to recitations, watch Islamic videos,
-check prayer times and ask Islamic questions.
-</p>
+<!-- Feature Buttons -->
+<h2>Features</h2>
+<a href="quran.html"><button>📖 Quran Reader</button></a>
+<a href="hadith.html"><button>📜 Daily Hadith</button></a>
+<a href="prayer.html"><button>🕌 Prayer Times</button></a>
+<a href="videos.html"><button>🎥 Latest Videos</button></a>
 
-<h2>Founder Biography</h2>
-<div id="biography">
-<p>
-Welcome to Chair Islamic TV, where faith meets innovation! 
-I'm <b>KAWEESI SHURAIM</b>, the founder of this dynamic platform. 
-Born and raised in <b>Masajja, Kampala</b>, I was inspired by the values 
-of compassion, knowledge, and unity taught by Islam.
-</p>
-<p>
-With a passion for media and a desire to share the beauty of Islam, 
-I embarked on this journey to create a hub for authentic Islamic content.
-</p>
-<p>
-At Chair Islamic TV, we're committed to spreading the message of peace 
-and love. Our team works tirelessly to bring you engaging programs, 
-insightful lectures, and inspiring stories.
-</p>
-<p>
-Join us on this journey as we strive to make a positive impact and 
-uplift communities worldwide. 🌟
-</p>
-</div>
-
-<hr>
-
-<!-- Install / Download App Button -->
-<button id="installBtn">Install Chair Islamic TV 📲</button>
-
-<hr>
-
-<!-- Daily Hadith (Home page link only) -->
-<h2>Daily Hadith</h2>
-<p>Click below to read today's Hadith:</p>
-<a href="hadith.html">
-  <button>Read Daily Hadith 📜</button>
-</a>
-
-<hr>
-
-<!-- Ask Question -->
-<h2>Ask a Question</h2>
-<input id="userName" placeholder="Your Name">
-<input id="userEmail" placeholder="Your Email">
-<textarea id="userQuestion" placeholder="Your Question"></textarea>
-<button onclick="sendQuestion()">Send Question</button>
-<p id="questionStatus"></p>
-
-<hr>
-
-<!-- Prayer Times -->
-<h2>Prayer Times</h2>
-<input id="cityInput" placeholder="Enter City (example Kampala)">
-<button onclick="getPrayerTimes()">Get Prayer Times</button>
-<div id="prayerTimes"></div>
-
-<hr>
-
-<!-- Latest Videos -->
-<h2>Latest Videos</h2>
-<iframe src="https://www.youtube.com/embed/zGIBIOMA0PQ" allowfullscreen></iframe>
-<iframe src="https://www.youtube.com/embed/ZGwG7UBlFCc" allowfullscreen></iframe>
-
-<hr>
-
-<!-- Quran Reader (home shows only controls) -->
-<h2>Quran Reader</h2>
-<input id="surahSearch" placeholder="Search Surah..." onkeyup="searchSurah()">
-<select id="surahSelect"><option value="">Select Surah</option></select>
-<select id="reciterSelect">
-  <option value="afasy">Mishary Alafasy</option>
-  <option value="baset">Abdul Baset</option>
-  <option value="ghamdi">Saad Al-Ghamdi</option>
-</select>
-<a href="quran.html">
-  <button>Open Quran Reader 📖</button>
-</a>
-
-<hr>
-
-<!-- Donate Section -->
-<h2>Support Chair Islamic TV</h2>
-<p>Your donations help us spread Islamic knowledge and maintain this platform.</p>
-<a href="https://www.paypal.com/donate" target="_blank" class="donate-btn">Donate with PayPal / Card</a>
-<a href="https://flutterwave.com/pay" target="_blank" class="donate-btn">Donate with Card (Mastercard / Visa)</a>
+<!-- Install Button -->
+<button id="installBtn" style="display:none;">Install Chair Islamic TV 📲</button>
 
 </div>
 
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
-  <a href="index.html">🏠 Home</a>
-  <a href="quran.html">📖 Quran</a>
-  <a href="hadith.html">📜 Hadith</a>
-  <a href="prayer.html">🕌 Prayer</a>
-  <a href="videos.html">🎥 Videos</a>
+<a href="index.html">🏠 Home</a>
+<a href="quran.html">📖 Quran</a>
+<a href="hadith.html">📜 Hadith</a>
+<a href="prayer.html">🕌 Prayer</a>
+<a href="videos.html">🎥 Videos</a>
 </div>
 
-<!-- Scripts -->
-<script src="script.js"></script>
-
 <script>
-// PWA Install Button
+// PWA Install
 let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
   const installBtn = document.getElementById("installBtn");
   installBtn.style.display = "block";
+
   installBtn.addEventListener("click", () => {
     installBtn.style.display = "none";
     deferredPrompt.prompt();
@@ -268,7 +117,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
   });
 });
 
-// Service Worker registration
+// Service Worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("worker.js")
