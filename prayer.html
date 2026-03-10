@@ -1,174 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Prayer Times | Chair Islamic TV</title>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFD700">
-
 <style>
-
-body{
-background:#0f0f0f;
-color:#FFD700;
-font-family:Arial, sans-serif;
-margin:0;
-padding:20px;
-padding-bottom:90px;
-text-align:center;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-h1{
-color:#FFD700;
-}
-
-input,button{
-width:100%;
-padding:12px;
-margin:8px 0;
-border:none;
-border-radius:6px;
-}
-
-button{
-background:#FFD700;
-color:black;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-opacity:0.9;
-}
-
-.prayer-box{
-background:#1a1a1a;
-padding:20px;
-border-radius:8px;
-margin-top:20px;
-color:#eee;
-line-height:1.8;
-}
-
-/* Bottom Navigation */
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-background:#000;
-display:flex;
-justify-content:space-around;
-padding:12px 0;
-border-top:1px solid #333;
-}
-
-.bottom-nav a{
-color:#FFD700;
-text-decoration:none;
-font-size:14px;
-flex:1;
-text-align:center;
-}
-
-.bottom-nav a:hover{
-color:white;
-}
-
+body{background:#0f0f0f;color:#FFD700;font-family:Arial,sans-serif;margin:0;padding:20px;text-align:center;}
+h1,h2{color:#FFD700;}
+input,button{width:80%;padding:10px;margin:10px auto;display:block;border:none;border-radius:6px;}
+button{background:#FFD700;color:black;font-weight:bold;cursor:pointer;}
+button:hover{opacity:0.9;}
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:#000;display:flex;justify-content:space-around;padding:12px 0;border-top:1px solid #333;}
+.bottom-nav a{color:#FFD700;text-decoration:none;font-size:14px;flex:1;text-align:center;}
+.bottom-nav a:hover{color:white;}
 </style>
-
 </head>
-
 <body>
-
-<div class="container">
-
 <h1>Prayer Times</h1>
-
-<p>Check daily prayer times for your city</p>
-
-<input id="cityInput" placeholder="Enter city (example: Kampala)">
-
-<button onclick="getPrayerTimes()">
-Get Prayer Times
-</button>
-
-<div id="prayerTimes" class="prayer-box">
-Prayer times will appear here
-</div>
-
-</div>
+<input id="cityInput" placeholder="Enter City (e.g., Kampala)">
+<button onclick="getPrayerTimes()">Get Prayer Times</button>
+<div id="prayerTimes"></div>
 
 <!-- Bottom Navigation -->
-
 <div class="bottom-nav">
-
 <a href="index.html">🏠 Home</a>
-
 <a href="quran.html">📖 Quran</a>
-
 <a href="hadith.html">📜 Hadith</a>
-
 <a href="prayer.html">🕌 Prayer</a>
-
 <a href="videos.html">🎥 Videos</a>
-
 </div>
 
 <script>
-
-async function getPrayerTimes(){
-
-const city=document.getElementById("cityInput").value;
-
-if(city===""){
-alert("Please enter a city");
-return;
-}
-
-try{
-
-const response=await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda`);
-
-const data=await response.json();
-
-const t=data.data.timings;
-
+function getPrayerTimes(){
+let city=document.getElementById("cityInput").value||"Kampala";
+fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
+.then(r=>r.json())
+.then(data=>{
+let t=data.data.timings;
 document.getElementById("prayerTimes").innerHTML=`
-
-<b>Fajr:</b> ${t.Fajr}<br><br>
-
-<b>Dhuhr:</b> ${t.Dhuhr}<br><br>
-
-<b>Asr:</b> ${t.Asr}<br><br>
-
-<b>Maghrib:</b> ${t.Maghrib}<br><br>
-
-<b>Isha:</b> ${t.Isha}
-
+Fajr: ${t.Fajr}<br>Dhuhr: ${t.Dhuhr}<br>Asr: ${t.Asr}<br>Maghrib: ${t.Maghrib}<br>Isha: ${t.Isha}
 `;
-
-}catch(error){
-
-document.getElementById("prayerTimes").innerHTML="Could not load prayer times.";
-
+});
 }
-
-}
-
 </script>
-
 </body>
-
 </html>
