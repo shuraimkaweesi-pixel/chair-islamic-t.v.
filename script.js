@@ -202,7 +202,7 @@ window.location.href=`mailto:shuraimkaweesi@gmail.com?subject=${encodeURICompone
 
 
 // ===============================
-// DAILY HADITH (Changes Once Per Day)
+// DAILY HADITH (ENGLISH - DAILY UPDATE)
 // ===============================
 
 async function loadHadith(){
@@ -214,7 +214,6 @@ let today = new Date().toDateString()
 let storedDate = localStorage.getItem("hadithDate")
 let storedHadith = localStorage.getItem("hadithContent")
 
-// If hadith already loaded today
 if(storedDate === today && storedHadith){
 
 document.getElementById("hadithBox").innerHTML = storedHadith
@@ -222,23 +221,32 @@ return
 
 }
 
-// Fetch new hadith
-let res = await fetch("https://api.hadith.gading.dev/books/muslim?range=1-300")
+let res = await fetch("https://api.hadith.sutanlab.id/books/muslim?range=1-300")
 
 let data = await res.json()
 
-let hadithList = data.data.hadiths
+let hadiths = data.data.hadiths
 
-let randomHadith = hadithList[Math.floor(Math.random()*hadithList.length)]
+let randomHadith = hadiths[Math.floor(Math.random()*hadiths.length)]
 
 let hadithHTML = `
-<p style="font-size:22px; direction:rtl;">${randomHadith.arab}</p>
-<p style="margin-top:10px;">${randomHadith.id}</p>
+
+<div class="arabic">
+${randomHadith.arab}
+</div>
+
+<div class="translation">
+${randomHadith.id}
+</div>
+
+<p style="color:#FFD700">
+Sahih Muslim ${randomHadith.number}
+</p>
+
 `
 
 document.getElementById("hadithBox").innerHTML = hadithHTML
 
-// Save for the day
 localStorage.setItem("hadithDate", today)
 localStorage.setItem("hadithContent", hadithHTML)
 
