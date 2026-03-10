@@ -5,80 +5,108 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Chair Islamic TV</title>
 
+<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#d4af37">
+<meta name="theme-color" content="#FFD700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="logo.png">
 
 <style>
-
 body{
-background:#0f0f0f;
-color:#d4af37;
-font-family:Arial;
-margin:0;
-padding:20px;
+  background:#0f0f0f;
+  color:#d4af37;
+  font-family:Arial, sans-serif;
+  margin:0;
+  padding:20px;
 }
 
 .container{
-max-width:900px;
-margin:auto;
+  max-width:900px;
+  margin:auto;
 }
 
 h1,h2{
-color:#ffd700;
+  color:#ffd700;
 }
 
 input,select,textarea,button{
-width:100%;
-padding:10px;
-margin:5px 0;
-border:none;
-border-radius:6px;
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border:none;
+  border-radius:6px;
 }
 
 button{
-background:#d4af37;
-color:black;
-font-weight:bold;
-cursor:pointer;
+  background:#d4af37;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 button:hover{
-opacity:0.9;
+  opacity:0.9;
 }
 
 hr{
-border:1px solid #333;
-margin:30px 0;
+  border:1px solid #333;
+  margin:30px 0;
 }
 
 .arabic{
-font-size:24px;
-direction:rtl;
-text-align:right;
+  font-size:24px;
+  direction:rtl;
+  text-align:right;
 }
 
 .translation{
-font-size:18px;
-color:#eee;
+  font-size:18px;
+  color:#eee;
 }
 
 .ayah{
-border-bottom:1px solid #333;
-padding:10px 0;
+  border-bottom:1px solid #333;
+  padding:10px 0;
 }
 
 iframe{
-width:100%;
-height:315px;
-border:none;
-margin-bottom:20px;
+  width:100%;
+  height:315px;
+  border:none;
+  margin-bottom:20px;
 }
 
 audio{
-width:100%;
-margin-top:10px;
+  width:100%;
+  margin-top:10px;
 }
 
+.donate-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
+
+.donate-btn{
+  background:#FFD700;
+  color:black;
+  text-align:center;
+  padding:12px 20px;
+  border-radius:8px;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.donate-btn:hover{
+  background:#e6c200;
+}
+
+#installBtn{
+  display:none;
+  margin:15px 0;
+}
 </style>
 </head>
 
@@ -86,203 +114,122 @@ margin-top:10px;
 
 <div class="container">
 
-<!-- A. INFO / Header -->
-<!-- A. INFO / Header -->
+<!-- HEADER -->
 <div class="header">
   <img src="logo.png" alt="Chair Islamic TV Logo" class="logo" width="150">
   <h1>Chair Islamic TV</h1>
 </div>
 
 <p>
-Welcome to Chair Islamic TV.
-Read the Quran, listen to recitations, watch Islamic videos,
-check prayer times and ask Islamic questions.
+Welcome to Chair Islamic TV. Read the Quran, listen to recitations, watch Islamic videos, check prayer times and ask Islamic questions.
 </p>
 
-  <h2>Founder Biography</h2>
-
+<h2>Founder Biography</h2>
 <div id="biography">
-
 <p>
-Welcome to Chair Islamic TV, where faith meets innovation! 
-I'm <b>KAWEESI SHURAIM</b>, the founder of this dynamic platform. 
-Born and raised in <b>Masajja, Kampala</b>, I was inspired by the values 
-of compassion, knowledge, and unity taught by Islam.
+Welcome to Chair Islamic TV, where faith meets innovation! I'm <b>KAWEESI SHURAIM</b>, the founder of this dynamic platform. Born and raised in <b>Masajja, Kampala</b>, I was inspired by the values of compassion, knowledge, and unity taught by Islam.
 </p>
-
 <p>
-With a passion for media and a desire to share the beauty of Islam, 
-I embarked on this journey to create a hub for authentic Islamic content.
+With a passion for media and a desire to share the beauty of Islam, I embarked on this journey to create a hub for authentic Islamic content.
 </p>
-
 <p>
-At Chair Islamic TV, we're committed to spreading the message of peace 
-and love. Our team works tirelessly to bring you engaging programs, 
-insightful lectures, and inspiring stories.
+At Chair Islamic TV, we're committed to spreading the message of peace and love. Our team works tirelessly to bring you engaging programs, insightful lectures, and inspiring stories.
 </p>
-
 <p>
-Join us on this journey as we strive to make a positive impact and 
-uplift communities worldwide. 🌟
+Join us on this journey as we strive to make a positive impact and uplift communities worldwide. 🌟
 </p>
-
 </div>
-  
+
 <hr>
 
-  <button id="installBtn" style="display:none;">
-Install Chair Islamic TV 📲
-  </button>
-  <script>
+<!-- INSTALL BUTTON -->
+<button id="installBtn">Install Chair Islamic TV 📲</button>
 
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  const installBtn = document.getElementById("installBtn");
-  installBtn.style.display = "block";
-
-  installBtn.addEventListener("click", () => {
-    installBtn.style.display = "none";
-    deferredPrompt.prompt();
-
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the install");
-      } else {
-        console.log("User dismissed the install");
-      }
-      deferredPrompt = null;
-    });
-  });
-});
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js")
-      .then(reg => console.log("Service Worker Registered"))
-      .catch(err => console.log("Service Worker Failed", err));
-  });
-}
-
-  </script>
-  
-  <link rel="manifest" href="manifest.json">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-<link rel="apple-touch-icon" href="logo.png">
-
-  
 <!-- DAILY HADITH -->
-
 <h2>Daily Hadith</h2>
-
-<div id="hadithBox">
-Loading hadith...
-</div>
-
+<div id="hadithBox">Loading hadith...</div>
 <hr>
 
-<!-- C. ASK QUESTION -->
-
+<!-- ASK QUESTION -->
 <h2>Ask a Question</h2>
-
 <input id="userName" placeholder="Your Name">
-
 <input id="userEmail" placeholder="Your Email">
-
 <textarea id="userQuestion" placeholder="Your Question"></textarea>
-
-<button onclick="sendQuestion()">
-Send Question
-</button>
-
+<button onclick="sendQuestion()">Send Question</button>
 <p id="questionStatus"></p>
-
 <hr>
 
-<!-- D. PRAYER TIME -->
-
+<!-- PRAYER TIMES -->
 <h2>Prayer Times</h2>
-
 <input id="cityInput" placeholder="Enter City (example Kampala)">
-
-<button onclick="getPrayerTimes()">
-Get Prayer Times
-</button>
-
+<button onclick="getPrayerTimes()">Get Prayer Times</button>
 <div id="prayerTimes"></div>
-
 <hr>
 
-<!-- B. LATEST VIDEOS -->
-
+<!-- LATEST VIDEOS -->
 <h2>Latest Videos</h2>
-
-<iframe
-src="https://www.youtube.com/embed/zGIBIOMA0PQ"
-title="Chair Islamic TV Video 1"
-allowfullscreen>
-</iframe>
-
-<iframe
-src="https://www.youtube.com/embed/ZGwG7UBlFCc"
-title="Chair Islamic TV Video 2"
-allowfullscreen>
-</iframe>
+<iframe src="https://www.youtube.com/embed/zGIBIOMA0PQ" title="Chair Islamic TV Video 1" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/ZGwG7UBlFCc" title="Chair Islamic TV Video 2" allowfullscreen></iframe>
 <hr>
 
 <!-- QURAN READER -->
-
 <h2>Quran Reader</h2>
-
-<input
-id="surahSearch"
-placeholder="Search Surah..."
-onkeyup="searchSurah()"
-/>
-
-<select id="surahSelect">
-<option value="">Select Surah</option>
-</select>
-
+<input id="surahSearch" placeholder="Search Surah..." onkeyup="searchSurah()">
+<select id="surahSelect"><option value="">Select Surah</option></select>
 <select id="reciterSelect">
 <option value="afasy">Mishary Alafasy</option>
 <option value="baset">Abdul Baset</option>
 <option value="ghamdi">Saad Al-Ghamdi</option>
 </select>
-
-<button onclick="loadSurah()">
-Load Surah
-</button>
-
+<button onclick="loadSurah()">Load Surah</button>
 <div id="audioPlayer"></div>
-
 <div id="quranText"></div>
 
-</div>
+<hr>
 
-<script src="script.js"></script>
-
-</body>
-</html>
-
+<!-- DONATION SECTION -->
 <section id="donate">
   <h2>Support Chair Islamic TV</h2>
   <p>Your donations help us spread Islamic knowledge and maintain this platform.</p>
 
   <div class="donate-buttons">
-    <a href="https://www.paypal.com/donate" target="_blank" class="donate-btn">
-      Donate with PayPal / Card
-    </a>
-
-    <a href="https://flutterwave.com/pay" target="_blank" class="donate-btn">
-      Donate with Card (Mastercard / Visa)
-    </a>
+    <a href="https://www.paypal.com/donate" target="_blank" class="donate-btn">Donate with PayPal / Card</a>
+    <a href="https://flutterwave.com/pay" target="_blank" class="donate-btn">Donate with Card (Mastercard / Visa)</a>
   </div>
 </section>
+
+</div>
+
+<!-- SCRIPT INCLUDES -->
+<script src="script.js"></script>
+
+<!-- INSTALL BUTTON LOGIC + SERVICE WORKER -->
+<script>
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", async () => {
+  installBtn.style.display = "none";
+  deferredPrompt.prompt();
+  const choice = await deferredPrompt.userChoice;
+  console.log("User choice:", choice.outcome);
+  deferredPrompt = null;
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("worker.js")
+      .then(reg => console.log("Service Worker Registered"))
+      .catch(err => console.log("Service Worker Failed", err));
+  });
+}
+</script>
+
+</body>
+</html>
