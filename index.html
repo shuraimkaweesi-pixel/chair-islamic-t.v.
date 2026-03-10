@@ -157,3 +157,30 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
+<script>
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const installBtn = document.getElementById("installBtn");
+  installBtn.style.display = "block";
+
+  installBtn.addEventListener("click", async () => {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === "accepted") {
+      console.log("App installed");
+    }
+
+    deferredPrompt = null;
+    installBtn.style.display = "none";
+  });
+});
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/worker.js");
+}
+</script>
