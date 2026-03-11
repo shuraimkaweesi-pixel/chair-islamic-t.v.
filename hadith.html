@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="styles.css">
 
 <style>
-/* Additional Hadith Styles */
+/* Hadith styles */
 .hadith-box {
   background:#1a1a1a;
   padding:20px;
@@ -42,6 +42,7 @@
   margin-top:10px;
   text-align:right;
 }
+
 /* Bottom Navigation */
 .bottom-nav{
   position:fixed;
@@ -87,24 +88,47 @@ Loading Hadith...
 </div>
 
 <script>
-// Load random Hadith from small JSON
-async function loadHadith() {
-  try {
-    const response = await fetch("/hadiths.json");
-    const data = await response.json();
-    const random = data[Math.floor(Math.random() * data.length)];
-
-    document.getElementById("hadithBox").innerHTML = `
-      <div class="arabic">${random.arab}</div>
-      <hr>
-      <div class="translation">${random.en}</div>
-      <div class="source">${random.book || ""}</div>
-    `;
-  } catch (error) {
-    document.getElementById("hadithBox").innerText = "Could not load Hadith.";
+// Small ready-to-use Hadith JSON array
+const hadiths = [
+  {
+    "arab": "عن أبي موسى الأشعري رضي الله عنه قال: دخلت على النبي ﷺ أنا ورجلان من بني عمي...",
+    "en": "I called on the Prophet ﷺ with two of my cousins. One said: 'O Messenger of Allah, appoint me governor...' ",
+    "book": "Riyad as-Salihin"
+  },
+  {
+    "arab": "عن عائشة رضي الله عنها قالت: ما رأيت النبي ﷺ يغضب...",
+    "en": "Aisha (RA) said: I never saw the Prophet ﷺ angry except for the cause of Allah.",
+    "book": "Sahih Bukhari"
+  },
+  {
+    "arab": "عن عبد الله بن عمر رضي الله عنهما قال: كان النبي ﷺ...",
+    "en": "Abdullah ibn Umar (RA) said: The Prophet ﷺ used to pray at night...",
+    "book": "Sahih Muslim"
+  },
+  {
+    "arab": "عن أنس رضي الله عنه قال: قال رسول الله ﷺ...",
+    "en": "Anas (RA) said: The Prophet ﷺ said: 'None of you truly believes until he loves for his brother what he loves for himself.'",
+    "book": "Sahih Muslim"
+  },
+  {
+    "arab": "عن جابر رضي الله عنه قال: قال النبي ﷺ...",
+    "en": "Jabir (RA) said: The Prophet ﷺ said: 'The strong believer is better and more beloved to Allah than the weak believer.'",
+    "book": "Sahih Muslim"
   }
+];
+
+// Pick a random Hadith and display
+function loadHadith() {
+  const random = hadiths[Math.floor(Math.random() * hadiths.length)];
+  document.getElementById("hadithBox").innerHTML = `
+    <div class="arabic">${random.arab}</div>
+    <hr>
+    <div class="translation">${random.en}</div>
+    <div class="source">${random.book}</div>
+  `;
 }
 
+// Load Hadith on page load
 loadHadith();
 </script>
 </body>
