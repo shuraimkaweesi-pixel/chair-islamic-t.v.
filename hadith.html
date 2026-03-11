@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Hadith | Chair Islamic TV</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FFD700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="logo.png">
+
+<!-- Main CSS -->
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* Additional Hadith Styles */
+.hadith-box {
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:8px;
+  margin:20px 0;
+  line-height:1.6;
+  color:#fff;
+  text-align:right;
+}
+.arabic {
+  font-size:24px;
+  direction:rtl;
+  text-align:right;
+  margin-bottom:15px;
+}
+.translation {
+  font-size:18px;
+  color:#ddd;
+  text-align:left;
+}
+.source {
+  font-size:14px;
+  color:#FFD700;
+  margin-top:10px;
+  text-align:right;
+}
+/* Bottom Navigation */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#000;
+  display:flex;
+  justify-content:space-around;
+  padding:12px 0;
+  border-top:1px solid #333;
+}
+.bottom-nav a{
+  color:#FFD700;
+  text-decoration:none;
+  font-size:14px;
+  flex:1;
+  text-align:center;
+}
+.bottom-nav a:hover{ color:white; }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Daily Hadith</h1>
+<p>Read authentic sayings of Prophet Muhammad ﷺ</p>
+
+<div id="hadithBox" class="hadith-box">
+Loading Hadith...
+</div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+<a href="index.html">🏠 Home</a>
+<a href="quran.html">📖 Quran</a>
+<a href="hadith.html">📜 Hadith</a>
+<a href="prayer.html">🕌 Prayer</a>
+<a href="videos.html">🎥 Videos</a>
+</div>
+
+<script>
+// ===== Load Hadith from local JSON =====
+async function loadHadith() {
+  try {
+    const response = await fetch("/hadiths.json");
+    if(!response.ok) throw new Error("Failed to fetch JSON");
+    const data = await response.json();
+    
+    // Pick a random Hadith
+    const random = data[Math.floor(Math.random() * data.length)];
+    
+    document.getElementById("hadithBox").innerHTML = `
+      <div class="arabic">${random.arab}</div>
+      <hr>
+      <div class="translation">${random.en}</div>
+      <div class="source">${random.book || ""}</div>
+    `;
+  } catch (error) {
+    console.error(error);
+    document.getElementById("hadithBox").innerText = "Could not load Hadith.";
+  }
+}
+
+loadHadith();
+</script>
+</body>
+</html>
