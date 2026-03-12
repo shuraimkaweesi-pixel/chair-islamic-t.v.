@@ -4,48 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quran Reader | Chair Islamic TV</title>
-
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="container">
+  <h1>Quran Reader</h1>
+  <p>Read and listen to the Quran in Arabic with English translation.</p>
 
-<h1>Quran Reader</h1>
+  <!-- Surah Selector -->
+  <label for="surahSelect">Select Surah:</label>
+  <select id="surahSelect"></select>
 
-<!-- Search Surah -->
-<input type="text" id="surahSearch" placeholder="Search Surah..." onkeyup="searchSurah()">
-<select id="surahSelect"></select>
-<button onclick="loadSurah()">Load Surah</button>
+  <!-- Reciter Selector -->
+  <label for="reciterSelect">Select Reciter:</label>
+  <select id="reciterSelect">
+    <option value="afasy">Al Afasy</option>
+    <option value="baset">Baset</option>
+    <option value="ghamdi">Ghamdi</option>
+  </select>
 
-<!-- Reciter Select -->
-<select id="reciterSelect">
-<option value="afasy">Alafasy</option>
-<option value="baset">Baset</option>
-<option value="ghamdi">Ghamdi</option>
-</select>
+  <button onclick="loadSurah()">Load Surah</button>
 
-<!-- Quran Display -->
-<div id="audioPlayer"></div>
-<div id="quranText"></div>
+  <!-- Quran Text -->
+  <div id="quranText" class="quran-text"></div>
 
-<!-- Search Verse -->
-<input type="text" id="quranSearch" placeholder="Search Quran Topics">
-<button onclick="searchQuran()">Search</button>
-<div id="quranResults"></div>
-
+  <!-- Audio Player -->
+  <div id="audioPlayer"></div>
 </div>
 
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
-<a href="index.html">🏠 Home</a>
-<a href="quran.html">📖 Quran</a>
-<a href="hadith.html">📜 Hadith</a>
-<a href="prayer.html">🕌 Prayer</a>
-<a href="videos.html">🎥 Videos</a>
+  <a href="index.html">🏠 Home</a>
+  <a href="quran.html">📖 Quran</a>
+  <a href="hadith.html">📜 Hadith</a>
+  <a href="prayer.html">🕌 Prayer</a>
+  <a href="videos.html">🎥 Videos</a>
 </div>
 
-<script src="quran.js"></script>
+<script>
+// ===============================
+// SURAH LIST
+// ===============================
+const surahNames = [
+"Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
+"Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha",
+"Al-Anbiya","Al-Hajj","Al-Mu’minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum",
+"Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir",
+"Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf",
+"Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah",
+"As-Saff","Al-Jumu’ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij",
+"Nuh","Al-Jinn","Al-Muzzammil","Al-Muddathir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","Abasa",
+"At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad",
+"Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat",
+"Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
+"Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
+];
+
+// ===============================
+// POPULATE SURAH DROPDOWN
+// ===============================
+const surahSelect = document.getElementById("surahSelect");
+surahNames.forEach((name, i) => {
+  let option = document.createElement("option");
+  option.value = i + 1;
+  option.textContent = (i + 1) + " - " + name;
+  surahSelect.appendChild(option);
+});
+
+// ===============================
+// LOAD SURAH
+// ===============================
+async function loadSurah() {
+  const surahNumber = parseInt(surahSelect.value);
+  if (!surahNumber) {
+    alert("Please select a Surah");
+    return;
+  }
+
+  try {
+    const arabicRes = await fetch("quran.json");
+    const englishRes = await fetch("quran_en.json");
+
+    if (!arabicRes.ok || !englishRes.ok) {
+      throw new Error("Quran JSON files not found");
+    }
+
+    const arabicData = await arabicRes.json();
+    const englishData = await englishRes.json();
+
+    const arabicSurah = arabicData[surahNumber - 1] || arabicData.data?.surahs?.[surahNumber - 1];
+    const englishSurah = englishData[surahNumber - 1] || englishData.data?.surahs?.[surahNumber - 1];
+
+    const arabicAyahs = arabicSurah?.ayahs || arabicSurah?.verses || [];
+    const englishAyahs = englishSurah?.ayahs || englishSurah?.verses || [];
+
+    let html = "";
+    for (let i = 0; i < arabicAyahs.length; i++) {
+      html += `
+      <div class="ayah">
+        <div class="arabic">${i + 1}. ${arabicAyahs[i].text}</div>
+        <div class="translation">${i + 1}. ${englishAyahs[i]?.text || englishAyahs[i]?.translation || "Translation unavailable"}</div>
+      </div>`;
+    }
+
+    document.getElementById("quranText").innerHTML = html;
+
+    // AUDIO PLAYER
+    const reciter = document.getElementById("reciterSelect").value;
+    const reciters = {
+      afasy: "https://server8.mp3quran.net/afs/",
+      baset: "https://server8.mp3quran.net/bas/",
+      ghamdi: "https://server7.mp3quran.net/s_gmd/"
+    };
+    const surahCode = String(surahNumber).padStart(3, "0");
+    const audioURL = reciters[reciter] + surahCode + ".mp3";
+
+    document.getElementById("audioPlayer").innerHTML = `
+      <audio controls>
+        <source src="${audioURL}" type="audio/mpeg">
+      </audio>`;
+
+  } catch (error) {
+    console.error(error);
+    document.getElementById("quranText").innerHTML = "<p style='color:red'>Failed to load Surah. Check Quran JSON files.</p>";
+  }
+}
+</script>
 
 </body>
 </html>
