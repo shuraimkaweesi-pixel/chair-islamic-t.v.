@@ -395,3 +395,14 @@ answer:data.choices[0].message.content
 });
 
 }
+async function askAI() {
+  const question = document.getElementById("aiQuestion").value;
+  const res = await fetch("/api/ask-ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question })
+  });
+
+  const data = await res.json();
+  document.getElementById("aiAnswer").innerText = data.answer || "AI did not respond.";
+    }
