@@ -1,7 +1,7 @@
+<script>
 // ===============================
 // SURAH LIST
 // ===============================
-
 const surahNames = [
 "Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
 "Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha",
@@ -15,65 +15,45 @@ const surahNames = [
 "Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat",
 "Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
-]
+];
 
 // ===============================
 // POPULATE SURAH DROPDOWN
 // ===============================
-
-const surahSelect = document.getElementById("surahSelect")
-
-surahNames.forEach((name,i)=>{
-let option=document.createElement("option")
-option.value=i+1
-option.textContent=(i+1)+" - "+name
-surahSelect.appendChild(option)
-})
-
+const surahSelect = document.getElementById("surahSelect");
+surahNames.forEach((name, i) => {
+  let option = document.createElement("option");
+  option.value = i + 1;
+  option.textContent = (i + 1) + " - " + name;
+  surahSelect.appendChild(option);
+});
 
 // ===============================
 // SURAH SEARCH
 // ===============================
-
-function searchSurah(){
-
-let input=document.getElementById("surahSearch").value.toLowerCase()
-
-for(let i=0;i<surahSelect.options.length;i++){
-
-let txt=surahSelect.options[i].text.toLowerCase()
-
-surahSelect.options[i].style.display=
-txt.includes(input) ? "block":"none"
-
-}
-
-}
-
-
-async function loadSurah() {
-
-  const surahNumber = parseInt(document.getElementById("surahSelect").value);
-
-  if (!surahNumber) {
-    alert("Please select a Surah");
-    return;
+function searchSurah() {
+  let input = document.getElementById("surahSearch").value.toLowerCase();
+  for (let i = 0; i < surahSelect.options.length; i++) {
+    let txt = surahSelect.options[i].text.toLowerCase();
+    surahSelect.options[i].style.display = txt.includes(input) ? "block" : "none";
   }
+}
+
+// ===============================
+// LOAD SURAH
+// ===============================
+async function loadSurah() {
+  const surahNumber = parseInt(document.getElementById("surahSelect").value);
+  if (!surahNumber) { alert("Please select a Surah"); return; }
 
   try {
-
-    // Fetch Quran files
     const arabicRes = await fetch("quran.json");
     const englishRes = await fetch("quran_en.json");
-
-    if (!arabicRes.ok || !englishRes.ok) {
-      throw new Error("Quran JSON files not found");
-    }
+    if (!arabicRes.ok || !englishRes.ok) throw new Error("Quran JSON files not found");
 
     const arabicData = await arabicRes.json();
     const englishData = await englishRes.json();
 
-    // Support different JSON structures
     const arabicSurah =
       arabicData[surahNumber - 1] ||
       arabicData.data?.surahs?.[surahNumber - 1] ||
@@ -82,142 +62,73 @@ async function loadSurah() {
     const englishSurah =
       englishData[surahNumber - 1] ||
       englishData.data?.surahs?.[surahNumber - 1] ||
-      englishData.surahs?.[surahNumber - 1];
+      englishData.surahs?.[surahNumber - 1] ||
+      englishData[surahNumber - 1]; // fallback for array
 
-    if (!arabicSurah) {
-      throw new Error("Surah not found in Arabic file");
-    }
+    if (!arabicSurah) throw new Error("Surah not found in Arabic file");
 
     const arabicAyahs = arabicSurah.ayahs || arabicSurah.verses || [];
-    const englishAyahs = englishSurah?.ayahs || englishSurah?.verses || [];
+    let englishAyahs = [];
+    if (englishSurah) {
+      if (englishSurah.ayahs) englishAyahs = englishSurah.ayahs;
+      else if (englishSurah.verses) englishAyahs = englishSurah.verses;
+      else if (Array.isArray(englishSurah)) englishAyahs = englishSurah;
+    }
 
-let html = "";
-
-for (let i = 0; i < arabicAyahs.length; i++) {
-
-const arabicText = arabicAyahs[i].text;
-
-const englishText =
-englishAyahs[i]?.translation ||
-englishAyahs[i]?.text ||
-"Translation unavailable";
-
-html += `
-<div class="ayah">
-
-<div class="arabic">
-${i + 1}. ${arabicText}
-</div>
-
-<div class="translation">
-${i + 1}. ${englishText}
-</div>
-
-</div>
-`;
-
-}
-async function searchQuran(){
-
-const topic = document.getElementById("quranSearch").value;
-
-const res = await fetch("/api/quran-search",{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({topic})
-});
-
-const data = await res.json();
-
-document.getElementById("quranResults").innerText = data.result;
-
-}    
+    let html = "";
+    for (let i = 0; i < arabicAyahs.length; i++) {
+      const arabicText = arabicAyahs[i]?.text || "Arabic not available";
+      const englishText = englishAyahs[i]?.text || englishAyahs[i]?.translation || "Translation unavailable";
+      html += `
+      <div class="ayah">
+        <div class="arabic">${i + 1}. ${arabicText}</div>
+        <div class="translation">${i + 1}. ${englishText}</div>
+      </div>`;
+    }
 
     document.getElementById("quranText").innerHTML = html;
 
     // AUDIO PLAYER
     const reciter = document.getElementById("reciterSelect").value;
-
     const reciters = {
       afasy: "https://server8.mp3quran.net/afs/",
       baset: "https://server8.mp3quran.net/bas/",
       ghamdi: "https://server7.mp3quran.net/s_gmd/"
     };
-
     const surahCode = String(surahNumber).padStart(3, "0");
     const audioURL = reciters[reciter] + surahCode + ".mp3";
-
     document.getElementById("audioPlayer").innerHTML = `
       <audio controls>
         <source src="${audioURL}" type="audio/mpeg">
-      </audio>
-    `;
+      </audio>`;
 
   } catch (error) {
-
     console.error(error);
-
-    document.getElementById("quranText").innerHTML =
-      "<p style='color:red'>Failed to load Surah. Check Quran JSON files.</p>";
+    document.getElementById("quranText").innerHTML = "<p style='color:red'>Failed to load Surah. Check Quran JSON files.</p>";
   }
 }
-
 
 // ===============================
 // PRAYER TIMES
 // ===============================
-
-function getPrayerTimes(){
-
-let city=document.getElementById("cityInput").value || "Kampala"
-
-fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
-.then(r=>r.json())
-.then(data=>{
-
-let t=data.data.timings
-
-document.getElementById("prayerTimes").innerHTML=`
-
-Fajr: ${t.Fajr}<br>
-Dhuhr: ${t.Dhuhr}<br>
-Asr: ${t.Asr}<br>
-Maghrib: ${t.Maghrib}<br>
-Isha: ${t.Isha}
-
-`
-
-})
-
+function getPrayerTimes() {
+  let city = document.getElementById("cityInput").value || "Kampala";
+  fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
+    .then(r => r.json())
+    .then(data => {
+      let t = data.data.timings;
+      document.getElementById("prayerTimes").innerHTML = `
+        Fajr: ${t.Fajr}<br>
+        Dhuhr: ${t.Dhuhr}<br>
+        Asr: ${t.Asr}<br>
+        Maghrib: ${t.Maghrib}<br>
+        Isha: ${t.Isha}
+      `;
+    });
 }
 
-
 // ===============================
-// ASK QUESTION EMAIL
-// ===============================
-
-function sendQuestion(){
-
-let name=document.getElementById("userName").value
-let email=document.getElementById("userEmail").value
-let q=document.getElementById("userQuestion").value
-
-let subject="Question from Chair Islamic TV"
-
-let body=`Name: ${name}
-
-Email: ${email}
-
-Question:
-${q}`
-
-window.location.href=`mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-
-}
-
-
-// ===============================
-// DAILY HADITH (Offline, Auto-update Daily)
+// DAILY HADITH
 // ===============================
 async function loadHadith() {
   try {
@@ -225,34 +136,26 @@ async function loadHadith() {
     const storedDate = localStorage.getItem("hadithDate");
     const storedHadith = localStorage.getItem("hadithContent");
 
-    // If already loaded today, use cached version
     if (storedDate === today && storedHadith) {
       document.getElementById("hadithBox").innerHTML = storedHadith;
       return;
     }
 
-    // Fetch local JSON file
     const res = await fetch("hadith.json");
     if (!res.ok) throw new Error("Failed to load local Hadith file");
-
     const data = await res.json();
     const hadiths = data.hadiths;
-
-    // Pick a random Hadith
     const randomHadith = hadiths[Math.floor(Math.random() * hadiths.length)];
 
     const arabicText = randomHadith.arab || "Arabic not available";
     const englishText = randomHadith.en || "Translation not available";
-
     const hadithHTML = `
       <div class="arabic">${arabicText}</div>
       <div class="translation">${englishText}</div>
       <p style="color:#FFD700">Sahih Muslim #${randomHadith.number || "-"}</p>
     `;
-
     document.getElementById("hadithBox").innerHTML = hadithHTML;
 
-    // Save to localStorage so it shows same Hadith for today
     localStorage.setItem("hadithDate", today);
     localStorage.setItem("hadithContent", hadithHTML);
 
@@ -261,148 +164,42 @@ async function loadHadith() {
     document.getElementById("hadithBox").innerText = "Could not load Hadith";
   }
 }
-
 loadHadith();
 
-
-async function explainHadith(){
-
-const hadith = document.querySelector(".translation").innerText;
-
-const res = await fetch("/api/explain-hadith",{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({hadith})
-});
-
-const data = await res.json();
-
-document.getElementById("hadithExplanation").innerText = data.explanation;
-
-}
-
-
-
 // ===============================
-// YOUTUBE VIDEOS - Reliable Embed
+// YOUTUBE VIDEOS
 // ===============================
 const youtubeContainer = document.getElementById("youtubeVideos");
-
-// Your channel ID
-const channelID = "UC5_wjk8WksHOOZHflU9heJQ";
-
-// YouTube embed URLs for latest 5 videos
-const videoIDs = [
-  "ZGwG7UBlFCc",
-  "zGIBIOMA0PQ",
-];
-
-// If you want to auto update, you can later fetch via YouTube API key
+const videoIDs = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
 function loadYouTubeVideos() {
   let html = "";
   videoIDs.forEach(id => {
-    html += `
-      <iframe width="100%" height="315"
-        src="https://www.youtube.com/embed/${id}"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe><br><br>
-    `;
+    html += `<iframe width="100%" height="315"
+      src="https://www.youtube.com/embed/${id}"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe><br><br>`;
   });
   youtubeContainer.innerHTML = html;
 }
-
 loadYouTubeVideos();
 
 // ===============================
 // PWA INSTALL BUTTON
 // ===============================
-
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
-
 window.addEventListener("beforeinstallprompt", (e) => {
-
   e.preventDefault();
   deferredPrompt = e;
-
   installBtn.style.display = "block";
-
 });
-
 installBtn.addEventListener("click", async () => {
-
   if (!deferredPrompt) return;
-
   deferredPrompt.prompt();
-
   const choice = await deferredPrompt.userChoice;
-
-  if (choice.outcome === "accepted") {
-    console.log("User installed the app");
-  } else {
-    console.log("User dismissed install");
-  }
-
+  console.log(choice.outcome === "accepted" ? "Installed" : "Dismissed");
   deferredPrompt = null;
-
 });
-async function askAI(){
-
-const question = document.getElementById("aiQuestion").value;
-
-const res = await fetch("/api/ask-ai",{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({question})
-});
-
-const data = await res.json();
-
-document.getElementById("aiAnswer").innerText = data.answer;
-
-}
-
-export default async function handler(req,res){
-
-const {question} = req.body;
-
-const response = await fetch("https://api.openai.com/v1/chat/completions",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json",
-"Authorization":"Bearer YOUR_API_KEY"
-},
-
-body:JSON.stringify({
-model:"gpt-4o-mini",
-messages:[
-{role:"system",content:"You are an Islamic scholar AI. Answer based on Quran and authentic Hadith."},
-{role:"user",content:question}
-]
-})
-
-});
-
-const data = await response.json();
-
-res.json({
-answer:data.choices[0].message.content
-});
-
-}
-async function askAI() {
-  const question = document.getElementById("aiQuestion").value;
-  const res = await fetch("/api/ask-ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question })
-  });
-
-  const data = await res.json();
-  document.getElementById("aiAnswer").innerText = data.answer || "AI did not respond.";
-    }
+</script>
