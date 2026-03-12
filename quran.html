@@ -3,35 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chair Islamic TV - Quran & AI</title>
+<title>Quran Reader | Chair Islamic TV</title>
 
-<!-- Manifest & Theme -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FFD700">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="apple-touch-icon" href="logo.png">
 
-<!-- Main CSS -->
 <link rel="stylesheet" href="styles.css">
 
 <style>
-/* Quran / Hadith Styles */
-.ayah { margin-bottom:15px; }
-.arabic { font-size:22px; direction:rtl; text-align:right; color:#1a1a1a; }
-.translation { font-size:18px; color:#333; text-align:left; margin-top:5px; }
-.hadith-box { background:#1a1a1a; padding:15px; border-radius:8px; color:#fff; margin:20px 0; }
-.hadith-box .arabic { font-size:20px; text-align:right; margin-bottom:10px; }
-.hadith-box .translation { font-size:16px; color:#ddd; text-align:left; }
-.hadith-box .source { color:#FFD700; margin-top:8px; text-align:right; font-size:14px; }
-.bottom-nav { position:fixed; bottom:0; left:0; width:100%; background:#000; display:flex; justify-content:space-around; padding:12px 0; border-top:1px solid #333; }
-.bottom-nav a { color:#FFD700; text-decoration:none; font-size:16px; flex:1; text-align:center; }
-.bottom-nav a:hover { color:white; }
-.ai-chat { background:#f1f1f1; padding:15px; border-radius:8px; margin:20px 0; }
-.ai-chat input { width:80%; padding:8px; }
-.ai-chat button { padding:8px 12px; }
-</style>
+/* Quran styles */
+.ayah { margin-bottom:15px; padding:10px; border-bottom:1px solid #333; }
+.arabic { font-size:24px; direction:rtl; text-align:right; color:#fff; }
+.translation { font-size:18px; text-align:left; color:#ddd; }
+#quranText { margin-top:20px; }
 
+/* Top Controls */
+.controls { margin-bottom:20px; }
+.controls input, .controls select { padding:8px; margin-right:8px; }
+
+/* Bottom Nav */
+.bottom-nav{ position:fixed; bottom:0; left:0; width:100%; background:#000; display:flex; justify-content:space-around; padding:12px 0; border-top:1px solid #333; }
+.bottom-nav a{ color:#FFD700; text-decoration:none; font-size:14px; flex:1; text-align:center; }
+.bottom-nav a:hover{ color:white; }
+
+/* AI Search Box */
+.ai-search { margin-top:20px; }
+.ai-search input { width:70%; padding:8px; margin-right:8px; }
+.ai-search button { padding:8px 12px; }
+#aiQuranAnswer { margin-top:15px; color:#FFD700; }
+</style>
 </head>
 <body>
 
@@ -39,49 +42,28 @@
 
 <h1>📖 Quran Reader</h1>
 
-<!-- Surah Search & Selection -->
-<input id="surahSearch" placeholder="Search Surah..." oninput="searchSurah()">
+<div class="controls">
+<input type="text" id="surahSearch" placeholder="Search Surah..." oninput="searchSurah()">
 <select id="surahSelect"></select>
 <select id="reciterSelect">
-  <option value="afasy">Al Afasy</option>
-  <option value="baset">Baset</option>
-  <option value="ghamdi">Ghamdi</option>
+  <option value="afasy">Abu Bakr Al-Afasy</option>
+  <option value="baset">Mishary Al-Baset</option>
+  <option value="ghamdi">Saad Al-Ghamdi</option>
 </select>
 <button onclick="loadSurah()">Load Surah</button>
-<div id="quranText"></div>
-<div id="audioPlayer"></div>
-
-<hr>
-
-<!-- Prayer Times -->
-<h2>🕌 Prayer Times</h2>
-<input id="cityInput" placeholder="Enter city">
-<button onclick="getPrayerTimes()">Get Prayer Times</button>
-<div id="prayerTimes"></div>
-
-<hr>
-
-<!-- Daily Hadith -->
-<h2>📜 Daily Hadith</h2>
-<div id="hadithBox" class="hadith-box">Loading Hadith...</div>
-<button onclick="explainHadith()">Explain Hadith</button>
-<div id="hadithExplanation"></div>
-
-<hr>
-
-<!-- AI Chat -->
-<h2>🤖 Ask Islamic AI</h2>
-<div class="ai-chat">
-<input id="aiQuestion" placeholder="Ask a question about Islam...">
-<button onclick="askAI()">Ask</button>
-<div id="aiAnswer"></div>
 </div>
 
-<hr>
+<div id="audioPlayer"></div>
 
-<!-- YouTube Videos -->
-<h2>🎥 Latest Videos</h2>
-<div id="youtubeVideos"></div>
+<div id="quranText"></div>
+
+<!-- AI Quran Search -->
+<div class="ai-search">
+<h2>🤖 Quran AI Search</h2>
+<input id="quranAIQuestion" placeholder="Ask about a verse or topic...">
+<button onclick="askQuranAI()">Ask</button>
+<div id="aiQuranAnswer"></div>
+</div>
 
 </div>
 
@@ -113,7 +95,7 @@ const surahNames = [
 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
 ];
 
-// Populate dropdown
+// Populate Surah dropdown
 const surahSelect = document.getElementById("surahSelect");
 surahNames.forEach((name,i)=>{
   let option=document.createElement("option");
@@ -122,158 +104,83 @@ surahNames.forEach((name,i)=>{
   surahSelect.appendChild(option);
 });
 
-// Surah Search
+// Search Surah
 function searchSurah(){
-  let input=document.getElementById("surahSearch").value.toLowerCase();
+  const input=document.getElementById("surahSearch").value.toLowerCase();
   for(let i=0;i<surahSelect.options.length;i++){
-    let txt=surahSelect.options[i].text.toLowerCase();
-    surahSelect.options[i].style.display = txt.includes(input) ? "block":"none";
+    const txt=surahSelect.options[i].text.toLowerCase();
+    surahSelect.options[i].style.display= txt.includes(input) ? "block":"none";
   }
 }
 
 // Load Surah
-async function loadSurah(){
-  const surahNumber = parseInt(surahSelect.value);
-  if(!surahNumber){ alert("Please select a Surah"); return; }
+async function loadSurah() {
+  const surahNumber = parseInt(document.getElementById("surahSelect").value);
+  if (!surahNumber) { alert("Please select a Surah"); return; }
 
-  try{
-    const arabicRes = await fetch("quran.json");
-    const englishRes = await fetch("quran_en.json");
+  try {
+    const [arabicRes, englishRes] = await Promise.all([
+      fetch("quran.json"),
+      fetch("quran_en.json")
+    ]);
+
+    if (!arabicRes.ok || !englishRes.ok) throw new Error("Quran JSON files not found");
+
     const arabicData = await arabicRes.json();
     const englishData = await englishRes.json();
 
-    const arabicSurah = arabicData[surahNumber-1] || arabicData.data?.surahs?.[surahNumber-1];
-    const englishSurah = englishData[surahNumber-1] || englishData.data?.surahs?.[surahNumber-1];
+    const arabicSurah = arabicData[surahNumber-1] || arabicData.data?.surahs?.[surahNumber-1] || arabicData.surahs?.[surahNumber-1];
+    const englishSurah = englishData[surahNumber-1] || englishData.data?.surahs?.[surahNumber-1] || englishData.surahs?.[surahNumber-1];
+
+    if (!arabicSurah) throw new Error("Arabic Surah not found");
 
     const arabicAyahs = arabicSurah.ayahs || arabicSurah.verses || [];
     const englishAyahs = englishSurah?.ayahs || englishSurah?.verses || [];
 
-    let html="";
-    for(let i=0;i<arabicAyahs.length;i++){
-      html+=`
-      <div class="ayah">
-        <div class="arabic">${i+1}. ${arabicAyahs[i].text}</div>
-        <div class="translation">${i+1}. ${englishAyahs[i]?.translation || englishAyahs[i]?.text || "Translation unavailable"}</div>
-      </div>`;
+    let html = "";
+    for (let i = 0; i < arabicAyahs.length; i++) {
+      const arabicText = arabicAyahs[i].text || arabicAyahs[i].ayah || "";
+      const englishText = englishAyahs[i]?.translation || englishAyahs[i]?.text || "Translation unavailable";
+      html += `<div class="ayah"><div class="arabic">${i+1}. ${arabicText}</div><div class="translation">${i+1}. ${englishText}</div></div>`;
     }
-    document.getElementById("quranText").innerHTML=html;
+    document.getElementById("quranText").innerHTML = html;
 
-    // Audio
-    const reciters = {afasy:"https://server8.mp3quran.net/afs/",baset:"https://server8.mp3quran.net/bas/",ghamdi:"https://server7.mp3quran.net/s_gmd/"};
-    const reciter=document.getElementById("reciterSelect").value;
+    // AUDIO PLAYER
+    const reciter = document.getElementById("reciterSelect").value;
+    const reciters = {
+      afasy: "https://server8.mp3quran.net/afs/",
+      baset: "https://server8.mp3quran.net/bas/",
+      ghamdi: "https://server7.mp3quran.net/s_gmd/"
+    };
     const surahCode = String(surahNumber).padStart(3,"0");
-    document.getElementById("audioPlayer").innerHTML=`<audio controls><source src="${reciters[reciter]+surahCode}.mp3" type="audio/mpeg"></audio>`;
-
-  }catch(e){ console.error(e); document.getElementById("quranText").innerHTML="<p style='color:red'>Failed to load Surah</p>"; }
+    document.getElementById("audioPlayer").innerHTML = `<audio controls><source src="${reciters[reciter]}${surahCode}.mp3" type="audio/mpeg"></audio>`;
+  } catch (err) {
+    console.error(err);
+    document.getElementById("quranText").innerHTML = "<p style='color:red'>Failed to load Surah. Check Quran JSON files.</p>";
+  }
 }
 
 // ===============================
-// PRAYER TIMES
+// Quran AI Search
 // ===============================
-function getPrayerTimes(){
-  let city=document.getElementById("cityInput").value || "Kampala";
-  fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
-  .then(r=>r.json())
-  .then(data=>{
-    let t=data.data.timings;
-    document.getElementById("prayerTimes").innerHTML=`
-      Fajr: ${t.Fajr}<br>
-      Dhuhr: ${t.Dhuhr}<br>
-      Asr: ${t.Asr}<br>
-      Maghrib: ${t.Maghrib}<br>
-      Isha: ${t.Isha}
-    `;
-  });
-}
+async function askQuranAI() {
+  const question = document.getElementById("quranAIQuestion").value;
+  if (!question) return;
 
-// ===============================
-// DAILY HADITH
-// ===============================
-async function loadHadith(){
-  try{
-    const today = new Date().toDateString();
-    const storedDate = localStorage.getItem("hadithDate");
-    const storedHadith = localStorage.getItem("hadithContent");
-
-    if(storedDate===today && storedHadith){
-      document.getElementById("hadithBox").innerHTML=storedHadith; return;
-    }
-
-    const res=await fetch("hadith.json");
-    const data=await res.json();
-    const hadiths=data.hadiths;
-    const randomHadith=hadiths[Math.floor(Math.random()*hadiths.length)];
-
-    const hadithHTML=`
-      <div class="arabic">${randomHadith.arab}</div>
-      <div class="translation">${randomHadith.en}</div>
-      <div class="source">${randomHadith.book || "-"}</div>
-    `;
-    document.getElementById("hadithBox").innerHTML=hadithHTML;
-    localStorage.setItem("hadithDate",today);
-    localStorage.setItem("hadithContent",hadithHTML);
-  }catch(err){ console.error(err); document.getElementById("hadithBox").innerText="Could not load Hadith"; }
-}
-loadHadith();
-
-// Explain Hadith AI
-async function explainHadith(){
-  const hadith=document.querySelector(".hadith-box .translation").innerText;
-  const res=await fetch("/api/explain-hadith",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({hadith})
-  });
-  const data=await res.json();
-  document.getElementById("hadithExplanation").innerText=data.explanation;
-}
-
-// ===============================
-// AI Chat
-// ===============================
-async function askAI(){
-  const question=document.getElementById("aiQuestion").value;
-  const res=await fetch("/api/ask-ai",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({question})
-  });
-  const data=await res.json();
-  document.getElementById("aiAnswer").innerText=data.answer;
-}
-
-// ===============================
-// YouTube Videos
-// ===============================
-const videoIDs=["ZGwG7UBlFCc","zGIBIOMA0PQ"];
-function loadYouTubeVideos(){
-  let html="";
-  videoIDs.forEach(id=>{
-    html+=`<iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>`;
-  });
-  document.getElementById("youtubeVideos").innerHTML=html;
-}
-loadYouTubeVideos();
-
-// ===============================
-// PWA INSTALL
-// ===============================
-let deferredPrompt;
-const installBtn=document.getElementById("installBtn");
-window.addEventListener("beforeinstallprompt",e=>{
-  e.preventDefault();
-  deferredPrompt=e;
-  if(installBtn) installBtn.style.display="block";
-});
-if(installBtn){
-  installBtn.addEventListener("click",async()=>{
-    deferredPrompt.prompt();
-    const choice=await deferredPrompt.userChoice;
-    console.log(choice.outcome==="accepted"?"User installed app":"User dismissed install");
-    deferredPrompt=null;
-    installBtn.style.display="none";
-  });
+  try {
+    const res = await fetch("/api/quran-search-ai",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({question})
+    });
+    const data = await res.json();
+    document.getElementById("aiQuranAnswer").innerText = data.answer || "No answer found.";
+  } catch(err) {
+    console.error(err);
+    document.getElementById("aiQuranAnswer").innerText = "AI failed to respond.";
+  }
 }
 </script>
+
 </body>
 </html>
