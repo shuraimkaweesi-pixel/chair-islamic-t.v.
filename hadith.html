@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="styles.css">
 
 <style>
+
 /* Hadith styles */
 .hadith-box {
   background:#1a1a1a;
@@ -25,17 +26,20 @@
   color:#fff;
   text-align:right;
 }
+
 .arabic {
   font-size:24px;
   direction:rtl;
   text-align:right;
   margin-bottom:15px;
 }
+
 .translation {
   font-size:18px;
   color:#ddd;
   text-align:left;
 }
+
 .source {
   font-size:14px;
   color:#FFD700;
@@ -43,7 +47,27 @@
   text-align:right;
 }
 
+/* AI explanation */
+.ai-box{
+background:#111;
+padding:15px;
+border-radius:8px;
+margin-top:15px;
+color:#fff;
+}
+
+.ai-btn{
+background:#FFD700;
+color:black;
+border:none;
+padding:10px 15px;
+border-radius:6px;
+cursor:pointer;
+margin-top:10px;
+}
+
 /* Bottom Navigation */
+
 .bottom-nav{
   position:fixed;
   bottom:0;
@@ -55,6 +79,7 @@
   padding:12px 0;
   border-top:1px solid #333;
 }
+
 .bottom-nav a{
   color:#FFD700;
   text-decoration:none;
@@ -62,11 +87,14 @@
   flex:1;
   text-align:center;
 }
+
 .bottom-nav a:hover{ color:white; }
+
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
 <h1>Daily Hadith</h1>
@@ -76,65 +104,112 @@
 Loading Hadith...
 </div>
 
+<!-- AI Explain Button -->
+
+<button class="ai-btn" onclick="explainHadith()">
+🤖 Explain Hadith
+</button>
+
+<div id="hadithExplanation" class="ai-box">
+AI explanation will appear here...
 </div>
 
+</div>
+
+
 <!-- Bottom Navigation -->
+
 <div class="bottom-nav">
+
 <a href="index.html">🏠 Home</a>
 <a href="quran.html">📖 Quran</a>
 <a href="hadith.html">📜 Hadith</a>
 <a href="prayer.html">🕌 Prayer</a>
 <a href="videos.html">🎥 Videos</a>
+
 </div>
 
+
 <script>
+
 // Small ready-to-use Hadith JSON array
+
 const hadiths = [
-  {
-    "arab": "عن أبي موسى الأشعري رضي الله عنه قال: دخلت على النبي ﷺ أنا ورجلان من بني عمي...",
-    "en": "I called on the Prophet ﷺ with two of my cousins. One said: 'O Messenger of Allah, appoint me governor...' ",
-    "book": "Riyad as-Salihin"
-  },
-  {
-    "arab": "عن عائشة رضي الله عنها قالت: ما رأيت النبي ﷺ يغضب...",
-    "en": "Aisha (RA) said: I never saw the Prophet ﷺ angry except for the cause of Allah.",
-    "book": "Sahih Bukhari"
-  },
-  {
-    "arab": "عن عبد الله بن عمر رضي الله عنهما قال: كان النبي ﷺ...",
-    "en": "Abdullah ibn Umar (RA) said: The Prophet ﷺ used to pray at night...",
-    "book": "Sahih Muslim"
-  },
-  {
-    "arab": "عن أنس رضي الله عنه قال: قال رسول الله ﷺ...",
-    "en": "Anas (RA) said: The Prophet ﷺ said: 'None of you truly believes until he loves for his brother what he loves for himself.'",
-    "book": "Sahih Muslim"
-  },
-  {
-    "arab": "عن جابر رضي الله عنه قال: قال النبي ﷺ...",
-    "en": "Jabir (RA) said: The Prophet ﷺ said: 'The strong believer is better and more beloved to Allah than the weak believer.'",
-    "book": "Sahih Muslim"
-  }
+
+{
+"arab":"عن أبي موسى الأشعري رضي الله عنه قال: دخلت على النبي ﷺ أنا ورجلان من بني عمي...",
+"en":"I called on the Prophet ﷺ with two of my cousins. One said: 'O Messenger of Allah, appoint me governor...' ",
+"book":"Riyad as-Salihin"
+},
+
+{
+"arab":"عن عائشة رضي الله عنها قالت: ما رأيت النبي ﷺ يغضب...",
+"en":"Aisha (RA) said: I never saw the Prophet ﷺ angry except for the cause of Allah.",
+"book":"Sahih Bukhari"
+},
+
+{
+"arab":"عن عبد الله بن عمر رضي الله عنهما قال: كان النبي ﷺ...",
+"en":"Abdullah ibn Umar (RA) said: The Prophet ﷺ used to pray at night...",
+"book":"Sahih Muslim"
+},
+
+{
+"arab":"عن أنس رضي الله عنه قال: قال رسول الله ﷺ...",
+"en":"Anas (RA) said: The Prophet ﷺ said: 'None of you truly believes until he loves for his brother what he loves for himself.'",
+"book":"Sahih Muslim"
+},
+
+{
+"arab":"عن جابر رضي الله عنه قال: قال النبي ﷺ...",
+"en":"Jabir (RA) said: The Prophet ﷺ said: 'The strong believer is better and more beloved to Allah than the weak believer.'",
+"book":"Sahih Muslim"
+}
+
 ];
 
-// Pick a random Hadith and display
-function loadHadith() {
-  const random = hadiths[Math.floor(Math.random() * hadiths.length)];
-  document.getElementById("hadithBox").innerHTML = `
-    <div class="arabic">${random.arab}</div>
-    <hr>
-    <div class="translation">${random.en}</div>
-    <div class="source">${random.book}</div>
-  `;
+// store current hadith
+let currentHadith = "";
+
+// Pick random Hadith
+
+function loadHadith(){
+
+const random = hadiths[Math.floor(Math.random()*hadiths.length)];
+
+currentHadith = random.en;
+
+document.getElementById("hadithBox").innerHTML = `
+
+<div class="arabic">${random.arab}</div>
+<hr>
+<div class="translation">${random.en}</div>
+<div class="source">${random.book}</div>
+
+`;
+
+}
+
+// AI explanation (simple built-in explanation)
+
+function explainHadith(){
+
+const explanation = `
+This hadith teaches an important moral lesson in Islam.
+It encourages believers to follow the example of Prophet Muhammad ﷺ,
+show sincerity, good character, and strong faith in Allah.
+Reflect on the meaning and apply it in daily life.
+`;
+
+document.getElementById("hadithExplanation").innerText = explanation;
+
 }
 
 // Load Hadith on page load
+
 loadHadith();
 
-<button onclick="explainHadith()">Explain Hadith</button>
-
-<div id="hadithExplanation"></div>
-  
 </script>
+
 </body>
 </html>
