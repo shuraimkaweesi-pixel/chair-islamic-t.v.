@@ -17,63 +17,9 @@
 <!-- Main CSS -->
 <link rel="stylesheet" href="styles.css">
 
-<style>
-/* AI Chat Section */
-.ai-chat {
-  background:#1a1a1a;
-  color:#fff;
-  padding:20px;
-  border-radius:8px;
-  margin:30px auto;
-  max-width:900px;
-  text-align:center;
-}
-.ai-chat input {
-  width:80%;
-  padding:12px;
-  border-radius:6px;
-  border:none;
-  margin-bottom:10px;
-}
-.ai-chat button {
-  padding:12px 20px;
-  background:#FFD700;
-  border:none;
-  border-radius:6px;
-  font-weight:bold;
-  cursor:pointer;
-}
-.ai-chat #aiAnswer {
-  margin-top:15px;
-  text-align:left;
-  color:#ddd;
-  white-space:pre-wrap;
-}
-
-/* Bottom Navigation */
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#000;
-  display:flex;
-  justify-content:space-around;
-  padding:14px 0;
-  border-top:1px solid #333;
-}
-.bottom-nav a{
-  color:#FFD700;
-  text-decoration:none;
-  font-size:16px;
-  flex:1;
-  text-align:center;
-}
-.bottom-nav a:hover{ color:white; }
-</style>
 </head>
-
 <body>
+
 <div class="container">
 
 <h1>Welcome to Chair Islamic TV</h1>
@@ -82,7 +28,7 @@
 <!-- Founder Biography -->
 <h2>Founder Biography</h2>
 <div class="content-box">
-<p>Welcome to Chair Islamic TV, where faith meets innovation! I'm <b>KAWEESI SHURAIM</b>, the founder of this dynamic platform.</p>
+<p>Welcome to Chair Islamic TV, where faith meets innovation! I'm <b>KAWEESI SHURAIM</b>, the founder of this platform.</p>
 <p>Born and raised in <b>Masajja, Kampala</b>, I was inspired by the values of compassion, knowledge, and unity taught by Islam.</p>
 <p>With a passion for media and a desire to share the beauty of Islam, I created this platform to provide authentic Islamic content.</p>
 <p>At Chair Islamic TV, we are committed to spreading the message of peace and knowledge through digital media.</p>
@@ -110,14 +56,6 @@
 
 </div>
 
-<!-- AI Chat Section -->
-<div class="ai-chat">
-<h2>🤖 Ask Islamic AI</h2>
-<input id="aiQuestion" placeholder="Ask a question about Islam...">
-<button onclick="askAI()">Ask</button>
-<div id="aiAnswer">Your answer will appear here...</div>
-</div>
-
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
 <a href="index.html">🏠 Home</a>
@@ -128,9 +66,7 @@
 </div>
 
 <script>
-// ===============================
-// PWA Install Button
-// ===============================
+// ===== PWA Install Button =====
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
@@ -140,58 +76,19 @@ window.addEventListener("beforeinstallprompt", (e) => {
   installBtn.style.display = "block";
 });
 
-installBtn.addEventListener("click", async () => {
+installBtn.addEventListener("click", () => {
   if(!deferredPrompt) return;
   installBtn.style.display = "none";
   deferredPrompt.prompt();
-  const choice = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-});
-
-// ===============================
-// Service Worker
-// ===============================
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('worker.js')
-      .then(reg => console.log('Service Worker Registered'))
-      .catch(err => console.log('Service Worker Failed', err));
-  });
-}
-
-// ===============================
-// Ask Islamic AI
-// ===============================
-async function askAI() {
-  const question = document.getElementById("aiQuestion").value.trim();
-  const aiAnswerDiv = document.getElementById("aiAnswer");
-
-  if(!question){
-    aiAnswerDiv.innerText = "Please type a question.";
-    return;
-  }
-
-  aiAnswerDiv.innerText = "Thinking...";
-
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ message: question })
-    });
-
-    const data = await res.json();
-
-    if(data.reply){
-      aiAnswerDiv.innerText = data.reply;
+  deferredPrompt.userChoice.then((choice) => {
+    if(choice.outcome === 'accepted'){
+      console.log("User accepted the install");
     } else {
-      aiAnswerDiv.innerText = "AI did not return a reply.";
+      console.log("User dismissed the install");
     }
-  } catch(err){
-    console.error(err);
-    aiAnswerDiv.innerText = "AI could not respond.";
-  }
-}
+    deferredPrompt = null;
+  });
+});
 </script>
 
 </body>
