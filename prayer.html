@@ -1,47 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prayer Times | Chair Islamic TV</title>
-<style>
-body{background:#0f0f0f;color:#FFD700;font-family:Arial,sans-serif;margin:0;padding:20px;text-align:center;}
-h1,h2{color:#FFD700;}
-input,button{width:80%;padding:10px;margin:10px auto;display:block;border:none;border-radius:6px;}
-button{background:#FFD700;color:black;font-weight:bold;cursor:pointer;}
-button:hover{opacity:0.9;}
-.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:#000;display:flex;justify-content:space-around;padding:12px 0;border-top:1px solid #333;}
-.bottom-nav a{color:#FFD700;text-decoration:none;font-size:14px;flex:1;text-align:center;}
-.bottom-nav a:hover{color:white;}
-</style>
-</head>
-<body>
-<h1>Prayer Times</h1>
-<input id="cityInput" placeholder="Enter City (e.g., Kampala)">
-<button onclick="getPrayerTimes()">Get Prayer Times</button>
-<div id="prayerTimes"></div>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-<a href="index.html">🏠 Home</a>
-<a href="quran.html">📖 Quran</a>
-<a href="hadith.html">📜 Hadith</a>
-<a href="prayer.html">🕌 Prayer</a>
-<a href="videos.html">🎥 Videos</a>
+<title>Prayer Times | Chair Islamic TV</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FFD700">
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+
+.prayer-box{
+background:#1a1a1a;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+color:white;
+font-size:18px;
+}
+
+.prayer{
+display:flex;
+justify-content:space-between;
+padding:12px;
+border-bottom:1px solid #333;
+}
+
+.next{
+background:#FFD700;
+color:black;
+font-weight:bold;
+border-radius:6px;
+}
+
+.date{
+margin-top:10px;
+font-size:16px;
+color:#FFD700;
+}
+
+/* Navigation */
+
+.bottom-nav{
+position:fixed;
+bottom:20px;
+left:0;
+width:100%;
+background:#000;
+display:flex;
+justify-content:space-around;
+padding:15px 0;
+border-top:1px solid #333;
+}
+
+.bottom-nav a{
+color:#FFD700;
+text-decoration:none;
+font-size:18px;
+flex:1;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Prayer Times</h1>
+
+<p id="location">Detecting location...</p>
+
+<div class="date" id="date"></div>
+
+<div id="prayerBox" class="prayer-box">
+
+Loading prayer times...
+
 </div>
 
+</div>
+
+
+<!-- Navigation -->
+
+<div class="bottom-nav">
+
+<a href="index.html">🏠 Home</a>
+
+<a href="quran.html">📖 Quran</a>
+
+<a href="hadith.html">📜 Hadith</a>
+
+<a href="prayer.html">🕌 Prayer</a>
+
+<a href="videos.html">🎥 Videos</a>
+
+</div>
+
+
 <script>
-function getPrayerTimes(){
-let city=document.getElementById("cityInput").value||"Kampala";
-fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
-.then(r=>r.json())
-.then(data=>{
-let t=data.data.timings;
-document.getElementById("prayerTimes").innerHTML=`
-Fajr: ${t.Fajr}<br>Dhuhr: ${t.Dhuhr}<br>Asr: ${t.Asr}<br>Maghrib: ${t.Maghrib}<br>Isha: ${t.Isha}
-`;
-});
+
+function getNextPrayer(timings){
+
+const prayers = ["Fajr","Dhuhr","Asr","Maghrib","Isha"];
+
+const now = new Date();
+
+let next = null;
+
+for(let p of prayers){
+
+const time = timings[p].split(":");
+
+const prayerTime = new Date();
+
+prayerTime.setHours(time[0], time[1]);
+
+if(prayerTime > now){
+
+next = p;
+
+break;
+
 }
+
+}
+
+return next;
+
+}
+
+
+
+function displayPrayerTimes(data){
+
+const t = data.data.timings;
+
+const date = data.data.date;
+
+const next = getNextPrayer(t);
+
+document.getElementById("date").innerHTML =
+`${date.gregorian.date} | ${date.hijri.date} ${date.hijri.month.en}`;
+
+
+
+const prayers = ["Fajr","Dhuhr","Asr","Maghrib","Isha"];
+
+let html = "";
+
+prayers.forEach(p=>{
+
+const cls = p === next ? "prayer next" : "prayer";
+
+html += `<div class="${cls}">
+<span>${p}</span>
+<span>${t[p]}</span>
+</div>`;
+
+});
+
+document.getElementById("prayerBox").innerHTML = html;
+
+}
+
+
+
+function loadPrayerTimes(lat,lon){
+
+fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`)
+.then(res=>res.json())
+.then(data=>{
+
+displayPrayerTimes(data);
+
+})
+
+.catch(()=>{
+
+document.getElementById("prayerBox").innerHTML="Could not load prayer times.";
+
+});
+
+}
+
+
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(position=>{
+
+const lat = position.coords.latitude;
+
+const lon = position.coords.longitude;
+
+document.getElementById("location").innerHTML = "Your location detected";
+
+loadPrayerTimes(lat,lon);
+
+},()=>{
+
+document.getElementById("location").innerHTML="Using default location Kampala";
+
+loadPrayerTimes(0.3476,32.5825);
+
+});
+
+}else{
+
+loadPrayerTimes(0.3476,32.5825);
+
+}
+
 </script>
+
 </body>
+
 </html>
