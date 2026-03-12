@@ -117,6 +117,21 @@ ${i + 1}. ${englishText}
 `;
 
 }
+async function searchQuran(){
+
+const topic = document.getElementById("quranSearch").value;
+
+const res = await fetch("/api/quran-search",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({topic})
+});
+
+const data = await res.json();
+
+document.getElementById("quranResults").innerText = data.result;
+
+}    
 
     document.getElementById("quranText").innerHTML = html;
 
