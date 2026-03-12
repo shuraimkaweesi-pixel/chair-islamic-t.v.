@@ -265,6 +265,24 @@ async function loadHadith() {
 loadHadith();
 
 
+async function explainHadith(){
+
+const hadith = document.querySelector(".translation").innerText;
+
+const res = await fetch("/api/explain-hadith",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({hadith})
+});
+
+const data = await res.json();
+
+document.getElementById("hadithExplanation").innerText = data.explanation;
+
+}
+
+
+
 // ===============================
 // YOUTUBE VIDEOS - Reliable Embed
 // ===============================
