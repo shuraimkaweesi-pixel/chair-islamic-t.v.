@@ -364,3 +364,34 @@ const data = await res.json();
 document.getElementById("aiAnswer").innerText = data.answer;
 
 }
+
+export default async function handler(req,res){
+
+const {question} = req.body;
+
+const response = await fetch("https://api.openai.com/v1/chat/completions",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer YOUR_API_KEY"
+},
+
+body:JSON.stringify({
+model:"gpt-4o-mini",
+messages:[
+{role:"system",content:"You are an Islamic scholar AI. Answer based on Quran and authentic Hadith."},
+{role:"user",content:question}
+]
+})
+
+});
+
+const data = await response.json();
+
+res.json({
+answer:data.choices[0].message.content
+});
+
+}
