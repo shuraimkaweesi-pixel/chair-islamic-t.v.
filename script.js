@@ -145,46 +145,71 @@ if(surahSelect){
   }
 
   // LOAD SURAH
-  window.loadSurah = async function(){
-    const surahNumber = parseInt(surahSelect.value);
-    if(!surahNumber) return alert("Select a Surah");
+  async function loadSurah(){
 
-    try{
-      const [arabicRes, englishRes] = await Promise.all([
-        fetch("quran.json"), fetch("quran_en.json")
-      ]);
-      if(!arabicRes.ok || !englishRes.ok) throw new Error("Quran JSON files not found");
+const surahNumber = parseInt(document.getElementById("surahSelect").value);
+if(!surahNumber) return alert("Select a Surah");
 
-      const arabicData = await arabicRes.json();
-      const englishData = await englishRes.json();
-      const arabicSurah = arabicData[surahNumber-1]?.ayahs || arabicData.data?.surahs?.[surahNumber-1]?.ayahs || arabicData.surahs?.[surahNumber-1]?.ayahs;
-      const englishSurah = englishData[surahNumber-1]?.ayahs || englishData.data?.surahs?.[surahNumber-1]?.ayahs || englishData.surahs?.[surahNumber-1]?.ayahs;
-      if(!arabicSurah) throw new Error("Arabic Surah not found");
+try{
 
-      let html = "";
-      for(let i=0;i<arabicSurah.length;i++){
-        const arabicText = arabicSurah[i]?.text || "Arabic not available";
-        let englishText = "Translation unavailable";
-        if(englishSurah && englishSurah[i]){
-          englishText = englishSurah[i].translation || englishSurah[i].text || englishText;
-        }
-        html += `<div class="ayah">
-          <div class="arabic">${i+1}. ${arabicText}</div>
-          <div class="translation">${i+1}. ${englishText}</div>
-        </div>`;
-      }
-      document.getElementById("quranText").innerHTML = html;
+const arabicRes = await fetch("quran.json");
+const englishRes = await fetch("quran_en.json");
 
-      // AUDIO
-      const reciter = document.getElementById("reciterSelect").value;
-      const reciters = { afasy:"https://server8.mp3quran.net/afs/", baset:"https://server8.mp3quran.net/bas/", ghamdi:"https://server7.mp3quran.net/s_gmd/" };
-      const surahCode = String(surahNumber).padStart(3,"0");
-      const audioURL = reciters[reciter]+surahCode+".mp3";
-      document.getElementById("audioPlayer").innerHTML = `<audio controls><source src="${audioURL}" type="audio/mpeg"></audio>`;
+const arabicData = await arabicRes.json();
+const englishData = await englishRes.json();
 
-    }catch(err){
-      console.error(err);
-      document.getElementById("quranText").innerHTML = "<p style='color:red'>Failed to load Surah. Check Quran JSON files.</p>";
-    }
-  }
+// your JSON is an ARRAY of surahs
+const arabicSurah = arabicData[surahNumber-1];
+const englishSurah = englishData[surahNumber-1];
+
+let html = "";
+
+for(let i=0;i<arabicSurah.verses.length;i++){
+
+const ar = arabicSurah.verses[i].text;
+const en = englishSurah.verses[i].text;
+
+html += `
+<div class="ayah">
+
+<div class="arabic">
+${i+1}. ${ar}
+</div>
+
+<div class="translation">
+${i+1}. ${en}
+</div>
+
+</div>
+`;
+
 }
+
+document.getElementById("quranText").innerHTML = html;
+
+// AUDIO PLAYER
+const reciter = document.getElementById("reciterSelect").value;
+
+const reciters = {
+afasy:"https://server8.mp3quran.net/afs/",
+baset:"https://server8.mp3quran.net/bas/",
+ghamdi:"https://server7.mp3quran.net/s_gmd/"
+};
+
+const surahCode = String(surahNumber).padStart(3,"0");
+
+const audioURL = reciters[reciter] + surahCode + ".mp3";
+
+document.getElementById("audioPlayer").innerHTML =
+`<audio controls src="${audioURL}"></audio>`;
+
+}catch(err){
+
+console.error(err);
+
+document.getElementById("quranText").innerHTML =
+"<p style='color:red'>Failed to load Surah</p>";
+
+}
+
+  
