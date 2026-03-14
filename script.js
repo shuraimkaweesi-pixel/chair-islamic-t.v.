@@ -226,34 +226,18 @@ html += `
 document.getElementById("quranText").innerHTML = html;
 
 
-// AUDIO
-
-const reciter = document.getElementById("reciterSelect")?.value || "afasy";
-
+// Audio
+const reciter = document.getElementById("reciterSelect").value;
 const reciters = {
-
-afasy:"https://server8.mp3quran.net/afs/",
-baset:"https://server8.mp3quran.net/bas/",
-ghamdi:"https://server7.mp3quran.net/s_gmd/"
-
+  afasy:"https://server8.mp3quran.net/afs/",
+  baset:"https://server8.mp3quran.net/bas/",
+  ghamdi:"https://server7.mp3quran.net/s_gmd/"
 };
-
 const surahCode = String(surahNumber).padStart(3,"0");
-
 const audioURL = reciters[reciter] + surahCode + ".mp3";
 
-document.getElementById("audioPlayer").innerHTML =
-`<audio controls style="width:100%" src="${audioURL}"></audio>`;
+// Floating audio (stays visible)
+document.getElementById("audioPlayer").innerHTML = `
+  <audio controls style="width:100%" src="${audioURL}"></audio>
+`;;
 
-}catch(err){
-
-console.error(err);
-
-document.getElementById("quranText").innerHTML =
-"<p style='color:red'>Failed to load Surah</p>";
-
-}
-
-}
-
-window.loadSurah = loadSurah;
