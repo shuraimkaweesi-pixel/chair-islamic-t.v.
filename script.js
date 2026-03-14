@@ -161,25 +161,47 @@ txt.includes(input) ? "block" : "none";
 
 
 // LOAD SURAH
+function searchSurah(){
+
+const input = document.getElementById("surahSearch").value.toLowerCase();
+
+const options = document.getElementById("surahSelect").options;
+
+for(let i=0;i<options.length;i++){
+
+const txt = options[i].text.toLowerCase();
+
+options[i].style.display = txt.includes(input) ? "block" : "none";
+
+}
+
+}
+
+
 async function loadSurah(){
 
-const surahNumber = parseInt(document.getElementById("surahSelect").value);
+const surahNumber = document.getElementById("surahSelect").value;
 
 if(!surahNumber){
+
 alert("Select a Surah");
+
 return;
+
 }
 
 try{
 
 const arabicRes = await fetch("quran.json");
+
 const englishRes = await fetch("quran_en.json");
 
 const arabicData = await arabicRes.json();
+
 const englishData = await englishRes.json();
 
-// get selected surah
 const arabicSurah = arabicData[surahNumber-1];
+
 const englishSurah = englishData[surahNumber-1];
 
 let html = "";
@@ -187,9 +209,11 @@ let html = "";
 for(let i=0;i<arabicSurah.verses.length;i++){
 
 const ar = arabicSurah.verses[i].text;
+
 const en = englishSurah.verses[i].text;
 
 html += `
+
 <div class="ayah">
 
 <div class="arabic">
@@ -201,6 +225,7 @@ ${i+1}. ${en}
 </div>
 
 </div>
+
 `;
 
 }
@@ -209,12 +234,15 @@ document.getElementById("quranText").innerHTML = html;
 
 
 // AUDIO
+
 const reciter = document.getElementById("reciterSelect").value;
 
 const reciters = {
+
 afasy:"https://server8.mp3quran.net/afs/",
 baset:"https://server8.mp3quran.net/bas/",
 ghamdi:"https://server7.mp3quran.net/s_gmd/"
+
 };
 
 const surahCode = String(surahNumber).padStart(3,"0");
@@ -234,7 +262,3 @@ document.getElementById("quranText").innerHTML =
 }
 
 }
-
-// make button access function
-window.loadSurah = loadSurah;
-window.searchSurah = searchSurah;
