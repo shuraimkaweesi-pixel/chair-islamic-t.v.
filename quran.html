@@ -48,10 +48,10 @@ select,input,button { padding:8px; font-size:16px; border-radius:5px; border:1px
 <div id="audioPlayer"></div>
 
 <script>
-// Load both local JSON files
 let quranArabic = [];
 let quranEnglish = [];
 
+// Load both JSONs
 Promise.all([
   fetch('quran.json').then(r=>r.json()),
   fetch('quran_en.json').then(r=>r.json())
@@ -60,22 +60,20 @@ Promise.all([
   quranEnglish = en;
   populateSurahSelect();
 }).catch(err=>{
-  console.error("Failed to load Quran files",err);
-  document.getElementById('quranText').innerText = "Failed to load Quran files";
+  console.error("Failed to load Quran JSON", err);
+  document.getElementById('quranText').innerText = "Failed to load Quran";
 });
 
-// Populate dropdown
 function populateSurahSelect(){
   const select = document.getElementById('surahSelect');
-  quranArabic.forEach((surah,i)=>{
+  quranArabic.forEach(s=>{
     const option = document.createElement('option');
-    option.value = surah.id;
-    option.textContent = `${surah.id} - ${surah.transliteration} (${surah.name})`;
+    option.value = s.id;
+    option.textContent = `${s.id} - ${s.transliteration} (${s.name})`;
     select.appendChild(option);
   });
 }
 
-// Load selected Surah
 function loadSurah(){
   const surahId = parseInt(document.getElementById('surahSelect').value);
   if(!surahId){ alert("Select a Surah"); return; }
@@ -83,7 +81,7 @@ function loadSurah(){
   const surahAr = quranArabic.find(s=>s.id===surahId);
   const surahEn = quranEnglish.find(s=>s.id===surahId);
 
-  if(!surahAr){ alert("Surah not found"); return; }
+  if(!surahAr){ alert("Arabic Surah not found"); return; }
 
   let html = '';
   surahAr.verses.forEach((v,i)=>{
@@ -95,6 +93,7 @@ function loadSurah(){
       </div>
     `;
   });
+
   document.getElementById('quranText').innerHTML = html;
 
   // Floating audio
@@ -108,7 +107,6 @@ function loadSurah(){
   const audioURL = reciters[reciter] + surahCode + ".mp3";
   document.getElementById('audioPlayer').innerHTML = `<audio controls style="width:100%" src="${audioURL}"></audio>`;
 }
-  
 </script>
 </body>
 </html>
