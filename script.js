@@ -192,52 +192,40 @@ surahSelect.appendChild(option);
 // ===============================
 
 async function loadSurah(){
+  const surahNumber = parseInt(document.getElementById("surahSelect").value);
+  if(!surahNumber){ alert("Select a Surah"); return; }
 
-const surahNumber = document.getElementById("surahSelect").value;
+  try{
+    const res = await fetch("https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/quran.json");
+    if(!res.ok) throw new Error("Failed to load Quran JSON");
+    const data = await res.json();
+    const surah = data[surahNumber-1];
 
-if(!surahNumber){
+    let html = "";
+    surah.verses.forEach((v,i)=>{
+      html += `
+      <div class="ayah">
+        <div class="arabic">${i+1}. ${v.text_ar}</div>
+        <div class="translation">${i+1}. ${v.text_en}</div>
+      </div>`;
+    });
+    document.getElementById("quranText").innerHTML = html;
 
-alert("Select a Surah");
+    // Audio
+    const reciter = document.getElementById("reciterSelect").value;
+    const reciters = {
+      afasy:"https://server8.mp3quran.net/afs/",
+      baset:"https://server8.mp3quran.net/bas/",
+      ghamdi:"https://server7.mp3quran.net/s_gmd/"
+    };
+    const surahCode = String(surahNumber).padStart(3,"0");
+    const audioURL = reciters[reciter] + surahCode + ".mp3";
 
-return;
-
+    document.getElementById("audioPlayer").innerHTML = `
+      <audio controls style="width:100%" src="${audioURL}"></audio>`;
+  } catch(err){
+    console.error(err);
+    document.getElementById("quranText").innerHTML =
+      "<p style='color:red'>Failed to load Surah</p>";
+  }
 }
-
-try{
-
-const res = await fetch("https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/quran.json");
-
-const data = await res.json();
-
-const surah = data[surahNumber-1];
-
-let html = "";
-
-surah.verses.forEach((v,i)=>{
-
-html += `
-<div class="ayah">
-<div class="arabic">${i+1}. ${v.text}</div>
-</div>
-`;
-
-});
-
-document.getElementById("quranText").innerHTML = html;
-
-
-// Audio
-const reciter = document.getElementById("reciterSelect").value;
-const reciters = {
-  afasy:"https://server8.mp3quran.net/afs/",
-  baset:"https://server8.mp3quran.net/bas/",
-  ghamdi:"https://server7.mp3quran.net/s_gmd/"
-};
-const surahCode = String(surahNumber).padStart(3,"0");
-const audioURL = reciters[reciter] + surahCode + ".mp3";
-
-// Floating audio (stays visible)
-document.getElementById("audioPlayer").innerHTML = `
-  <audio controls style="width:100%" src="${audioURL}"></audio>
-`;;
-
