@@ -5,7 +5,8 @@
 // ===== PWA INSTALL BUTTON =====
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
-if(installBtn){
+
+if (installBtn) {
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -13,103 +14,144 @@ if(installBtn){
   });
 
   installBtn.addEventListener("click", async () => {
-    if(!deferredPrompt) return;
+    if (!deferredPrompt) return;
+
     deferredPrompt.prompt();
     const choice = await deferredPrompt.userChoice;
+
     console.log(choice.outcome === "accepted" ? "Installed" : "Dismissed");
+
     deferredPrompt = null;
   });
 }
 
-// ===== YOUTUBE VIDEOS (Home Page) =====
+// ===============================
+// YOUTUBE VIDEOS (HOME PAGE)
+// ===============================
+
 const youtubeContainer = document.getElementById("youtubeVideos");
-if(youtubeContainer){
+
+if (youtubeContainer) {
+
   const videoIDs = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
+
   let html = "";
-  videoIDs.forEach(id=>{
-    html += `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" 
-      title="YouTube video player" frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>`;
+
+  videoIDs.forEach(id => {
+
+    html += `
+    <iframe width="100%" height="315"
+    src="https://www.youtube.com/embed/${id}"
+    frameborder="0"
+    allowfullscreen></iframe><br><br>
+    `;
+
   });
+
   youtubeContainer.innerHTML = html;
+
 }
 
 // ===============================
 // PRAYER TIMES
 // ===============================
+
 function getPrayerTimes(){
+
   const city = document.getElementById("cityInput")?.value || "Kampala";
-  if(!document.getElementById("prayerTimes")) return;
+
+  const prayerBox = document.getElementById("prayerTimes");
+
+  if(!prayerBox) return;
 
   fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
-  .then(r=>r.json())
-  .then(data=>{
+  .then(r => r.json())
+  .then(data => {
+
     const t = data.data.timings;
-    document.getElementById("prayerTimes").innerHTML=`
-      Fajr: ${t.Fajr}<br>
-      Dhuhr: ${t.Dhuhr}<br>
-      Asr: ${t.Asr}<br>
-      Maghrib: ${t.Maghrib}<br>
-      Isha: ${t.Isha}
+
+    prayerBox.innerHTML = `
+    Fajr: ${t.Fajr}<br>
+    Dhuhr: ${t.Dhuhr}<br>
+    Asr: ${t.Asr}<br>
+    Maghrib: ${t.Maghrib}<br>
+    Isha: ${t.Isha}
     `;
+
   });
+
 }
 
 // ===============================
 // SEND QUESTION VIA EMAIL
 // ===============================
+
 function sendQuestion(){
+
   const name = document.getElementById("userName")?.value;
   const email = document.getElementById("userEmail")?.value;
   const q = document.getElementById("userQuestion")?.value;
-  if(!name || !email || !q) return alert("Fill all fields");
+
+  if(!name || !email || !q){
+
+    alert("Fill all fields");
+    return;
+
+  }
 
   const subject = "Question from Chair Islamic TV";
-  const body = `Name: ${name}\nEmail: ${email}\nQuestion:\n${q}`;
-  window.location.href = `mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  const body = `Name: ${name}
+Email: ${email}
+
+Question:
+${q}`;
+
+  window.location.href =
+  `mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
 }
 
 // ===============================
-// DAILY HADITH (Home/Hadith page)
+// DAILY HADITH
 // ===============================
+
 async function loadHadith(){
+
   const box = document.getElementById("hadithBox");
+
   if(!box) return;
 
   try{
-    const today = new Date().toDateString();
-    const storedDate = localStorage.getItem("hadithDate");
-    const storedHadith = localStorage.getItem("hadithContent");
-    if(storedDate === today && storedHadith){
-      box.innerHTML = storedHadith;
-      return;
-    }
 
     const res = await fetch("hadith.json");
-    if(!res.ok) throw new Error("Failed to load Hadith JSON");
+
     const data = await res.json();
+
     const hadiths = data.hadiths;
-    const randomHadith = hadiths[Math.floor(Math.random()*hadiths.length)];
 
-    const arabicText = randomHadith.arab || "Arabic not available";
-    const englishText = randomHadith.en || "Translation not available";
-    const html = `<div class="arabic">${arabicText}</div>
-                  <div class="translation">${englishText}</div>
-                  <p style="color:#FFD700">Sahih Muslim #${randomHadith.number || "-"}</p>`;
-    box.innerHTML = html;
+    const random = hadiths[Math.floor(Math.random()*hadiths.length)];
 
-    localStorage.setItem("hadithDate", today);
-    localStorage.setItem("hadithContent", html);
+    box.innerHTML = `
+    <div class="arabic">${random.arab}</div>
+    <div class="translation">${random.en}</div>
+    <p style="color:gold">Hadith #${random.number || ""}</p>
+    `;
 
   }catch(err){
+
     console.error(err);
+
     box.innerText = "Could not load Hadith";
+
   }
+
 }
+
 loadHadith();
-}
+
 // ===============================
-// QURAN PAGE FUNCTIONS
+// QURAN PAGE
 // ===============================
 
 const surahSelect = document.getElementById("surahSelect");
@@ -131,47 +173,38 @@ const surahNames = [
 "Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
 ];
 
-// populate dropdown
 surahNames.forEach((name,i)=>{
+
 const option = document.createElement("option");
+
 option.value = i+1;
-option.textContent = (i+1) + " - " + name;
+
+option.textContent = (i+1)+" - "+name;
+
 surahSelect.appendChild(option);
+
 });
 
 }
 
-
-// SEARCH
-function searchSurah(){
-
-const input = document.getElementById("surahSearch").value.toLowerCase();
-const select = document.getElementById("surahSelect");
-
-for(let i=0;i<select.options.length;i++){
-
-const txt = select.options[i].text.toLowerCase();
-
-select.options[i].style.display =
-txt.includes(input) ? "block" : "none";
-
-}
-
-}
-
+// ===============================
+// LOAD SURAH
+// ===============================
 
 async function loadSurah(){
 
 const surahNumber = document.getElementById("surahSelect").value;
 
 if(!surahNumber){
-alert("Please select a Surah");
+
+alert("Select a Surah");
+
 return;
+
 }
 
 try{
 
-// Load Quran dataset
 const res = await fetch("https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/quran.json");
 
 const data = await res.json();
@@ -180,26 +213,22 @@ const surah = data[surahNumber-1];
 
 let html = "";
 
-for(let i=0;i<surah.verses.length;i++){
+surah.verses.forEach((v,i)=>{
 
 html += `
 <div class="ayah">
-
-<div class="arabic">
-${i+1}. ${surah.verses[i].text}
-</div>
-
+<div class="arabic">${i+1}. ${v.text}</div>
 </div>
 `;
 
-}
+});
 
 document.getElementById("quranText").innerHTML = html;
 
 
 // AUDIO
 
-const reciter = document.getElementById("reciterSelect").value;
+const reciter = document.getElementById("reciterSelect")?.value || "afasy";
 
 const reciters = {
 
@@ -216,9 +245,9 @@ const audioURL = reciters[reciter] + surahCode + ".mp3";
 document.getElementById("audioPlayer").innerHTML =
 `<audio controls style="width:100%" src="${audioURL}"></audio>`;
 
-}catch(error){
+}catch(err){
 
-console.error(error);
+console.error(err);
 
 document.getElementById("quranText").innerHTML =
 "<p style='color:red'>Failed to load Surah</p>";
@@ -226,6 +255,5 @@ document.getElementById("quranText").innerHTML =
 }
 
 }
-}
 
-}
+window.loadSurah = loadSurah;
