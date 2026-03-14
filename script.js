@@ -160,72 +160,36 @@ txt.includes(input) ? "block" : "none";
 }
 
 
-// LOAD SURAH
-function searchSurah(){
-
-const input = document.getElementById("surahSearch").value.toLowerCase();
-
-const options = document.getElementById("surahSelect").options;
-
-for(let i=0;i<options.length;i++){
-
-const txt = options[i].text.toLowerCase();
-
-options[i].style.display = txt.includes(input) ? "block" : "none";
-
-}
-
-}
-
-
 async function loadSurah(){
 
 const surahNumber = document.getElementById("surahSelect").value;
 
 if(!surahNumber){
-
-alert("Select a Surah");
-
+alert("Please select a Surah");
 return;
-
 }
 
 try{
 
-const arabicRes = await fetch("quran.json");
+// Load Quran dataset
+const res = await fetch("https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/quran.json");
 
-const englishRes = await fetch("quran_en.json");
+const data = await res.json();
 
-const arabicData = await arabicRes.json();
-
-const englishData = await englishRes.json();
-
-const arabicSurah = arabicData[surahNumber-1];
-
-const englishSurah = englishData[surahNumber-1];
+const surah = data[surahNumber-1];
 
 let html = "";
 
-for(let i=0;i<arabicSurah.verses.length;i++){
-
-const ar = arabicSurah.verses[i].text;
-
-const en = englishSurah.verses[i].text;
+for(let i=0;i<surah.verses.length;i++){
 
 html += `
-
 <div class="ayah">
 
 <div class="arabic">
-${i+1}. ${ar}
-</div>
-
-<div class="translation">
-${i+1}. ${en}
+${i+1}. ${surah.verses[i].text}
 </div>
 
 </div>
-
 `;
 
 }
@@ -252,13 +216,16 @@ const audioURL = reciters[reciter] + surahCode + ".mp3";
 document.getElementById("audioPlayer").innerHTML =
 `<audio controls style="width:100%" src="${audioURL}"></audio>`;
 
-}catch(err){
+}catch(error){
 
-console.error(err);
+console.error(error);
 
 document.getElementById("quranText").innerHTML =
 "<p style='color:red'>Failed to load Surah</p>";
 
+}
+
+}
 }
 
 }
