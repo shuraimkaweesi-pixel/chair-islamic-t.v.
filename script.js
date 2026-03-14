@@ -196,19 +196,19 @@ async function loadSurah(){
   if(!surahNumber){ alert("Select a Surah"); return; }
 
   try{
-    const res = await fetch("https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/quran.json");
-    if(!res.ok) throw new Error("Failed to load Quran JSON");
+    const res = await fetch("quran.json");  // your local JSON
     const data = await res.json();
-    const surah = data[surahNumber-1];
+    const surah = data.find(s => s.id === surahNumber);
 
     let html = "";
     surah.verses.forEach((v,i)=>{
       html += `
       <div class="ayah">
-        <div class="arabic">${i+1}. ${v.text_ar}</div>
-        <div class="translation">${i+1}. ${v.text_en}</div>
+        <div class="arabic">${i+1}. ${v.text}</div>
+        <div class="translation">${i+1}. ${v.translation || 'Translation unavailable'}</div>
       </div>`;
     });
+
     document.getElementById("quranText").innerHTML = html;
 
     // Audio
@@ -223,6 +223,7 @@ async function loadSurah(){
 
     document.getElementById("audioPlayer").innerHTML = `
       <audio controls style="width:100%" src="${audioURL}"></audio>`;
+
   } catch(err){
     console.error(err);
     document.getElementById("quranText").innerHTML =
