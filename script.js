@@ -277,7 +277,7 @@ ghamdi:"https://server7.mp3quran.net/s_gmd/"
 
 const surahCode=String(surahNumber).padStart(3,"0");
 
-const audioURL=reciters[reciter]+surahCode+".mp3";
+const audioURL = "https://verses.quran.com/Alafasy/mp3/" + surahCode + ayahCode + ".mp3";
 
 document.getElementById("audioPlayer").innerHTML=
 
