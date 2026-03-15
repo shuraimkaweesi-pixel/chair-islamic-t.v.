@@ -368,3 +368,13 @@ function findQibla() {
         document.getElementById("qiblaArrow").style.transform = `translate(-50%, -50%) rotate(${qibla}deg)`;
     });
 }
+let qiblaArrow = document.getElementById("qiblaArrow");
+
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', function(event) {
+    if(!qiblaAngle) return; // wait until user location detected
+    const alpha = event.alpha || 0;
+    const rotation = qiblaAngle - alpha;
+    qiblaArrow.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+  }, true);
+}
