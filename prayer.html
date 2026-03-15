@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,6 +55,14 @@ h1, h2 {
   transition: transform 0.5s ease;
 }
 
+/* Countdown timer */
+#countdown {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10px;
+  color: #FFD700;
+}
+
 /* Navigation */
 .bottom-nav {
   position: fixed;
@@ -89,18 +96,15 @@ button {
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
   <h1>Prayer Times</h1>
-
   <p id="location">Detecting location...</p>
-
   <div class="date" id="date"></div>
-
   <div id="prayerBox" class="prayer-box">Loading prayer times...</div>
+  <div id="countdown">Next prayer in: --:--:--</div>
 
   <!-- Qibla Section -->
   <h2>Qibla Direction</h2>
@@ -120,9 +124,13 @@ button {
 </div>
 
 <script>
-/* ==========================
-   PRAYER TIMES LOGIC
-========================== */
+// =====================
+// PRAYER TIMES LOGIC
+// =====================
+let prayerTimings = null;
+let nextPrayerName = "";
+let countdownInterval = null;
+
 function getNextPrayer(timings) {
   const prayers = ["Fajr","Dhuhr","Asr","Maghrib","Isha"];
   const now = new Date();
@@ -133,13 +141,15 @@ function getNextPrayer(timings) {
     prayerTime.setHours(time[0], time[1], 0, 0);
     if (prayerTime > now) { next = p; break; }
   }
+  // If all prayers passed, next is Fajr tomorrow
+  if (!next) next = "Fajr";
   return next;
 }
 
 function displayPrayerTimes(data) {
-  const t = data.data.timings;
+  prayerTimings = data.data.timings;
   const date = data.data.date;
-  const next = getNextPrayer(t);
+  nextPrayerName = getNextPrayer(prayerTimings);
 
   document.getElementById("date").innerHTML =
     `${date.gregorian.date} | ${date.hijri.date} ${date.hijri.month.en}`;
@@ -147,10 +157,12 @@ function displayPrayerTimes(data) {
   const prayers = ["Fajr","Dhuhr","Asr","Maghrib","Isha"];
   let html = "";
   prayers.forEach(p => {
-    const cls = p === next ? "prayer next" : "prayer";
-    html += `<div class="${cls}"><span>${p}</span><span>${t[p]}</span></div>`;
+    const cls = p === nextPrayerName ? "prayer next" : "prayer";
+    html += `<div class="${cls}"><span>${p}</span><span>${prayerTimings[p]}</span></div>`;
   });
   document.getElementById("prayerBox").innerHTML = html;
+
+  startCountdown();
 }
 
 function loadPrayerTimes(lat, lon) {
@@ -177,9 +189,42 @@ if (navigator.geolocation) {
   loadPrayerTimes(0.3476, 32.5825);
 }
 
-/* ==========================
-   QIBLA LOGIC
-========================== */
+// =====================
+// COUNTDOWN TIMER
+// =====================
+function startCountdown() {
+  if (countdownInterval) clearInterval(countdownInterval);
+
+  countdownInterval = setInterval(() => {
+    if (!prayerTimings) return;
+
+    let timeStr = prayerTimings[nextPrayerName];
+    let parts = timeStr.split(":");
+    let now = new Date();
+    let prayerTime = new Date();
+    prayerTime.setHours(parts[0], parts[1], 0, 0);
+
+    // If next prayer is Fajr and passed, set to tomorrow
+    if (nextPrayerName === "Fajr" && prayerTime < now) {
+      prayerTime.setDate(prayerTime.getDate() + 1);
+    }
+
+    let diff = prayerTime - now;
+    if (diff < 0) {
+      nextPrayerName = getNextPrayer(prayerTimings);
+      return;
+    }
+    let hours = Math.floor(diff / 1000 / 3600);
+    let minutes = Math.floor((diff / 1000 % 3600) / 60);
+    let seconds = Math.floor((diff / 1000) % 60);
+    document.getElementById("countdown").innerHTML =
+      `Next prayer (${nextPrayerName}) in: ${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`;
+  }, 1000);
+}
+
+// =====================
+// QIBLA LOGIC
+// =====================
 function findQibla() {
   if(!navigator.geolocation){
     alert("Geolocation not supported");
@@ -210,7 +255,17 @@ function findQibla() {
       "rotate("+qibla+"deg)";
   });
 }
-</script>
 
+// Optional: Live device orientation for compass
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', function(event) {
+    const compass = document.getElementById("compass");
+    if(compass) {
+      const alpha = event.alpha; // 0-360 rotation around z-axis
+      compass.style.transform = `rotate(${alpha}deg)`;
+    }
+  }, true);
+}
+</script>
 </body>
 </html>
