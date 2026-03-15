@@ -334,47 +334,96 @@ playAyah(currentSurah, nextAyah, nextElement);
 
 }
 
-function findQibla() {
+// ===============================
+// QIBLA COMPASS SCRIPT
+// ===============================
+
+let qiblaArrowEl = document.getElementById("qiblaArrow");
+let compassEl = document.getElementById("compass");
+let qiblaResultEl = document.getElementById("qiblaResult");
+
+let qiblaAngle = null;
+let userLat = null;
+let userLon = null;
+
+// Calculate Qibla angle from user location
+function calcQibla(lat, lon) {
+    const kaabaLat = 21.4225; // Kaaba latitude
+    const kaabaLon = 39.8262; // Kaaba longitude
+    const lat1 = lat * Math.PI / 180;
+    const lat2 = kaabaLat * Math.PI / 180;
+    const dLon = (kaabaLon - lon) * Math.PI / 180;
+
+    const y = Math.sin(dLon) * Math.cos(lat2);
+    const x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
+
+    let angle = Math.atan2(y, x) * 180 / Math.PI;
+    return (angle + 360) % 360;
+}
+
+// Get user location
+function getUserLocationQibla() {
     if (!navigator.geolocation) {
-        alert("Geolocation not supported");
+        alert("Geolocation not supported on this device.");
         return;
     }
 
-    navigator.geolocation.getCurrentPosition(function(position){
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition(pos => {
+        userLat = pos.coords.latitude;
+        userLon = pos.coords.longitude;
+        qiblaAngle = calcQibla(userLat, userLon);
 
-        const kaabaLat = 21.4225;
-        const kaabaLon = 39.8262;
+        qiblaResultEl.innerText =
+            "Qibla Direction: " + qiblaAngle.toFixed(2) + "° from North";
 
-        // Calculate Qibla angle
-        const lat1 = userLat * Math.PI/180;
-        const lat2 = kaabaLat * Math.PI/180;
-        const dLon = (kaabaLon - userLon) * Math.PI/180;
+    }, err => {
+        alert("Unable to detect location. Using default location Kampala.");
+        userLat = 0.3476;
+        userLon = 32.5825;
+        qiblaAngle = calcQibla(userLat, userLon);
 
-        const y = Math.sin(dLon) * Math.cos(lat2);
-        const x = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLon);
-
-        let qibla = Math.atan2(y,x) * 180/Math.PI;
-        qibla = (qibla + 360) % 360;
-
-        document.getElementById("qiblaResult").innerHTML =
-          "Qibla Direction: " + qibla.toFixed(2) + "° from North";
-
-        // Rotate compass (optional: rotate background instead of needle)
-        document.getElementById("compass").style.transform = `rotate(${qibla}deg)`;
-
-        // Rotate arrow to point correctly
-        document.getElementById("qiblaArrow").style.transform = `translate(-50%, -50%) rotate(${qibla}deg)`;
+        qiblaResultEl.innerText =
+            "Qibla Direction: " + qiblaAngle.toFixed(2) + "° from North";
     });
 }
-let qiblaArrow = document.getElementById("qiblaArrow");
 
-if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', function(event) {
-    if(!qiblaAngle) return; // wait until user location detected
-    const alpha = event.alpha || 0;
-    const rotation = qiblaAngle - alpha;
-    qiblaArrow.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
-  }, true);
+// Enable compass (for iOS/Android)
+function enableCompass() {
+    if (!qiblaAngle) {
+        alert("Wait until location is detected!");
+        return;
+    }
+
+    // For iOS 13+ devices, request permission
+    if (typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+
+        DeviceOrientationEvent.requestPermission()
+            .then(response => {
+                if (response === 'granted') startCompass();
+                else alert("Permission denied for compass.");
+            })
+            .catch(console.error);
+
+    } else {
+        startCompass();
+    }
 }
+
+// Start live compass updates
+function startCompass() {
+    window.addEventListener('deviceorientationabsolute', function(event) {
+        const alpha = event.alpha || 0; // 0-360 rotation around z-axis
+        const rotation = qiblaAngle - alpha;
+
+        // Rotate arrow to point to Qibla
+        qiblaArrowEl.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+
+        // Rotate compass background to match device orientation
+        compassEl.style.transform = `rotate(${-alpha}deg)`;
+
+    }, true);
+}
+
+// Initialize Qibla detection
+getUserLocationQibla();
