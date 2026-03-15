@@ -107,11 +107,39 @@ button {
   <div id="countdown">Next prayer in: --:--:--</div>
 
   <!-- Qibla Section -->
-  <h2>Qibla Direction</h2>
-  <button onclick="findQibla()">Find Qibla</button>
-  <p id="qiblaResult">Press button to detect Qibla direction</p>
-  <div id="compass">🧭</div>
+<h2>Qibla Direction</h2>
+<button onclick="findQibla()">Find Qibla</button>
+<p id="qiblaResult">Press button to detect Qibla direction</p>
 
+<div id="compassContainer" style="position: relative; width: 250px; height: 250px; margin: 20px auto;">
+    <!-- Compass background circle -->
+    <div id="compass" style="
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center, #FFD700 0%, #fff 70%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 100px;
+        transform: rotate(0deg);
+        transition: transform 0.5s ease;
+    ">🧭</div>
+
+    <!-- Qibla Arrow -->
+    <div id="qiblaArrow" style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 50px solid red;
+        transform-origin: bottom center;
+        transform: translate(-50%, -50%) rotate(0deg);
+        transition: transform 0.5s ease;
+    "></div>
 </div>
 
 <!-- Bottom Navigation -->
