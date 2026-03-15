@@ -296,3 +296,43 @@ document.getElementById("quranText").innerHTML=
 }
 
 }
+let currentAudio;
+
+function playAyah(surah,ayah,element){
+
+// remove previous highlight
+document.querySelectorAll(".ayah").forEach(a=>{
+a.classList.remove("playing");
+});
+
+// highlight current ayah
+element.classList.add("playing");
+
+const reciter=document.getElementById("reciterSelect").value;
+
+const reciters={
+afasy:"https://server8.mp3quran.net/afs/",
+baset:"https://server8.mp3quran.net/bas/",
+ghamdi:"https://server7.mp3quran.net/s_gmd/"
+};
+
+// build ayah audio code
+const surahCode=String(surah).padStart(3,"0");
+const ayahCode=String(ayah).padStart(3,"0");
+
+const audioURL=reciters[reciter]+surahCode+ayahCode+".mp3";
+
+// stop previous audio
+if(currentAudio){
+currentAudio.pause();
+}
+
+currentAudio=new Audio(audioURL);
+
+currentAudio.play();
+
+// show in floating player
+document.getElementById("audioPlayer").innerHTML=
+`<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
+
+}
