@@ -305,3 +305,26 @@ document.getElementById("audioPlayer").innerHTML =
 `<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
 
 }
+function donateAirtel(){
+
+const amount = document.getElementById("donationAmount").value;
+
+if(!amount){
+
+alert("Please enter donation amount");
+
+return;
+
+}
+
+alert(
+"To complete your donation:\n\n"+
+"1. Dial *185# on your phone\n"+
+"2. Select Pay Merchant\n"+
+"3. Enter Merchant Code: 7037856\n"+
+"4. Enter Amount: "+amount+"\n"+
+"5. Confirm with your PIN\n\n"+
+"Thank you for supporting Chair Islamic TV"
+);
+
+}
