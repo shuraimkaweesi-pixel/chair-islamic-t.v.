@@ -81,9 +81,7 @@ Isha: ${t.Isha}
 });
 
 }
-<audio id="adhanAudio">
-<source src="https://cdn.islamic.network/audio/adhan/1.mp3" type="audio/mpeg">
-</audio>
+
 // ===============================
 // SEND QUESTION
 // ===============================
@@ -279,25 +277,14 @@ document.getElementById("quranText").innerHTML =
 // ===============================
 
 let currentAudio;
-let currentSurah = 0;
-let currentAyah = 0;
 
 function playAyah(surah, ayah, element){
-
-currentSurah = surah;
-currentAyah = ayah;
 
 document.querySelectorAll(".ayah").forEach(a=>{
 a.classList.remove("playing");
 });
 
 element.classList.add("playing");
-
-// scroll to ayah
-element.scrollIntoView({
-behavior:"smooth",
-block:"center"
-});
 
 const surahCode = String(surah).padStart(3,"0");
 const ayahCode = String(ayah).padStart(3,"0");
@@ -314,26 +301,7 @@ currentAudio = new Audio(audioURL);
 
 currentAudio.play();
 
-// show player
 document.getElementById("audioPlayer").innerHTML =
 `<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
 
-// when ayah finishes
-currentAudio.onended = function(){
-
-const nextAyah = currentAyah + 1;
-
-const nextElement =
-document.querySelector(`.ayah:nth-child(${nextAyah})`);
-
-if(nextElement){
-
-playAyah(currentSurah, nextAyah, nextElement);
-
 }
-
-};
-
-}
-
-                
