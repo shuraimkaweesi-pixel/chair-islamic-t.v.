@@ -305,3 +305,31 @@ document.getElementById("audioPlayer").innerHTML =
 `<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
 
   }
+function downloadSurah(){
+
+const surahNumber = parseInt(document.getElementById("surahSelect").value);
+
+if(!surahNumber){
+alert("Select a Surah first");
+return;
+}
+
+const reciter = document.getElementById("reciterSelect")?.value || "afasy";
+
+const reciters = {
+afasy: "https://server8.mp3quran.net/afs/",
+baset: "https://server8.mp3quran.net/bas/",
+ghamdi: "https://server7.mp3quran.net/s_gmd/"
+};
+
+const surahCode = String(surahNumber).padStart(3,"0");
+
+const audioURL = reciters[reciter] + surahCode + ".mp3";
+
+// create download link
+const a = document.createElement("a");
+a.href = audioURL;
+a.download = "Surah_" + surahCode + ".mp3";
+a.click();
+
+}
