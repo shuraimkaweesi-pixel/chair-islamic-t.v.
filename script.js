@@ -1,374 +1,281 @@
 // ===============================
-// SHARED FUNCTIONS FOR ALL PAGES
+// CHAIR ISLAMIC TV MAIN SCRIPT
 // ===============================
 
-// ===== PWA INSTALL BUTTON =====
+// Run after page loads
+document.addEventListener("DOMContentLoaded", () => {
+  initPWA();
+  loadYoutubeVideos();
+  loadHadith();
+  initSurahList();
+});
+
+// ===============================
+// PWA INSTALL + SERVICE WORKER
+// ===============================
 let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
 
-if (installBtn) {
-window.addEventListener("beforeinstallprompt", (e) => {
-e.preventDefault();
-deferredPrompt = e;
-installBtn.style.display = "block";
-});
+function initPWA() {
 
-installBtn.addEventListener("click", async () => {
-if (!deferredPrompt) return;
+  // Register Service Worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch(err => console.log("SW failed", err));
+  }
 
-deferredPrompt.prompt();
-const choice = await deferredPrompt.userChoice;
+  // Install Button
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
 
-console.log(choice.outcome === "accepted" ? "Installed" : "Dismissed");
+    const installBtn = document.getElementById("installBtn");
 
-deferredPrompt = null;
-});
+    if (installBtn) {
+      installBtn.style.display = "block";
+
+      installBtn.onclick = async () => {
+        if (!deferredPrompt) return;
+
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+
+        console.log(choice.outcome);
+        deferredPrompt = null;
+      };
+    }
+  });
 }
 
 // ===============================
 // YOUTUBE VIDEOS
 // ===============================
+function loadYoutubeVideos() {
 
-const youtubeContainer = document.getElementById("youtubeVideos");
+  const youtubeContainer = document.getElementById("youtubeVideos");
+  if (!youtubeContainer) return;
 
-if (youtubeContainer) {
+  const videoIDs = ["ZGwG7UBlFCc", "zGIBIOMA0PQ"];
 
-const videoIDs = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
+  let html = "";
 
-let html = "";
+  videoIDs.forEach(id => {
+    html += `
+    <iframe 
+      width="100%" height="315"
+      src="https://www.youtube.com/embed/${id}"
+      frameborder="0"
+      allowfullscreen>
+    </iframe><br><br>`;
+  });
 
-videoIDs.forEach(id => {
-
-html += `
-<iframe width="100%" height="315"
-src="https://www.youtube.com/embed/${id}"
-frameborder="0"
-allowfullscreen></iframe><br><br>
-`;
-
-});
-
-youtubeContainer.innerHTML = html;
-
+  youtubeContainer.innerHTML = html;
 }
 
 // ===============================
 // PRAYER TIMES
 // ===============================
+function getPrayerTimes() {
 
-function getPrayerTimes(){
+  const city = document.getElementById("cityInput")?.value || "Kampala";
+  const prayerBox = document.getElementById("prayerTimes");
 
-const city = document.getElementById("cityInput")?.value || "Kampala";
+  if (!prayerBox) return;
 
-const prayerBox = document.getElementById("prayerTimes");
+  fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
+    .then(r => r.json())
+    .then(data => {
 
-if(!prayerBox) return;
+      const t = data.data.timings;
 
-fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
-.then(r => r.json())
-.then(data => {
+      prayerBox.innerHTML = `
+        Fajr: ${t.Fajr}<br>
+        Dhuhr: ${t.Dhuhr}<br>
+        Asr: ${t.Asr}<br>
+        Maghrib: ${t.Maghrib}<br>
+        Isha: ${t.Isha}
+      `;
+    })
+    .catch(() => {
+      prayerBox.innerHTML = "Failed to load prayer times";
+    });
+}
 
-const t = data.data.timings;
+// ===============================
+// DONATION (AIRTEL USSD)
+// ===============================
+function donateAirtel() {
 
-prayerBox.innerHTML = `
-Fajr: ${t.Fajr}<br>
-Dhuhr: ${t.Dhuhr}<br>
-Asr: ${t.Asr}<br>
-Maghrib: ${t.Maghrib}<br>
-Isha: ${t.Isha}
-`;
+  const amount = document.getElementById("donationAmount")?.value;
 
-});
+  if (!amount) {
+    alert("Enter donation amount");
+    return;
+  }
 
+  const ussd = `*185*9*7037856*${amount}#`;
+
+  window.location.href = "tel:" + encodeURIComponent(ussd);
 }
 
 // ===============================
 // SEND QUESTION
 // ===============================
+function sendQuestion() {
 
-function sendQuestion(){
+  const name = document.getElementById("userName")?.value;
+  const email = document.getElementById("userEmail")?.value;
+  const q = document.getElementById("userQuestion")?.value;
 
-const name = document.getElementById("userName")?.value;
-const email = document.getElementById("userEmail")?.value;
-const q = document.getElementById("userQuestion")?.value;
+  if (!name || !email || !q) {
+    alert("Fill all fields");
+    return;
+  }
 
-if(!name || !email || !q){
-alert("Fill all fields");
-return;
-}
+  const subject = "Question from Chair Islamic TV";
 
-const subject = "Question from Chair Islamic TV";
-
-const body = `Name: ${name}
+  const body = `Name: ${name}
 Email: ${email}
 
 Question:
 ${q}`;
 
-window.location.href =
-`mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
+  window.location.href =
+    `mailto:shuraimkaweesi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 // ===============================
 // DAILY HADITH
 // ===============================
+async function loadHadith() {
 
-async function loadHadith(){
+  const box = document.getElementById("hadithBox");
+  if (!box) return;
 
-const box = document.getElementById("hadithBox");
+  try {
 
-if(!box) return;
+    const res = await fetch("hadith.json");
+    const data = await res.json();
 
-try{
+    const hadiths = data.hadiths;
+    const random = hadiths[Math.floor(Math.random() * hadiths.length)];
 
-const res = await fetch("hadith.json");
-const data = await res.json();
+    box.innerHTML = `
+      <div class="arabic">${random.arab}</div>
+      <div class="translation">${random.en}</div>
+      <p style="color:gold">Hadith #${random.number || ""}</p>
+    `;
 
-const hadiths = data.hadiths;
-const random = hadiths[Math.floor(Math.random()*hadiths.length)];
-
-box.innerHTML = `
-<div class="arabic">${random.arab}</div>
-<div class="translation">${random.en}</div>
-<p style="color:gold">Hadith #${random.number || ""}</p>
-`;
-
-}catch(err){
-
-console.error(err);
-box.innerText = "Could not load Hadith";
-
-}
-
-}
-
-loadHadith();
-
-// ===============================
-// QURAN PAGE
-// ===============================
-
-document.addEventListener("DOMContentLoaded", function(){
-
-const surahSelect = document.getElementById("surahSelect");
-
-if(!surahSelect) return;
-
-const surahNames = [
-"Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus",
-"Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha",
-"Al-Anbiya","Al-Hajj","Al-Mu’minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum",
-"Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir",
-"Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf",
-"Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah",
-"As-Saff","Al-Jumu’ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij",
-"Nuh","Al-Jinn","Al-Muzzammil","Al-Muddathir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","Abasa",
-"At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad",
-"Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat",
-"Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr",
-"Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"
-];
-
-surahNames.forEach((name,i)=>{
-
-const option=document.createElement("option");
-option.value=i+1;
-option.textContent=(i+1)+" - "+name;
-surahSelect.appendChild(option);
-
-});
-
-});
-
-// ===============================
-// SEARCH SURAH
-// ===============================
-
-function searchSurah(){
-
-const surahSelect = document.getElementById("surahSelect");
-const input = document.getElementById("surahSearch").value.toLowerCase();
-
-for(let i=0;i<surahSelect.options.length;i++){
-
-const txt = surahSelect.options[i].text.toLowerCase();
-
-surahSelect.options[i].style.display =
-txt.includes(input) ? "block" : "none";
-
-}
-
+  } catch {
+    box.innerText = "Could not load Hadith";
+  }
 }
 
 // ===============================
-// LOAD SURAH
+// QURAN SETUP
 // ===============================
+function initSurahList() {
 
-async function loadSurah(){
+  const surahSelect = document.getElementById("surahSelect");
+  if (!surahSelect) return;
 
-const surahNumber=parseInt(document.getElementById("surahSelect").value);
+  const surahNames = ["Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus","Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha","Al-Anbiya","Al-Hajj","Al-Mu’minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum","Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir","Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf","Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah","As-Saff","Al-Jumu’ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij","Nuh","Al-Jinn","Al-Muzzammil","Al-Muddathir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","Abasa","At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad","Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat","Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr","Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"];
 
-if(!surahNumber){
-alert("Select a Surah");
-return;
+  surahNames.forEach((name, i) => {
+    const option = document.createElement("option");
+    option.value = i + 1;
+    option.textContent = (i + 1) + " - " + name;
+    surahSelect.appendChild(option);
+  });
 }
 
-try{
+// ===============================
+// LOAD SURAH (API VERSION)
+// ===============================
+async function loadSurah() {
 
-const arabicRes=await fetch("quran.json");
-const englishRes=await fetch("quran_en.json");
+  const surahNumber = parseInt(document.getElementById("surahSelect").value);
 
-const arabicData=await arabicRes.json();
-const englishData=await englishRes.json();
+  if (!surahNumber) {
+    alert("Select a Surah");
+    return;
+  }
 
-const arabicSurah=arabicData[surahNumber-1];
-const englishSurah=englishData[surahNumber-1];
+  try {
 
-let html="";
+    const res = await fetch(
+      `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,en.sahih`
+    );
 
-for(let i=0;i<arabicSurah.verses.length;i++){
+    const data = await res.json();
 
-const ar=arabicSurah.verses[i].text;
-const en=englishSurah.verses[i]?.translation || "Translation unavailable";
+    const arabic = data.data[0].ayahs;
+    const english = data.data[1].ayahs;
 
-html+=`
-<div class="ayah" onclick="playAyah(${surahNumber},${i+1},this)">
-<div class="arabic">${i+1}. ${ar}</div>
-<div class="translation">${i+1}. ${en}</div>
-</div>
-`;
+    let html = "";
 
-}
+    for (let i = 0; i < arabic.length; i++) {
 
-document.getElementById("quranText").innerHTML=html;
+      html += `
+      <div class="ayah" onclick="playAyah(${surahNumber},${i + 1},this)">
+        <div class="arabic">${i + 1}. ${arabic[i].text}</div>
+        <div class="translation">${i + 1}. ${english[i].text}</div>
+      </div>`;
+    }
 
-// full surah audio
-const reciter=document.getElementById("reciterSelect").value;
+    document.getElementById("quranText").innerHTML = html;
 
-const reciters={
-afasy:"https://server8.mp3quran.net/afs/",
-baset:"https://server8.mp3quran.net/bas/",
-ghamdi:"https://server7.mp3quran.net/s_gmd/"
-};
-
-const surahCode=String(surahNumber).padStart(3,"0");
-
-const audioURL=reciters[reciter]+surahCode+".mp3";
-
-document.getElementById("audioPlayer").innerHTML=
-`<audio controls style="width:100%" src="${audioURL}"></audio>`;
-
-}
-
-catch(err){
-
-console.error(err);
-
-document.getElementById("quranText").innerHTML =
-"<p style='color:red'>Failed to load Surah</p>";
-
-}
-
+  } catch {
+    document.getElementById("quranText").innerHTML =
+      "<p style='color:red'>Failed to load Surah</p>";
+  }
 }
 
 // ===============================
 // PLAY AYAH
 // ===============================
-
 let currentAudio;
 
-function playAyah(surah, ayah, element){
+function playAyah(surah, ayah, element) {
 
-document.querySelectorAll(".ayah").forEach(a=>{
-a.classList.remove("playing");
-});
+  document.querySelectorAll(".ayah").forEach(a => a.classList.remove("playing"));
+  element.classList.add("playing");
 
-element.classList.add("playing");
+  const surahCode = String(surah).padStart(3, "0");
+  const ayahCode = String(ayah).padStart(3, "0");
 
-const surahCode = String(surah).padStart(3,"0");
-const ayahCode = String(ayah).padStart(3,"0");
+  const audioURL =
+    "https://everyayah.com/data/Alafasy_128kbps/" +
+    surahCode + ayahCode + ".mp3";
 
-const audioURL =
-"https://everyayah.com/data/Alafasy_128kbps/" +
-surahCode + ayahCode + ".mp3";
+  if (currentAudio) currentAudio.pause();
 
-if(currentAudio){
-currentAudio.pause();
+  currentAudio = new Audio(audioURL);
+  currentAudio.play();
+
+  document.getElementById("audioPlayer").innerHTML =
+    `<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
 }
 
-currentAudio = new Audio(audioURL);
+// ===============================
+// DOWNLOAD SURAH
+// ===============================
+function downloadSurah() {
 
-currentAudio.play();
+  const surahNumber = parseInt(document.getElementById("surahSelect").value);
 
-document.getElementById("audioPlayer").innerHTML =
-`<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
-
+  if (!surahNumber) {
+    alert("Select a Surah first");
+    return;
   }
-function downloadSurah(){
 
-const surahNumber = parseInt(document.getElementById("surahSelect").value);
+  const surahCode = String(surahNumber).padStart(3, "0");
 
-if(!surahNumber){
-alert("Select a Surah first");
-return;
-}
+  const audioURL =
+    "https://server8.mp3quran.net/afs/" + surahCode + ".mp3";
 
-const reciter = document.getElementById("reciterSelect")?.value || "afasy";
-
-const reciters = {
-afasy: "https://server8.mp3quran.net/afs/",
-baset: "https://server8.mp3quran.net/bas/",
-ghamdi: "https://server7.mp3quran.net/s_gmd/"
-};
-
-const surahCode = String(surahNumber).padStart(3,"0");
-
-const audioURL = reciters[reciter] + surahCode + ".mp3";
-
-// create download link
-const a = document.createElement("a");
-a.href = audioURL;
-a.download = "Surah_" + surahCode + ".mp3";
-a.click();
-
-}
-<script>
-// ===============================
-// SERVICE WORKER REGISTER
-// ===============================
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js")
-    .then(() => console.log("Service Worker Registered"))
-    .catch(err => console.log("SW failed", err));
-}
-
-// ===============================
-// INSTALL BUTTON
-// ===============================
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  const installBtn = document.getElementById("installBtn");
-
-  if (installBtn) {
-    installBtn.style.display = "block";
-
-    installBtn.onclick = async () => {
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-
-      if (choice.outcome === "accepted") {
-        console.log("App Installed");
-      } else {
-        console.log("Install dismissed");
-      }
-
-      deferredPrompt = null;
-    };
+  const a = document.createElement("a");
+  a.href = audioURL;
+  a.download = "Surah_" + surahCode + ".mp3";
+  a.click();
   }
-});
-</script>
