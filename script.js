@@ -333,3 +333,42 @@ a.download = "Surah_" + surahCode + ".mp3";
 a.click();
 
 }
+<script>
+// ===============================
+// SERVICE WORKER REGISTER
+// ===============================
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW failed", err));
+}
+
+// ===============================
+// INSTALL BUTTON
+// ===============================
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const installBtn = document.getElementById("installBtn");
+
+  if (installBtn) {
+    installBtn.style.display = "block";
+
+    installBtn.onclick = async () => {
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+
+      if (choice.outcome === "accepted") {
+        console.log("App Installed");
+      } else {
+        console.log("Install dismissed");
+      }
+
+      deferredPrompt = null;
+    };
+  }
+});
+</script>
