@@ -3,142 +3,206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chair Islamic TV - Home</title>
-<meta name="theme-color" content="#FFD700">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-icon" href="logo.png">
-<link rel="stylesheet" href="styles.css">
+
+<title>Chair Islamic TV</title>
+
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FFD700">
 <link rel="apple-touch-icon" href="logo.png">
+
 <style>
-/* =========================
-   CHAIR ISLAMIC TV STYLES
-   ========================= */
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0f0f0f;color:#FFD700;font-family:Arial,Helvetica,sans-serif;line-height:1.6;text-align:center;padding:20px;padding-bottom:90px;}
+
+body{
+background:#0f0f0f;
+color:#FFD700;
+font-family:Arial, sans-serif;
+text-align:center;
+padding:20px;
+padding-bottom:90px;
+}
+
 .container{max-width:900px;margin:auto;}
-h1,h2,h3{color:#FFD700;margin-bottom:10px;}
+
+h1,h2{margin-bottom:10px;}
+
 p{color:#ddd;margin-bottom:10px;}
-button{width:80%;max-width:400px;padding:14px;margin:10px auto;background:#FFD700;color:black;font-weight:bold;font-size:16px;border:none;border-radius:8px;cursor:pointer;display:block;}
-button:hover{opacity:0.9;}
-a button{text-decoration:none;}
-.content-box{background:#1a1a1a;padding:20px;border-radius:8px;margin-top:20px;color:#eee;line-height:1.7;}
-.donate-card{margin-top:15px;}
-input[type=number]{width:60%;padding:10px;margin:10px auto;border-radius:6px;border:none;text-align:center;display:block;}
-.video-container{margin-top:20px;}
-iframe{width:100%;max-width:560px;height:315px;border:none;border-radius:8px;}
-.bottom-nav{position:fixed;bottom:20px;left:0;width:100%;background:#000;display:flex;justify-content:space-around;padding:15px 0;border-radius:12px 12px 0 0;box-shadow:0 -2px 10px rgba(0,0,0,0.5);z-index:1000;}
-.bottom-nav a{color:#FFD700;text-decoration:none;font-size:18px;flex:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.bottom-nav a:hover{color:#fff;}
-#installBtn{background:#FFD700;color:black;font-weight:bold;}
-@media(max-width:600px){body{padding:15px;}button{width:100%;}iframe{height:200px;}}
+
+.content-box{
+background:#1a1a1a;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+}
+
+button{
+width:90%;
+max-width:400px;
+padding:14px;
+margin:10px auto;
+background:#FFD700;
+color:black;
+font-weight:bold;
+border:none;
+border-radius:8px;
+cursor:pointer;
+display:block;
+}
+
+input{
+width:70%;
+padding:10px;
+margin:10px auto;
+border-radius:6px;
+border:none;
+text-align:center;
+display:block;
+}
+
+iframe{
+width:100%;
+height:220px;
+border:none;
+border-radius:8px;
+margin-top:10px;
+}
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#000;
+display:flex;
+justify-content:space-around;
+padding:10px 0;
+}
+
+.bottom-nav a{
+color:#FFD700;
+text-decoration:none;
+font-size:14px;
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
-<h1>Welcome to Chair Islamic TV</h1>
-<p>Read Quran, view Hadith, check Prayer Times, and watch Islamic Videos.</p>
 
-<!-- Founder Biography -->
-<h2>Founder Biography</h2>
+<h1>Chair Islamic TV</h1>
+<p>Islamic Knowledge • Quran • Hadith • Videos</p>
+
+<!-- INSTALL BUTTON -->
+<button id="installBtn" style="display:none;">
+Install App 📲
+</button>
+
+<!-- BIO -->
 <div class="content-box">
-<p>Welcome to Chair Islamic TV, where faith meets innovation! I'm <b>KAWEESI SHURAIM</b>, the founder of this platform.</p>
-<p>Born and raised in <b>Masajja, Kampala</b>, I was inspired by Islamic values of compassion, knowledge, and unity.</p>
-<p>With a passion for media, I created this platform to provide authentic Islamic content.</p>
-<p>Join us on this journey as we uplift communities worldwide. 🌙</p>
+<h2>Founder</h2>
+<p><b>KAWEESI SHURAIM</b></p>
+<p>Masajja, Kampala</p>
 </div>
 
-<!-- Install App Button -->
-<button id="installBtn" style="display:none;">Install Chair Islamic TV 📲</button>
-
-<!-- Donation Section -->
+<!-- DONATION -->
 <div class="content-box">
-<h2>Support Chair Islamic TV</h2>
-<p>Your donation helps us spread Islamic knowledge.</p>
-<div class="donate-card">
-<label>Enter Donation Amount (UGX)</label>
-<input type="number" id="donationAmount" placeholder="e.g 5000">
-<button id="donateBtn">Donate via Airtel Money</button>
-<p id="donationStatus"></p>
-</div>
+<h2>Support Us</h2>
+
+<input type="number" id="amount" placeholder="Enter amount (UGX)">
+
+<button onclick="donate()">Donate via Airtel</button>
+
 </div>
 
-<!-- Feature Buttons -->
+<!-- FEATURES -->
+<div class="content-box">
 <h2>Explore</h2>
-<a href="quran.html"><button>📖 Quran Reader</button></a>
-<a href="hadith.html"><button>📜 Daily Hadith</button></a>
-<a href="prayer.html"><button>🕌 Prayer Times</button></a>
-<a href="videos.html"><button>🎥 Latest Videos</button></a>
 
-<!-- YouTube Videos -->
-<div class="video-container" id="youtubeVideos"></div>
+<a href="quran.html"><button>📖 Quran</button></a>
+<a href="hadith.html"><button>📜 Hadith</button></a>
+<a href="prayer.html"><button>🕌 Prayer</button></a>
+<a href="videos.html"><button>🎥 Videos</button></a>
+
 </div>
 
-<!-- Bottom Navigation -->
+<!-- VIDEOS -->
+<div id="youtubeVideos"></div>
+
+</div>
+
+<!-- NAV -->
 <div class="bottom-nav">
-<a href="index.html">🏠 Home</a>
-<a href="quran.html">📖 Quran</a>
-<a href="hadith.html">📜 Hadith</a>
-<a href="prayer.html">🕌 Prayer</a>
-<a href="videos.html">🎥 Videos</a>
+<a href="index.html">Home</a>
+<a href="quran.html">Quran</a>
+<a href="hadith.html">Hadith</a>
+<a href="prayer.html">Prayer</a>
+<a href="videos.html">Videos</a>
 </div>
 
-<!-- Scripts -->
 <script>
-// ===== PWA Install Button =====
+// ===============================
+// PWA INSTALL
+// ===============================
 let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = "block";
-});
-installBtn.addEventListener("click", async () => {
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const choice = await deferredPrompt.userChoice;
-  deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e)=>{
+e.preventDefault();
+deferredPrompt = e;
+
+const btn = document.getElementById("installBtn");
+btn.style.display = "block";
+
+btn.onclick = async ()=>{
+deferredPrompt.prompt();
+await deferredPrompt.userChoice;
+deferredPrompt = null;
+};
 });
 
-// ===== YouTube Videos =====
-const youtubeContainer = document.getElementById("youtubeVideos");
-const videoIDs = ["ZGwG7UBlFCc", "zGIBIOMA0PQ"];
-function loadYouTubeVideos() {
-  let html = "";
-  videoIDs.forEach(id=>{
-    html += `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${id}" 
-      title="YouTube video player" frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>`;
-  });
-  youtubeContainer.innerHTML = html;
+// ===============================
+// YOUTUBE
+// ===============================
+const vids = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
+const box = document.getElementById("youtubeVideos");
+
+if(box){
+let html="";
+vids.forEach(v=>{
+html += `<iframe src="https://www.youtube.com/embed/${v}" allowfullscreen></iframe>`;
+});
+box.innerHTML = html;
 }
-loadYouTubeVideos();
 
-// ===== Airtel Donation Button =====
-const donateBtn = document.getElementById("donateBtn");
-const donationStatus = document.getElementById("donationStatus");
+// ===============================
+// DONATION (AUTO USSD)
+// ===============================
+function donate(){
 
-donateBtn.addEventListener("click", () => {
-  const amount = document.getElementById("donationAmount").value;
-  if(!amount || amount < 1000){
-    alert("Please enter a valid amount (minimum 1000 UGX).");
-    return;
-  }
-  donationStatus.innerText = "";
-  // Since we don't have backend, guide the user
-  alert(
-    "To complete your donation:\n\n"+
-    "1. Dial *185# on your phone\n"+
-    "2. Select 'Pay Merchant'\n"+
-    "3. Enter Merchant Code: 7037856\n"+
-    "4. Enter Amount: "+amount+"\n"+
-    "5. Confirm with your Mobile Money PIN\n\n"+
-    "Thank you for supporting Chair Islamic TV!"
-  );
-});
+const amount = document.getElementById("amount").value;
+
+if(!amount || amount < 1000){
+alert("Enter valid amount (min 1000)");
+return;
+}
+
+// AUTO DIAL WITH MERCHANT CODE
+const ussd = `*185*9*7037856*${amount}#`;
+
+window.location.href = "tel:" + encodeURIComponent(ussd);
+
+}
+
+// ===============================
+// SERVICE WORKER
+// ===============================
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("sw.js")
+.then(()=>console.log("SW Registered"))
+.catch(()=>console.log("SW Failed"));
+}
+
 </script>
+
 </body>
 </html>
