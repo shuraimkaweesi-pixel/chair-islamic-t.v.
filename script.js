@@ -100,7 +100,88 @@ function getPrayerTimes() {
       prayerBox.innerHTML = "Failed to load prayer times";
     });
 }
+// ===============================
+// REAL PRAYER ADHAN SYSTEM 🔊
+// ===============================
 
+// Request permission once
+if ("Notification" in window) {
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+}
+
+// Prevent repeating same prayer alert
+let lastNotifiedPrayer = "";
+
+// Start Adhan system
+function startAdhanSystem(){
+
+const city = "Kampala";
+
+fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Uganda&method=2`)
+.then(res => res.json())
+.then(data => {
+
+const t = data.data.timings;
+
+// Clean prayer times (remove seconds if any)
+const prayers = {
+Fajr: t.Fajr.slice(0,5),
+Dhuhr: t.Dhuhr.slice(0,5),
+Asr: t.Asr.slice(0,5),
+Maghrib: t.Maghrib.slice(0,5),
+Isha: t.Isha.slice(0,5)
+};
+
+// Check every 20 seconds
+setInterval(() => {
+
+const now = new Date();
+const currentTime =
+now.getHours().toString().padStart(2,"0") + ":" +
+now.getMinutes().toString().padStart(2,"0");
+
+for(let name in prayers){
+
+if(prayers[name] === currentTime && lastNotifiedPrayer !== name){
+
+triggerAdhan(name);
+lastNotifiedPrayer = name;
+
+}
+
+}
+
+},20000);
+
+})
+.catch(err => console.log("Adhan fetch error", err));
+
+}
+
+// ===============================
+// TRIGGER ADHAN
+// ===============================
+function triggerAdhan(prayer){
+
+// Notification
+if(Notification.permission === "granted"){
+new Notification("🕌 Prayer Time", {
+body: `It's time for ${prayer}`
+});
+}
+
+// Play Adhan
+const audio = new Audio("https://cdn.islamic.network/audio/adhan/1.mp3");
+audio.play();
+
+console.log("Adhan triggered for", prayer);
+
+}
+
+// Start system when page loads
+startAdhanSystem();
 // ===============================
 // DONATION (AIRTEL USSD)
 // ===============================
