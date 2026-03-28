@@ -25,3 +25,29 @@ self.addEventListener("fetch", (event) => {
       })
   );
 });
+// ===============================
+// SERVICE WORKER (BACKGROUND)
+// ===============================
+
+self.addEventListener("install", e => {
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", e => {
+  console.log("Service Worker Activated");
+});
+
+// Listen for messages from app
+self.addEventListener("message", event => {
+
+  if(event.data.type === "PRAYER_ALERT"){
+
+    self.registration.showNotification("🕌 Prayer Time", {
+      body: "It's time for " + event.data.prayer,
+      icon: "logo.png",
+      vibrate: [200, 100, 200]
+    });
+
+  }
+
+});
