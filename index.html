@@ -91,14 +91,14 @@ font-size:14px;
 <div class="container">
 
 <h1>Chair Islamic TV</h1>
-<p>Islamic Knowledge • Quran • Hadith • Videos</p>
+<p>Read Quran, view Hadith, check Prayer Times, and watch Islamic Videos.</p>
 
 <!-- INSTALL BUTTON -->
 <button id="installBtn" style="display:none;">
-Install App 📲
+Install Chair Islamic TV 📲
 </button>
 
-<!-- BIO -->
+<!-- FOUNDER BIO -->
 <h2>Founder Biography</h2>
 <div class="content-box">
 <p>Welcome to Chair Islamic TV, where faith meets innovation! I'm <b>KAWEESI SHURAIM</b>, the founder of this platform.</p>
@@ -114,11 +114,11 @@ Install App 📲
 
 <!-- DONATION -->
 <div class="content-box">
-<h2>Support Us</h2>
+<h2>Support Chair Islamic TV</h2>
 
 <input type="number" id="amount" placeholder="Enter amount (UGX)">
 
-<button onclick="donate()">Donate via Airtel</button>
+<button onclick="donate()">Donate via Airtel Money</button>
 
 </div>
 
@@ -126,117 +126,94 @@ Install App 📲
 <div class="content-box">
 <h2>Explore</h2>
 
-<a href="quran.html"><button>📖 Quran</button></a>
-<a href="hadith.html"><button>📜 Hadith</button></a>
-<a href="prayer.html"><button>🕌 Prayer</button></a>
+<a href="quran.html"><button>📖 Quran Reader</button></a>
+<a href="hadith.html"><button>📜 Daily Hadith</button></a>
+<a href="prayer.html"><button>🕌 Prayer Times</button></a>
 <a href="videos.html"><button>🎥 Videos</button></a>
 
 </div>
 
-<!-- VIDEOS -->
+<!-- YOUTUBE -->
 <div id="youtubeVideos"></div>
 
 </div>
 
-<!-- NAV -->
+<!-- NAVIGATION -->
 <div class="bottom-nav">
-<a href="index.html">Home</a>
-<a href="quran.html">Quran</a>
-<a href="hadith.html">Hadith</a>
-<a href="prayer.html">Prayer</a>
-<a href="videos.html">Videos</a>
+<a href="index.html">🏠 Home</a>
+<a href="quran.html">📖 Quran</a>
+<a href="hadith.html">📜 Hadith</a>
+<a href="prayer.html">🕌 Prayer</a>
+<a href="videos.html">🎥 Videos</a>
 </div>
 
 <script>
-<script>
 // ===============================
-// SERVICE WORKER REGISTER
+// SERVICE WORKER
 // ===============================
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js")
       .then(() => console.log("Service Worker Registered"))
-      .catch(err => console.log("SW failed", err));
+      .catch(() => console.log("SW Failed"));
   });
 }
 
 // ===============================
-// INSTALL BUTTON FIX
+// INSTALL BUTTON (FIXED)
 // ===============================
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
+// Always show button (fallback)
+installBtn.style.display = "block";
+
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
-  if (installBtn) {
-    installBtn.style.display = "block";
-  }
 });
 
-installBtn?.addEventListener("click", async () => {
-  if (!deferredPrompt) {
-    alert("Install not available yet. Open site again or use Chrome menu.");
-    return;
-  }
+installBtn.addEventListener("click", async () => {
 
-  deferredPrompt.prompt();
-
-  const choice = await deferredPrompt.userChoice;
-
-  if (choice.outcome === "accepted") {
-    console.log("App Installed");
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
   } else {
-    console.log("Install dismissed");
+    alert("To install: Tap browser menu (⋮) → Add to Home Screen");
   }
 
-  deferredPrompt = null;
 });
-</script>
 
 // ===============================
-// YOUTUBE
+// YOUTUBE VIDEOS
 // ===============================
-const vids = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
-const box = document.getElementById("youtubeVideos");
+const videos = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
+const container = document.getElementById("youtubeVideos");
 
-if(box){
-let html="";
-vids.forEach(v=>{
+let html = "";
+videos.forEach(v=>{
 html += `<iframe src="https://www.youtube.com/embed/${v}" allowfullscreen></iframe>`;
 });
-box.innerHTML = html;
-}
+container.innerHTML = html;
 
 // ===============================
-// DONATION (AUTO USSD)
+// AIRTEL DONATION (AUTO USSD)
 // ===============================
 function donate(){
 
 const amount = document.getElementById("amount").value;
 
 if(!amount || amount < 1000){
-alert("Enter valid amount (min 1000)");
+alert("Enter valid amount (minimum 1000 UGX)");
 return;
 }
 
-// AUTO DIAL WITH MERCHANT CODE
 const ussd = `*185*9*7037856*${amount}#`;
 
 window.location.href = "tel:" + encodeURIComponent(ussd);
 
 }
-
-// ===============================
-// SERVICE WORKER
-// ===============================
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("sw.js")
-.then(()=>console.log("SW Registered"))
-.catch(()=>console.log("SW Failed"));
-}
-
 </script>
 
 </body>
