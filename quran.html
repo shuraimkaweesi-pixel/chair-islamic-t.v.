@@ -6,16 +6,13 @@
 <title>Chair Islamic TV - Quran</title>
 
 <style>
-
 body{
 font-family:Arial;
 margin:20px;
 background:#f5f5f5;
 }
 
-h1{
-text-align:center;
-}
+h1{text-align:center;}
 
 .ayah{
 background:white;
@@ -23,6 +20,7 @@ padding:12px;
 margin-bottom:12px;
 border-radius:8px;
 box-shadow:0 1px 3px rgba(0,0,0,0.1);
+cursor:pointer;
 }
 
 .arabic{
@@ -52,16 +50,15 @@ border-radius:6px;
 border:1px solid #ccc;
 }
 
-  .playing{
+.playing{
 background:#e8f7ff;
 border-left:4px solid #1e90ff;
-  }
-  
-/* Floating audio player */
+}
 
+/* Floating Audio Player */
 #audioPlayer{
 position:fixed;
-bottom:10px;
+bottom:70px;
 left:50%;
 transform:translateX(-50%);
 width:95%;
@@ -73,6 +70,22 @@ box-shadow:0 4px 10px rgba(0,0,0,0.25);
 z-index:999;
 }
 
+/* Floating Download Button */
+#downloadBtn{
+position:fixed;
+bottom:10px;
+right:15px;
+background:#1e90ff;
+color:white;
+padding:12px 16px;
+border:none;
+border-radius:50px;
+font-size:14px;
+box-shadow:0 4px 10px rgba(0,0,0,0.3);
+cursor:pointer;
+z-index:1000;
+}
+
 </style>
 </head>
 
@@ -82,12 +95,7 @@ z-index:999;
 
 <div id="quranControls">
 
-<input
-type="text"
-id="surahSearch"
-placeholder="Search Surah"
-onkeyup="searchSurah()"
->
+<input type="text" id="surahSearch" placeholder="Search Surah" onkeyup="searchSurah()">
 
 <select id="surahSelect"></select>
 
@@ -104,8 +112,9 @@ onkeyup="searchSurah()"
 <div id="quranText"></div>
 
 <div id="audioPlayer"></div>
-<button onclick="downloadSurah()">⬇️ Download Surah Audio</button>
-  
+
+<button id="downloadBtn" onclick="downloadSurah()">⬇️ Download</button>
+
 <script src="script.js"></script>
 
 </body>
