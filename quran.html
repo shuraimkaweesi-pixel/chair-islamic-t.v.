@@ -28,13 +28,26 @@ h1 {
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.ayah:hover {
+  background: #1a1a1a;      /* Slightly lighter black */
+  color: #FFA500;            /* Brighter gold-orange on hover */
+  box-shadow: 0 2px 6px rgba(255,165,0,0.4);
+}
+
+.ayah.active {
+  background: #1a1a1a;
+  color: #FFB800;            /* Active color */
+  border-left: 4px solid #FFB800;
 }
 
 .arabic {
   font-size: 26px;
   text-align: right;
   direction: rtl;
-  font-family: 'Amiri', serif;  /* Optional Arabic font */
+  font-family: 'Amiri', serif;
   margin-bottom: 6px;
   line-height: 1.8;
 }
@@ -131,6 +144,16 @@ select, input, button {
 <button id="downloadBtn" onclick="downloadSurah()">⬇️ Download</button>
 
 <script src="script.js"></script>
+
+<script>
+// Optional: add click event to highlight selected ayah
+document.addEventListener('click', function(e){
+  if(e.target.classList.contains('ayah')){
+    document.querySelectorAll('.ayah').forEach(a => a.classList.remove('active'));
+    e.target.classList.add('active');
+  }
+});
+</script>
 
 </body>
 </html>
