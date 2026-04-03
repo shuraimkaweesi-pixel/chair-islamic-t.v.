@@ -6,86 +6,104 @@
 <title>Chair Islamic TV - Quran</title>
 
 <style>
-body{
-font-family:Arial;
-margin:20px;
-background:#f5f5f5;
+/* General Body Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f5f5f5;
 }
 
-h1{text-align:center;}
-
-.ayah{
-background:white;
-padding:12px;
-margin-bottom:12px;
-border-radius:8px;
-box-shadow:0 1px 3px rgba(0,0,0,0.1);
-cursor:pointer;
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-.arabic{
-font-size:24px;
-text-align:right;
-direction:rtl;
-margin-bottom:6px;
+/* Quran Section Styles */
+.ayah {
+  background: #000000;       /* Black background */
+  color: #FFD700;            /* Gold text */
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  cursor: pointer;
 }
 
-.translation{
-font-size:18px;
-color:#444;
+.arabic {
+  font-size: 26px;
+  text-align: right;
+  direction: rtl;
+  font-family: 'Amiri', serif;  /* Optional Arabic font */
+  margin-bottom: 6px;
+  line-height: 1.8;
 }
 
-#quranControls{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-justify-content:center;
-margin-bottom:20px;
+.translation {
+  font-size: 18px;
+  color: #FFD700;
+  margin-top: 4px;
+  line-height: 1.6;
 }
 
-select,input,button{
-padding:8px;
-font-size:16px;
-border-radius:6px;
-border:1px solid #ccc;
+/* Quran Controls */
+#quranControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.playing{
-background:#e8f7ff;
-border-left:4px solid #1e90ff;
+select, input, button {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.playing {
+  background: #e8f7ff;
+  border-left: 4px solid #1e90ff;
 }
 
 /* Floating Audio Player */
-#audioPlayer{
-position:fixed;
-bottom:70px;
-left:50%;
-transform:translateX(-50%);
-width:95%;
-max-width:600px;
-background:white;
-padding:10px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.25);
-z-index:999;
+#audioPlayer {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 600px;
+  background: #000000;
+  color: #FFD700;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  z-index: 999;
 }
 
 /* Floating Download Button */
-#downloadBtn{
-position:fixed;
-bottom:10px;
-right:15px;
-background:#1e90ff;
-color:white;
-padding:12px 16px;
-border:none;
-border-radius:50px;
-font-size:14px;
-box-shadow:0 4px 10px rgba(0,0,0,0.3);
-cursor:pointer;
-z-index:1000;
+#downloadBtn {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+  background: #FFD700;
+  color: #000000;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 50px;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 1000;
+  transition: 0.3s;
 }
 
+#downloadBtn:hover {
+  background: #FFC300;
+  color: #000;
+}
 </style>
 </head>
 
@@ -94,26 +112,21 @@ z-index:1000;
 <h1>Quran - Chair Islamic TV</h1>
 
 <div id="quranControls">
+  <input type="text" id="surahSearch"
+    placeholder="Search Surah" onkeyup="searchSurah()">
 
-<input type="text" id="surahSearch"
-  placeholder="Search Surah" onkeyup="searchSurah()">
+  <select id="surahSelect"></select>
 
+  <select id="reciterSelect">
+    <option value="afasy">Mishary Al-Afasy</option>
+    <option value="baset">Abdul Basit</option>
+    <option value="ghamdi">Saad Al-Ghamdi</option>
+  </select>
 
-
-<select id="surahSelect"></select>
-
-<select id="reciterSelect">
-<option value="afasy">Mishary Al-Afasy</option>
-<option value="baset">Abdul Basit</option>
-<option value="ghamdi">Saad Al-Ghamdi</option>
-</select>
-
-<button onclick="loadSurah()">Load Surah</button>
-
+  <button onclick="loadSurah()">Load Surah</button>
 </div>
 
 <div id="quranText"></div>
-
 
 <button id="downloadBtn" onclick="downloadSurah()">⬇️ Download</button>
 
