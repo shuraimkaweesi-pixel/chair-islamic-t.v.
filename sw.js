@@ -20,9 +20,13 @@ self.addEventListener("install", event => {
 });
 
 // Fetch (offline support)
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
-  );
+self.addEventListener("message", event => {
+  if (event.data.type === "PLAY_ADHAN") {
+
+    self.registration.showNotification("🕌 Prayer Time", {
+      body: "It's time for " + event.data.prayer,
+      icon: "logo.png"
+    });
+
+  }
 });
