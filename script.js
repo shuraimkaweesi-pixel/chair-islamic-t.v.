@@ -317,26 +317,40 @@ async function loadSurah() {
 // PLAY AYAH
 // ===============================
 let currentAudio;
+let fullSurahAudio;
 
-function playAyah(surah, ayah, element) {
+function playAyah(surah, ayah, element){
 
-  document.querySelectorAll(".ayah").forEach(a => a.classList.remove("playing"));
-  element.classList.add("playing");
+// STOP full surah audio
+if(fullSurahAudio){
+fullSurahAudio.pause();
+}
 
-  const surahCode = String(surah).padStart(3, "0");
-  const ayahCode = String(ayah).padStart(3, "0");
+// remove highlight
+document.querySelectorAll(".ayah").forEach(a=>{
+a.classList.remove("playing");
+});
 
-  const audioURL =
-    "https://everyayah.com/data/Alafasy_128kbps/" +
-    surahCode + ayahCode + ".mp3";
+element.classList.add("playing");
 
-  if (currentAudio) currentAudio.pause();
+const surahCode = String(surah).padStart(3,"0");
+const ayahCode = String(ayah).padStart(3,"0");
 
-  currentAudio = new Audio(audioURL);
-  currentAudio.play();
+const audioURL =
+"https://everyayah.com/data/Alafasy_128kbps/" +
+surahCode + ayahCode + ".mp3";
 
-  document.getElementById("audioPlayer").innerHTML =
-    `<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
+// STOP previous ayah
+if(currentAudio){
+currentAudio.pause();
+}
+
+currentAudio = new Audio(audioURL);
+currentAudio.play();
+
+// update player UI
+document.getElementById("audioPlayer").innerHTML =
+`<audio controls autoplay style="width:100%" src="${audioURL}"></audio>`;
 }
 
 // ===============================
