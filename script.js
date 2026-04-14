@@ -318,3 +318,213 @@ return;
 
 window.location.href = "tel:" + encodeURIComponent(`*185*9*7037856*${amount}#`);
   }
+
+<script>
+
+// =====================
+// WAIT FOR PAGE LOAD
+// =====================
+document.addEventListener("DOMContentLoaded", () => {
+
+initLetters();
+
+unlockAudio(); // 🔓 fix mobile audio
+
+});
+
+
+// =====================
+// ARABIC LETTERS
+// =====================
+
+const letters = [
+{a:"ا", name:"Alif", sound:"a"},
+{a:"ب", name:"Ba", sound:"ba"},
+{a:"ت", name:"Ta", sound:"ta"},
+{a:"ث", name:"Tha", sound:"tha"},
+{a:"ج", name:"Jeem", sound:"ja"},
+{a:"ح", name:"Ha", sound:"ha"},
+{a:"خ", name:"Kha", sound:"kha"},
+{a:"د", name:"Dal", sound:"da"},
+{a:"ذ", name:"Dhal", sound:"dha"},
+{a:"ر", name:"Ra", sound:"ra"},
+{a:"ز", name:"Zay", sound:"za"},
+{a:"س", name:"Seen", sound:"sa"},
+{a:"ش", name:"Sheen", sound:"sha"},
+{a:"ص", name:"Sad", sound:"sa"},
+{a:"ض", name:"Dad", sound:"da"},
+{a:"ط", name:"Taa", sound:"ta"},
+{a:"ظ", name:"Zaa", sound:"za"},
+{a:"ع", name:"Ain", sound:"aa"},
+{a:"غ", name:"Ghain", sound:"gha"},
+{a:"ف", name:"Fa", sound:"fa"},
+{a:"ق", name:"Qaf", sound:"qa"},
+{a:"ك", name:"Kaf", sound:"ka"},
+{a:"ل", name:"Lam", sound:"la"},
+{a:"م", name:"Meem", sound:"ma"},
+{a:"ن", name:"Noon", sound:"na"},
+{a:"ه", name:"Ha", sound:"ha"},
+{a:"و", name:"Waw", sound:"wa"},
+{a:"ي", name:"Yaa", sound:"ya"}
+];
+
+
+// =====================
+// SETTINGS
+// =====================
+let repeatCount = 3;
+
+
+// =====================
+// LOAD UI
+// =====================
+function initLetters(){
+
+const box = document.getElementById("lessonBox");
+if(!box) return;
+
+box.innerHTML = "";
+
+letters.forEach((l,i)=>{
+
+box.innerHTML += `
+<div class="lesson">
+
+<h2 style="font-size:40px">${l.a}</h2>
+
+<p>${l.name}</p>
+<p style="color:#aaa">${l.sound}</p>
+
+<button onclick="startLetter(${i})">▶ Start</button>
+
+</div>
+`;
+
+});
+
+}
+
+
+// =====================
+// AUDIO SYSTEM
+// =====================
+let currentAudio = null;
+let currentIndex = null;
+let repeat = 0;
+let isPlaying = false;
+
+
+// =====================
+// START / TOGGLE LETTER
+// =====================
+function startLetter(index){
+
+// toggle same letter
+if(currentAudio && currentIndex === index){
+
+if(!currentAudio.paused){
+currentAudio.pause();
+isPlaying = false;
+return;
+}else{
+currentAudio.play();
+isPlaying = true;
+return;
+}
+
+}
+
+// stop previous
+if(currentAudio){
+currentAudio.pause();
+}
+
+currentIndex = index;
+repeat = 0;
+isPlaying = true;
+
+playLetter();
+
+}
+
+
+// =====================
+// PLAY LETTER
+// =====================
+function playLetter(){
+
+if(currentIndex === null) return;
+
+const letter = letters[currentIndex];
+
+// Google TTS (encoded)
+const text = encodeURIComponent(letter.a);
+
+const audioURL =
+`https://translate.google.com/translate_tts?ie=UTF-8&q=${text}&tl=ar&client=tw-ob`;
+
+currentAudio = new Audio(audioURL);
+
+currentAudio.play().catch(()=>{});
+
+highlightLetter(currentIndex);
+
+// when finished
+currentAudio.onended = ()=>{
+
+if(!isPlaying) return;
+
+repeat++;
+
+if(repeat < repeatCount){
+playLetter();
+return;
+}
+
+// next letter
+currentIndex++;
+
+if(currentIndex < letters.length){
+repeat = 0;
+playLetter();
+}else{
+isPlaying = false;
+console.log("Finished all letters ✅");
+}
+
+};
+
+}
+
+
+// =====================
+// HIGHLIGHT
+// =====================
+function highlightLetter(index){
+
+document.querySelectorAll(".lesson").forEach((l,i)=>{
+l.style.border = (i === index) ? "2px solid gold" : "none";
+});
+
+}
+
+
+// =====================
+// 🔓 UNLOCK AUDIO (MOBILE FIX)
+// =====================
+function unlockAudio(){
+
+document.body.addEventListener("click", () => {
+
+const a = new Audio("https://cdn.islamic.network/audio/adhan/1.mp3");
+
+a.play().then(()=>{
+a.pause();
+a.currentTime = 0;
+}).catch(()=>{});
+
+}, { once: true });
+
+}
+
+</script>
