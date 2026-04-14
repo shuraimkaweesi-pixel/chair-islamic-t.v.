@@ -1,40 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Yasarnah - Learn Arabic Letters</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#000;
+color:#FFD700;
+margin:0;
+padding:20px;
+text-align:center;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+#lessonBox{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+}
+
+.lesson{
+background:#111;
+padding:15px;
+border-radius:12px;
+transition:0.3s;
+}
+
+.lesson.active{
+border:2px solid gold;
+background:#1a1a1a;
+}
+
+.arabic{
+font-size:42px;
+margin-bottom:10px;
+}
+
+button{
+background:#FFD700;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.controls{
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>📖 Yasarnah (Alif → Yaa)</h1>
+
+<div id="lessonBox"></div>
+
+<div class="controls">
+<button onclick="stopLesson()">⏸ Stop</button>
+</div>
+
 <script>
 
 // =====================
-// ARABIC LETTERS (ALIF → YAA)
+// LETTERS (REAL ARABIC)
 // =====================
 
 const letters = [
-{a:"ا", name:"Alif", sound:"a"},
-{a:"ب", name:"Ba", sound:"ba"},
-{a:"ت", name:"Ta", sound:"ta"},
-{a:"ث", name:"Tha", sound:"tha"},
-{a:"ج", name:"Jeem", sound:"ja"},
-{a:"ح", name:"Ha", sound:"ha"},
-{a:"خ", name:"Kha", sound:"kha"},
-{a:"د", name:"Dal", sound:"da"},
-{a:"ذ", name:"Dhal", sound:"dha"},
-{a:"ر", name:"Ra", sound:"ra"},
-{a:"ز", name:"Zay", sound:"za"},
-{a:"س", name:"Seen", sound:"sa"},
-{a:"ش", name:"Sheen", sound:"sha"},
-{a:"ص", name:"Sad", sound:"sa"},
-{a:"ض", name:"Dad", sound:"da"},
-{a:"ط", name:"Taa", sound:"ta"},
-{a:"ظ", name:"Zaa", sound:"za"},
-{a:"ع", name:"Ain", sound:"aa"},
-{a:"غ", name:"Ghain", sound:"gha"},
-{a:"ف", name:"Fa", sound:"fa"},
-{a:"ق", name:"Qaf", sound:"qa"},
-{a:"ك", name:"Kaf", sound:"ka"},
-{a:"ل", name:"Lam", sound:"la"},
-{a:"م", name:"Meem", sound:"ma"},
-{a:"ن", name:"Noon", sound:"na"},
-{a:"ه", name:"Ha", sound:"ha"},
-{a:"و", name:"Waw", sound:"wa"},
-{a:"ي", name:"Yaa", sound:"ya"}
+{a:"ا", name:"Alif"},
+{a:"ب", name:"Ba"},
+{a:"ت", name:"Ta"},
+{a:"ث", name:"Tha"},
+{a:"ج", name:"Jeem"},
+{a:"ح", name:"Ha"},
+{a:"خ", name:"Kha"},
+{a:"د", name:"Dal"},
+{a:"ذ", name:"Dhal"},
+{a:"ر", name:"Ra"},
+{a:"ز", name:"Zay"},
+{a:"س", name:"Seen"},
+{a:"ش", name:"Sheen"},
+{a:"ص", name:"Sad"},
+{a:"ض", name:"Dad"},
+{a:"ط", name:"Taa"},
+{a:"ظ", name:"Zaa"},
+{a:"ع", name:"Ain"},
+{a:"غ", name:"Ghain"},
+{a:"ف", name:"Fa"},
+{a:"ق", name:"Qaf"},
+{a:"ك", name:"Kaf"},
+{a:"ل", name:"Lam"},
+{a:"م", name:"Meem"},
+{a:"ن", name:"Noon"},
+{a:"ه", name:"Ha"},
+{a:"و", name:"Waw"},
+{a:"ي", name:"Yaa"}
 ];
-
 
 // =====================
 // SETTINGS
@@ -42,30 +112,21 @@ const letters = [
 
 let repeatCount = 3;
 
-
 // =====================
-// LOAD UI
+// BUILD UI
 // =====================
 
 const box = document.getElementById("lessonBox");
 
 letters.forEach((l,i)=>{
-
 box.innerHTML += `
-<div class="lesson">
-
-<h2 style="font-size:40px">${l.a}</h2>
-
-<p>${l.name}</p>
-<p style="color:#aaa">${l.sound}</p>
-
-<button onclick="startLetter(${i})">▶ Start</button>
-
+<div class="lesson" onclick="startLetter(${i})">
+<div class="arabic">${l.a}</div>
+<div>${l.name}</div>
+<button>▶ Learn</button>
 </div>
 `;
-
 });
-
 
 // =====================
 // AUDIO SYSTEM
@@ -74,23 +135,39 @@ box.innerHTML += `
 let currentAudio = null;
 let currentIndex = null;
 let repeat = 0;
-
+let isPlaying = false;
 
 // =====================
-// START LETTER
+// START / TOGGLE
 // =====================
 
 function startLetter(index){
 
-if(currentAudio) currentAudio.pause();
+// toggle pause if same
+if(currentIndex === index && currentAudio){
+
+if(isPlaying){
+currentAudio.pause();
+isPlaying = false;
+return;
+}else{
+currentAudio.play();
+isPlaying = true;
+return;
+}
+
+}
+
+// new start
+stopLesson();
 
 currentIndex = index;
 repeat = 0;
+isPlaying = true;
 
 playLetter();
 
 }
-
 
 // =====================
 // PLAY LETTER
@@ -100,18 +177,19 @@ function playLetter(){
 
 const letter = letters[currentIndex];
 
-// 👉 using Google TTS (works online)
-const audioURL =
+// Google TTS (Arabic pronunciation)
+const url =
 `https://translate.google.com/translate_tts?ie=UTF-8&q=${letter.a}&tl=ar&client=tw-ob`;
 
-currentAudio = new Audio(audioURL);
+currentAudio = new Audio(url);
 currentAudio.play();
 
-// highlight
-highlightLetter(currentIndex);
+highlight(currentIndex);
 
-// when finished
+// on end
 currentAudio.onended = ()=>{
+
+if(!isPlaying) return;
 
 repeat++;
 
@@ -127,24 +205,46 @@ if(currentIndex < letters.length){
 repeat = 0;
 playLetter();
 }else{
-console.log("Finished all letters ✅");
+stopLesson();
 }
 
 };
 
 }
 
+// =====================
+// STOP
+// =====================
+
+function stopLesson(){
+
+if(currentAudio){
+currentAudio.pause();
+}
+
+isPlaying = false;
+currentIndex = null;
+repeat = 0;
+
+document.querySelectorAll(".lesson").forEach(l=>{
+l.classList.remove("active");
+});
+
+}
 
 // =====================
 // HIGHLIGHT
 // =====================
 
-function highlightLetter(index){
+function highlight(index){
 
-document.querySelectorAll(".lesson").forEach((l,i)=>{
-l.style.border = (i === index) ? "2px solid gold" : "none";
+document.querySelectorAll(".lesson").forEach((el,i)=>{
+el.classList.toggle("active", i === index);
 });
 
 }
 
 </script>
+
+</body>
+</html>
