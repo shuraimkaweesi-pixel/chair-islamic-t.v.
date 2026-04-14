@@ -469,6 +469,128 @@ currentAudio.onended = ()=>{
 
 if(!isPlaying) return;
 
+<script>
+
+// =====================
+// REAL AUDIO LETTERS (WORKING LINKS)
+// =====================
+
+const letters = [
+{a:"ا", name:"Alif", url:"https://www.islamcan.com/audio/arabic/alif.mp3"},
+{a:"ب", name:"Ba", url:"https://www.islamcan.com/audio/arabic/ba.mp3"},
+{a:"ت", name:"Ta", url:"https://www.islamcan.com/audio/arabic/ta.mp3"},
+{a:"ث", name:"Tha", url:"https://www.islamcan.com/audio/arabic/tha.mp3"},
+{a:"ج", name:"Jeem", url:"https://www.islamcan.com/audio/arabic/jeem.mp3"},
+{a:"ح", name:"Ha", url:"https://www.islamcan.com/audio/arabic/ha.mp3"},
+{a:"خ", name:"Kha", url:"https://www.islamcan.com/audio/arabic/kha.mp3"},
+{a:"د", name:"Dal", url:"https://www.islamcan.com/audio/arabic/dal.mp3"},
+{a:"ذ", name:"Dhal", url:"https://www.islamcan.com/audio/arabic/dhal.mp3"},
+{a:"ر", name:"Ra", url:"https://www.islamcan.com/audio/arabic/ra.mp3"},
+{a:"ز", name:"Zay", url:"https://www.islamcan.com/audio/arabic/zay.mp3"},
+{a:"س", name:"Seen", url:"https://www.islamcan.com/audio/arabic/seen.mp3"},
+{a:"ش", name:"Sheen", url:"https://www.islamcan.com/audio/arabic/sheen.mp3"},
+{a:"ص", name:"Sad", url:"https://www.islamcan.com/audio/arabic/sad.mp3"},
+{a:"ض", name:"Dad", url:"https://www.islamcan.com/audio/arabic/dad.mp3"},
+{a:"ط", name:"Taa", url:"https://www.islamcan.com/audio/arabic/taa.mp3"},
+{a:"ظ", name:"Zaa", url:"https://www.islamcan.com/audio/arabic/zaa.mp3"},
+{a:"ع", name:"Ain", url:"https://www.islamcan.com/audio/arabic/ain.mp3"},
+{a:"غ", name:"Ghain", url:"https://www.islamcan.com/audio/arabic/ghain.mp3"},
+{a:"ف", name:"Fa", url:"https://www.islamcan.com/audio/arabic/fa.mp3"},
+{a:"ق", name:"Qaf", url:"https://www.islamcan.com/audio/arabic/qaf.mp3"},
+{a:"ك", name:"Kaf", url:"https://www.islamcan.com/audio/arabic/kaf.mp3"},
+{a:"ل", name:"Lam", url:"https://www.islamcan.com/audio/arabic/lam.mp3"},
+{a:"م", name:"Meem", url:"https://www.islamcan.com/audio/arabic/meem.mp3"},
+{a:"ن", name:"Noon", url:"https://www.islamcan.com/audio/arabic/noon.mp3"},
+{a:"ه", name:"Ha", url:"https://www.islamcan.com/audio/arabic/haa.mp3"},
+{a:"و", name:"Waw", url:"https://www.islamcan.com/audio/arabic/waw.mp3"},
+{a:"ي", name:"Yaa", url:"https://www.islamcan.com/audio/arabic/yaa.mp3"}
+];
+
+// =====================
+// SETTINGS
+// =====================
+
+let repeatCount = 3;
+
+// =====================
+// BUILD UI
+// =====================
+
+const box = document.getElementById("lessonBox");
+
+letters.forEach((l,i)=>{
+box.innerHTML += `
+<div class="lesson" onclick="toggleLetter(${i})">
+
+<h2 style="font-size:42px">${l.a}</h2>
+<p>${l.name}</p>
+
+</div>`;
+});
+
+// =====================
+// AUDIO SYSTEM
+// =====================
+
+let currentAudio = null;
+let currentIndex = null;
+let repeat = 0;
+
+// =====================
+// TOGGLE PLAY / PAUSE
+// =====================
+
+function toggleLetter(index){
+
+// same letter toggle
+if(currentIndex === index && currentAudio){
+
+if(!currentAudio.paused){
+currentAudio.pause();
+return;
+}else{
+currentAudio.play();
+return;
+}
+
+}
+
+// new letter
+startLetter(index);
+
+}
+
+// =====================
+// START LETTER
+// =====================
+
+function startLetter(index){
+
+if(currentAudio) currentAudio.pause();
+
+currentIndex = index;
+repeat = 0;
+
+playLetter();
+
+}
+
+// =====================
+// PLAY LETTER
+// =====================
+
+function playLetter(){
+
+const letter = letters[currentIndex];
+
+currentAudio = new Audio(letter.url);
+currentAudio.play();
+
+highlightLetter(currentIndex);
+
+// repeat + auto next
+currentAudio.onended = ()=>{
+
 repeat++;
 
 if(repeat < repeatCount){
@@ -476,17 +598,29 @@ playLetter();
 return;
 }
 
-// next
+// next letter
 currentIndex++;
 
 if(currentIndex < letters.length){
 repeat = 0;
 playLetter();
 }else{
-stopLesson();
+console.log("Finished all letters ✅");
 }
 
 };
+
+}
+
+// =====================
+// HIGHLIGHT
+// =====================
+
+function highlightLetter(index){
+
+document.querySelectorAll(".lesson").forEach((el,i)=>{
+el.style.border = (i === index) ? "2px solid gold" : "none";
+});
 
 }
 
