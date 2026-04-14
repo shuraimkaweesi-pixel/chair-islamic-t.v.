@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yasarnah Teach | Chair Islamic TV</title>
+
+<style>
+
+body{
+background:#0f0f0f;
+color:#FFD700;
+font-family:Arial;
+padding:20px;
+text-align:center;
+}
+
+h1{
+margin-bottom:10px;
+}
+
+.lesson{
+background:#1a1a1a;
+padding:20px;
+border-radius:12px;
+margin-top:20px;
+}
+
+.arabic{
+font-size:28px;
+direction:rtl;
+margin:10px 0;
+}
+
+.translit{
+color:#ccc;
+margin-bottom:10px;
+}
+
+.meaning{
+color:#aaa;
+}
+
+button{
+margin-top:15px;
+padding:12px;
+width:80%;
+background:#FFD700;
+color:black;
+border:none;
+border-radius:8px;
+font-weight:bold;
+}
+
+.playing{
+background:#333;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>📘 Yasarnah Teach</h1>
+<p>Learn Quran step by step with audio</p>
+
+<div id="lessonBox"></div>
+
+<script>
+
+// =====================
+// LESSON DATA (START SIMPLE)
+// =====================
+
+const lessons = [
+{
+title: "Surah Al-Fatiha - Ayah 1",
+arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+translit: "Bismillahi rahmani raheem",
+meaning: "In the name of Allah, the Most Gracious, the Most Merciful",
+audio: "https://everyayah.com/data/Alafasy_128kbps/001001.mp3"
+},
+{
+title: "Surah Al-Fatiha - Ayah 2",
+arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+translit: "Alhamdu lillahi rabbil aalameen",
+meaning: "All praise is due to Allah, Lord of the worlds",
+audio: "https://everyayah.com/data/Alafasy_128kbps/001002.mp3"
+}
+];
+
+
+// =====================
+// LOAD LESSONS
+// =====================
+
+const box = document.getElementById("lessonBox");
+
+lessons.forEach((l,i)=>{
+
+box.innerHTML += `
+<div class="lesson">
+
+<h3>${l.title}</h3>
+
+<div class="arabic">${l.arabic}</div>
+
+<div class="translit">${l.translit}</div>
+
+<div class="meaning">${l.meaning}</div>
+
+<button onclick="playLesson(${i}, this)">▶ Play</button>
+
+</div>
+`;
+
+});
+
+
+// =====================
+// AUDIO CONTROL
+// =====================
+
+let currentAudio = null;
+
+function playLesson(index, btn){
+
+const lesson = lessons[index];
+
+// stop old
+if(currentAudio){
+currentAudio.pause();
+}
+
+// play new
+currentAudio = new Audio(lesson.audio);
+currentAudio.play();
+
+// UI feedback
+document.querySelectorAll("button").forEach(b=>b.classList.remove("playing"));
+btn.classList.add("playing");
+
+}
+
+</script>
+
+</body>
+</html>
