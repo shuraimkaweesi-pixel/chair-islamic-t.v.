@@ -194,61 +194,48 @@ playAyah(surah,next,ayahElements[next-1]);
 
 }
 
-// ===============================
-// ADHAN SYSTEM
-// ===============================
-let prayerTimes = {};
-let lastAdhan = "";
+// =====================
+// 🔊 ADHAN SYSTEM (REAL TIME)
+// =====================
 
-if("Notification" in window && Notification.permission!=="granted"){
-Notification.requestPermission();
+let lastAdhanPlayed = "";
+
+// ask notification permission
+if ("Notification" in window && Notification.permission !== "granted") {
+  Notification.requestPermission();
 }
 
-async function startAdhanSystem(){
+function startAdhanWatcher(){
 
-try{
+setInterval(()=>{
 
-const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Kampala&country=Uganda`);
-const data = await res.json();
-
-const t = data.data.timings;
-
-prayerTimes = {
-Fajr:t.Fajr.slice(0,5),
-Dhuhr:t.Dhuhr.slice(0,5),
-Asr:t.Asr.slice(0,5),
-Maghrib:t.Maghrib.slice(0,5),
-Isha:t.Isha.slice(0,5)
-};
-
-setInterval(checkPrayer,15000);
-
-}catch{}
-
-}
-
-function checkPrayer(){
+if(!prayerTimings) return;
 
 const now = new Date();
-const time = now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
 
-for(let p in prayerTimes){
+const currentTime =
+now.getHours().toString().padStart(2,"0") + ":" +
+now.getMinutes().toString().padStart(2,"0");
 
-if(prayerTimes[p]===time && lastAdhan!==p){
+const prayers = ["Fajr","Dhuhr","Asr","Maghrib","Isha"];
 
-new Audio("https://cdn.islamic.network/audio/adhan/1.mp3").play().catch(()=>{});
+prayers.forEach(p=>{
 
-if(Notification.permission==="granted"){
-new Notification("🕌 Prayer Time",{body:"It's time for "+p});
+let prayerTime = prayerTimings[p].slice(0,5);
+
+// MATCH TIME + prevent repeat
+if(currentTime === prayerTime && lastAdhanPlayed !== p){
+
+playAdhan(p);
+lastAdhanPlayed = p;
+
 }
 
-lastAdhan = p;
+});
 
-}
+},15000); // check every 15 sec
 
-}
-
-}
+   }
 
 // ===============================
 // DONATION
