@@ -6,23 +6,19 @@
 <title>Chair Islamic TV - Quran</title>
 
 <style>
-/* Full Page Background */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #000000; /* Full black background */
-  color: #FFD700;      /* Premium gold text by default */
-}
 
-/* Page Title */
-h1 {
-  text-align: center;
-  margin: 20px 0;
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #000;
   color: #FFD700;
 }
 
-/* Quran Controls */
+h1 {
+  text-align: center;
+  margin: 20px 0;
+}
+
 #quranControls {
   display: flex;
   flex-wrap: wrap;
@@ -32,101 +28,49 @@ h1 {
 }
 
 input, select, button {
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 8px;
   border-radius: 6px;
   border: 1px solid #FFD700;
-  background: #000000;
+  background: #000;
   color: #FFD700;
-  outline: none;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
-input::placeholder {
-  color: #FFD700;
-  opacity: 0.6;
-}
-
-button:hover, select:hover, input:hover {
-  background: #222;
-}
-
-/* Quran Text Container */
 #quranText {
   padding: 10px 20px;
 }
 
-/* Ayah Styles */
 .ayah {
-  background: transparent;
   padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
 .arabic {
   font-size: 26px;
   text-align: right;
   direction: rtl;
-  font-family: 'Amiri', serif;
-  line-height: 1.8;
 }
 
 .translation {
-  font-size: 18px;
-  color: #FFD700;
-  line-height: 1.6;
-  margin-top: 4px;
+  font-size: 16px;
 }
 
-/* Currently Playing Ayah Highlight */
 .playing {
-  background: rgba(139, 69, 19, 0.3); /* brownish filter */
-  color: #FFFF66; /* yellow-gold highlight */
-  border-left: 4px solid #FFFF66;
-  transition: 0.3s;
+  background: rgba(139,69,19,0.3);
+  border-left: 4px solid #FFD700;
 }
 
-/* Floating Audio Player */
-#audioPlayer {
-  position: fixed;
-  bottom: 70px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
-  max-width: 600px;
-  background: #000000;
-  color: #FFD700;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  z-index: 999;
-}
-
-/* Floating Download Button */
+/* Floating download */
 #downloadBtn {
   position: fixed;
-  bottom: 10px;
+  bottom: 15px;
   right: 15px;
-  background: #FFD700;
-  color: #000000;
-  padding: 12px 16px;
-  border: none;
+  background: gold;
+  color: black;
+  padding: 12px;
   border-radius: 50px;
-  font-size: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 1000;
-  transition: 0.3s;
 }
 
-#downloadBtn:hover {
-  background: #FFC300;
-  color: #000;
-}
 </style>
 </head>
 
@@ -135,34 +79,141 @@ button:hover, select:hover, input:hover {
 <h1>Quran - Chair Islamic TV</h1>
 
 <div id="quranControls">
-  <input type="text" id="surahSearch"placeholder="Search Surah" onkeyup="searchSurah()">
-  <select id="surahSelect"></select>
-  
-  <select id="reciterSelect">
-    
-    <option value="afasy">Mishary Al-Afasy</option>
-    <option value="baset">Abdul Basit</option>
-    <option value="ghamdi">Saad Al-Ghamdi</option>
-  </select>
-  <button onclick="loadSurah()">Load Surah</button>
+<input id="surahSearch" placeholder="Search Surah">
+<select id="surahSelect"></select>
+
+<select id="reciterSelect">
+<option value="Alafasy_128kbps">Alafasy</option>
+<option value="Abdul_Basit_Murattal_128kbps">Abdul Basit</option>
+<option value="Ghamdi_40kbps">Ghamdi</option>
+</select>
+
+<button onclick="loadSurah()">Load Surah</button>
 </div>
 
 <div id="quranText"></div>
 
-<button id="downloadBtn" onclick="downloadSurah()">⬇️ Download</button>
-
-<script src="script.js"></script>
+<button id="downloadBtn" onclick="downloadSurah()">⬇️</button>
 
 <script>
-// Highlight clicked ayah and scroll into view
-document.addEventListener('click', function(e){
-  if(e.target.classList.contains('ayah') || e.target.closest('.ayah')){
-    const el = e.target.closest('.ayah');
-    document.querySelectorAll('.ayah').forEach(a => a.classList.remove('playing'));
-    el.classList.add('playing');
-    el.scrollIntoView({behavior: 'smooth', block: 'center'});
-  }
+
+// =====================
+// SURAH LIST
+// =====================
+
+const surahNames = ["Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus","Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha","Al-Anbiya","Al-Hajj","Al-Mu’minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum","Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir","Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf","Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah","As-Saff","Al-Jumu’ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij","Nuh","Al-Jinn","Al-Muzzammil","Al-Muddathir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","Abasa","At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad","Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat","Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr","Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"];
+
+const select = document.getElementById("surahSelect");
+
+surahNames.forEach((n,i)=>{
+let o=document.createElement("option");
+o.value=i+1;
+o.textContent=(i+1)+" - "+n;
+select.appendChild(o);
 });
+
+// =====================
+// LOAD SURAH
+// =====================
+
+async function loadSurah(){
+
+const num = select.value;
+
+const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}/editions/quran-uthmani,en.sahih`);
+const data = await res.json();
+
+const ar = data.data[0].ayahs;
+const en = data.data[1].ayahs;
+
+let html="";
+
+for(let i=0;i<ar.length;i++){
+html+=`
+<div class="ayah" onclick="playAyah(${num},${i+1},this)">
+<div class="arabic">${ar[i].text}</div>
+<div class="translation">${en[i].text}</div>
+</div>`;
+}
+
+document.getElementById("quranText").innerHTML = html;
+
+}
+
+// =====================
+// AUDIO SYSTEM
+// =====================
+
+let currentAudio=null;
+let currentAyah=null;
+let ayahList=[];
+
+function playAyah(surah,ayah,el){
+
+// toggle
+if(currentAudio && currentAyah===ayah){
+
+if(!currentAudio.paused){
+currentAudio.pause();
+return;
+}else{
+currentAudio.play();
+return;
+}
+
+}
+
+// stop old
+if(currentAudio) currentAudio.pause();
+
+// highlight
+document.querySelectorAll(".ayah").forEach(a=>a.classList.remove("playing"));
+el.classList.add("playing");
+el.scrollIntoView({behavior:"smooth",block:"center"});
+
+// save
+currentAyah=ayah;
+ayahList=document.querySelectorAll(".ayah");
+
+// reciter
+const reciter=document.getElementById("reciterSelect").value;
+
+const s=String(surah).padStart(3,"0");
+const a=String(ayah).padStart(3,"0");
+
+const url=`https://everyayah.com/data/${reciter}/${s}${a}.mp3`;
+
+currentAudio=new Audio(url);
+currentAudio.play();
+
+// auto next
+currentAudio.onended=()=>{
+let next=ayah+1;
+if(ayahList[next-1]){
+playAyah(surah,next,ayahList[next-1]);
+}
+};
+
+}
+
+// =====================
+// DOWNLOAD
+// =====================
+
+function downloadSurah(){
+
+const num = select.value;
+const code = String(num).padStart(3,"0");
+
+const url = `https://server8.mp3quran.net/afs/${code}.mp3`;
+
+const a=document.createElement("a");
+a.href=url;
+a.download="surah.mp3";
+a.click();
+
+}
+
 </script>
 
 </body>
