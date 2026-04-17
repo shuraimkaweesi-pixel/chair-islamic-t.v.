@@ -170,27 +170,103 @@ el.classList.add("playing");
 // save
 currentSurah = surah;
 currentAyah = ayah;
-ayahElements = document.querySelectorAll(".ayah");
+// ===============================
+// LOAD SURAH (JSON SAFE VERSION)
+// ===============================
+async function loadSurah(){
 
-// url
-const s = String(surah).padStart(3,"0");
-const a = String(ayah).padStart(3,"0");
+const surahNumber = parseInt(document.getElementById("surahSelect").value);
 
-const url = `https://everyayah.com/data/Alafasy_128kbps/${s}${a}.mp3`;
+if(!surahNumber){
+alert("Select a Surah");
+return;
+}
+
+try{
+
+const arabicRes = await fetch("quran.json");
+const englishRes = await fetch("quran_en.json");
+
+const arabicData = await arabicRes.json();
+const englishData = await englishRes.json();
+
+const arabicSurah = arabicData[surahNumber-1];
+const englishSurah = englishData[surahNumber-1];
+
+let html = "";
+
+for(let i=0;i<arabicSurah.verses.length;i++){
+
+html += `
+<div class="ayah" onclick="playAyah(${surahNumber},${i+1},this)">
+<div class="arabic">${i+1}. ${arabicSurah.verses[i].text}</div>
+<div class="translation">${i+1}. ${englishSurah.verses[i]?.translation}</div>
+</div>`;
+}
+
+document.getElementById("quranText").innerHTML = html;
+
+}catch(err){
+
+console.error(err);
+document.getElementById("quranText").innerHTML =
+"<p style='color:red'>Failed to load Surah</p>";
+
+}
+}
+
+// ===============================
+// PLAY AYAH (NO DOUBLE AUDIO)
+// ===============================
+let currentAudio;
+let fullSurahAudio;
+
+function playAyah(surah, ayah, element){
+
+if(fullSurahAudio){
+fullSurahAudio.pause();
+}
+
+document.querySelectorAll(".ayah").forEach(a=>a.classList.remove("playing"));
+element.classList.add("playing");
+
+const surahCode = String(surah).padStart(3,"0");
+const ayahCode = String(ayah).padStart(3,"0");
+
+const url =
+"https://everyayah.com/data/Alafasy_128kbps/" +
+surahCode + ayahCode + ".mp3";
+
+if(currentAudio){
+currentAudio.pause();
+}
 
 currentAudio = new Audio(url);
 currentAudio.play();
 
-// auto next
-currentAudio.onended = ()=>{
-
-const next = ayah + 1;
-
-if(ayahElements[next-1]){
-playAyah(surah,next,ayahElements[next-1]);
+document.getElementById("audioPlayer").innerHTML =
+`<audio controls autoplay src="${url}" style="width:100%"></audio>`;
 }
 
-};
+// ===============================
+// DOWNLOAD
+// ===============================
+function downloadSurah(){
+
+const surahNumber = parseInt(document.getElementById("surahSelect").value);
+
+if(!surahNumber){
+alert("Select a Surah first");
+return;
+}
+
+const code = String(surahNumber).padStart(3,"0");
+const url = "https://server8.mp3quran.net/afs/" + code + ".mp3";
+
+const a = document.createElement("a");
+a.href = url;
+a.download = "Surah_" + code + ".mp3";
+a.click();
 
 }
 
