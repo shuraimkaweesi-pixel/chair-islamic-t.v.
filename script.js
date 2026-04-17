@@ -214,59 +214,99 @@ document.getElementById("quranText").innerHTML =
 
 }
 }
-
 // ===============================
-// PLAY AYAH (NO DOUBLE AUDIO)
+// LOAD SURAH
 // ===============================
-let currentAudio;
-let fullSurahAudio;
+async function loadSurah(){
 
-function playAyah(surah, ayah, element){
+const num = parseInt(document.getElementById("surahSelect").value);
 
-if(fullSurahAudio){
-fullSurahAudio.pause();
+if(!num){
+alert("Select a Surah");
+return;
 }
 
-document.querySelectorAll(".ayah").forEach(a=>a.classList.remove("playing"));
-element.classList.add("playing");
+try{
 
-const surahCode = String(surah).padStart(3,"0");
-const ayahCode = String(ayah).padStart(3,"0");
+const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}/editions/quran-uthmani,en.sahih`);
+const data = await res.json();
 
-const url =
-"https://everyayah.com/data/Alafasy_128kbps/" +
-surahCode + ayahCode + ".mp3";
+const ar = data.data[0].ayahs;
+const en = data.data[1].ayahs;
 
-if(currentAudio){
+let html = "";
+
+for(let i=0;i<ar.length;i++){
+
+html += `
+<div class="ayah" onclick="playAyah(${num},${i+1},this)">
+<div class="arabic">${i+1}. ${ar[i].text}</div>
+<div class="translation">${i+1}. ${en[i].text}</div>
+</div>`;
+}
+
+document.getElementById("quranText").innerHTML = html;
+
+}catch{
+document.getElementById("quranText").innerHTML = "Failed to load Surah";
+}
+
+}
+
+// ===============================
+// 🔊 AYAH AUDIO SYSTEM (FINAL)
+// ===============================
+let currentAudio = null;
+let currentSurah = null;
+let currentAyah = null;
+let ayahElements = [];
+
+function playAyah(surah, ayah, el){
+
+// toggle same ayah
+if(currentAudio && currentSurah===surah && currentAyah===ayah){
+
+if(!currentAudio.paused){
 currentAudio.pause();
+return;
+}else{
+currentAudio.play();
+return;
 }
+
+}
+
+// stop old
+if(currentAudio) currentAudio.pause();
+
+// highlight
+document.querySelectorAll(".ayah").forEach(a=>a.classList.remove("playing"));
+el.classList.add("playing");
+
+// save
+currentSurah = surah;
+currentAyah = ayah;
+ayahElements = document.querySelectorAll(".ayah");
+
+// url
+const s = String(surah).padStart(3,"0");
+const a = String(ayah).padStart(3,"0");
+
+const url = `https://everyayah.com/data/Alafasy_128kbps/${s}${a}.mp3`;
 
 currentAudio = new Audio(url);
 currentAudio.play();
 
-document.getElementById("audioPlayer").innerHTML =
-`<audio controls autoplay src="${url}" style="width:100%"></audio>`;
+// auto next
+currentAudio.onended = ()=>{
+
+const next = ayah + 1;
+
+if(ayahElements[next-1]){
+playAyah(surah,next,ayahElements[next-1]);
 }
 
-// ===============================
-// DOWNLOAD
-// ===============================
-function downloadSurah(){
-
-const surahNumber = parseInt(document.getElementById("surahSelect").value);
-
-if(!surahNumber){
-alert("Select a Surah first");
-return;
-}
-
-const code = String(surahNumber).padStart(3,"0");
-const url = "https://server8.mp3quran.net/afs/" + code + ".mp3";
-
-const a = document.createElement("a");
-a.href = url;
-a.download = "Surah_" + code + ".mp3";
-a.click();
+};
 
 }
 
