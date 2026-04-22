@@ -54,6 +54,55 @@ function loadYoutubeVideos() {
   `).join("");
 }
 
+
+// ===============================
+// 🔒 COPY FIRST SYSTEM
+// ===============================
+
+let hasCopied = false;
+
+function copyMerchant(){
+
+  navigator.clipboard.writeText("7037856").then(()=>{
+
+    hasCopied = true;
+
+    alert("✅ Number copied. You can now donate.");
+
+    // show donate button
+    document.getElementById("donateBtn").style.display = "block";
+
+  }).catch(()=>{
+    alert("Copy failed. Please copy manually: 7037856");
+  });
+
+}
+
+
+// ===============================
+// 💰 DONATION FUNCTION
+// ===============================
+function donate(){
+
+  if(!hasCopied){
+    alert("⚠️ Please copy the merchant number first");
+    return;
+  }
+
+  const amount = document.getElementById("amount").value;
+
+  if(!amount || amount < 1000){
+    alert("Enter valid amount (minimum 1000 UGX)");
+    return;
+  }
+
+  const ussd = `*185*9*7037856*${amount}#`;
+
+  window.location.href = "tel:" + encodeURIComponent(ussd);
+
+}
+
+
 // ===============================
 // HADITH
 // ===============================
