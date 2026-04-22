@@ -210,7 +210,7 @@ alert("Enter valid amount (minimum 1000 UGX)");
 return;
 }
 
-const ussd = `*185*9*7037856*${amount}#`;
+const ussd = `*185*1*${amount}#`;
 
 window.location.href = "tel:" + encodeURIComponent(ussd);
 
