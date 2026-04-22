@@ -235,6 +235,57 @@ navigator.vibrate([500,300,500]);
 }
 
 // ===============================
+// 🔒 COPY REQUIRED + AIRTEL DONATION
+// ===============================
+
+let hasCopied = false;
+
+// COPY BUTTON FUNCTION
+function copyMerchant(){
+
+  navigator.clipboard.writeText("7037856").then(()=>{
+
+    hasCopied = true;
+
+    alert("✅ Merchant number copied. You can now donate.");
+
+    // Optional: show donate button if hidden
+    const btn = document.getElementById("donateBtn");
+    if(btn) btn.style.display = "block";
+
+  }).catch(()=>{
+    alert("Copy failed. Please copy manually: 7037856");
+  });
+
+}
+
+
+// ===============================
+// DONATE (LOCKED UNTIL COPY)
+// ===============================
+function donate(){
+
+  // 🚫 block if not copied
+  if(!hasCopied){
+    alert("⚠️ Please copy the merchant number first");
+    return;
+  }
+
+  const amount = document.getElementById("amount").value;
+
+  if(!amount || amount < 1000){
+    alert("Enter valid amount (minimum 1000 UGX)");
+    return;
+  }
+
+  const ussd = `*185*9*7037856*${amount}#`;
+
+  window.location.href = "tel:" + encodeURIComponent(ussd);
+
+}
+
+
+// ===============================
 // 📖 YASARNAH (REAL AUDIO)
 // ===============================
 const letters = [
