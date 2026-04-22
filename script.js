@@ -1,5 +1,5 @@
 // ===============================
-// CHAIR ISLAMIC TV MAIN SCRIPT - FIXED
+// CHAIR ISLAMIC TV MAIN SCRIPT - V2
 // ===============================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   loadYoutubeVideos();
   loadHadith();
   initSurahList();
-  startAdhanSystem();
+  startAdhanSystem(); // Runs on all pages now
   initLetters();
-  unlockAudio(); // unlocks audio for Adhan + Ayah
+  unlockAudio();
 });
 
 // ===============================
@@ -56,7 +56,7 @@ function loadYoutubeVideos() {
 }
 
 // ===============================
-// DONATION - SINGLE VERSION
+// DONATION
 // ===============================
 let hasCopied = false;
 
@@ -83,9 +83,11 @@ function donate() {
     return;
   }
 
-  // NOTE: This USSD is Airtel only. MTN is *165*3*...
   const ussd = `*185*9*7037856*${amount}#`;
-  window.location.href = "tel:" + encodeURIComponent(ussd);
+  // This method works better on Android WebView + WhatsApp
+  const a = document.createElement('a');
+  a.href = "tel:" + encodeURIComponent(ussd);
+  a.click();
 }
 
 // ===============================
@@ -133,6 +135,9 @@ async function loadSurah() {
   const num = parseInt(document.getElementById("surahSelect").value);
   if (!num) { alert("Select a Surah"); return; }
 
+  const quranText = document.getElementById("quranText");
+  if (quranText) quranText.innerHTML = "Loading...";
+
   try {
     const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}/editions/quran-uthmani,en.sahih`);
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -149,10 +154,10 @@ async function loadSurah() {
         <div class="translation">${i + 1}. ${en[i].text}</div>
       </div>`;
     }
-    document.getElementById("quranText").innerHTML = html;
+    if (quranText) quranText.innerHTML = html;
   } catch (err) {
     console.log("Surah error:", err);
-    document.getElementById("quranText").innerHTML = "Failed to load Surah";
+    if (quranText) quranText.innerHTML = "Failed to load Surah";
   }
 }
 
@@ -161,7 +166,8 @@ async function loadSurah() {
 // ===============================
 let currentAudio = null;
 let letterAudio = null;
-let adhanAudio = null; // Reused audio object for Adhan to avoid autoplay block
+let adhanAudio = null;
+let audioUnlocked = false;
 
 function stopAllAudio() {
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
@@ -176,7 +182,7 @@ let currentAyah = null;
 let ayahElements = [];
 
 function playAyah(surah, ayah, el) {
-  stopAllAudio(); // stop letter audio if playing
+  stopAllAudio();
 
   if (currentAudio && currentSurah === surah && currentAyah === ayah) {
     currentAudio.paused? currentAudio.play() : currentAudio.pause();
@@ -206,27 +212,72 @@ function playAyah(surah, ayah, el) {
 }
 
 // ===============================
-// ADHAN SYSTEM - FIXED
+// ADHAN SYSTEM - FAST + CACHED
 // ===============================
 let prayerTimings = {};
 let lastAdhanPlayed = "";
 let lastAdhanDate = "";
+let adhanCheckInterval = null;
 
+const KAMPALA_LAT = 0.3476;
+const KAMPALA_LON = 32.5825;
+
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function saveAdhanCache(data) {
+  localStorage.setItem('adhanData', JSON.stringify({
+    date: getTodayKey(),
+    timings: data
+  }));
+}
+
+function loadAdhanCache() {
+  const cached = localStorage.getItem('adhanData');
+  if (!cached) return null;
+  const parsed = JSON.parse(cached);
+  if (parsed.date === getTodayKey()) return parsed.timings;
+  return null;
+}
+
+// Request notification permission early
 if ("Notification" in window && Notification.permission === "default") {
   Notification.requestPermission();
 }
 
 function unlockAudio() {
-  document.body.addEventListener("click", () => {
-    // Create the adhan audio object once after user interaction
+  const handler = () => {
     if (!adhanAudio) {
       adhanAudio = new Audio("https://cdn.islamic.network/audio/adhan/1.mp3");
-      adhanAudio.load(); // preload
+      adhanAudio.preload = "auto";
     }
-  }, { once: true });
+    adhanAudio.play().then(() => {
+      adhanAudio.pause();
+      adhanAudio.currentTime = 0;
+      audioUnlocked = true;
+      const msg = document.getElementById("unlockMsg");
+      if (msg) msg.style.display = "none";
+    }).catch(e => console.log("Unlock failed:", e));
+
+    document.body.removeEventListener("click", handler);
+    document.body.removeEventListener("touchstart", handler);
+  };
+
+  document.body.addEventListener("click", handler, { once: true });
+  document.body.addEventListener("touchstart", handler, { once: true });
 }
 
 async function startAdhanSystem() {
+  // 1. Load from cache first for instant Adhan checking
+  const cached = loadAdhanCache();
+  if (cached) {
+    prayerTimings = cached;
+    if (!adhanCheckInterval) setInterval(checkAdhanTime, 15000);
+  }
+
+  // 2. Fetch fresh data
   try {
     const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Kampala&country=Uganda&method=2`);
     if (!res.ok) throw new Error("HTTP " + res.status);
@@ -241,9 +292,35 @@ async function startAdhanSystem() {
       Isha: t.Isha.slice(0, 5)
     };
 
-    setInterval(checkAdhanTime, 15000);
+    saveAdhanCache(prayerTimings);
+    if (!adhanCheckInterval) setInterval(checkAdhanTime, 15000);
+
   } catch (err) {
     console.log("Adhan error:", err);
+  }
+
+  // 3. Optional: Try GPS in background to update if user not in Kampala
+  if (navigator.geolocation &&!cached) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      const distance = Math.abs(lat - KAMPALA_LAT) + Math.abs(lon - KAMPALA_LON);
+      if (distance > 0.5) { // >50km from Kampala
+        fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`)
+         .then(r => r.json())
+         .then(d => {
+            const t = d.data.timings;
+            prayerTimings = {
+              Fajr: t.Fajr.slice(0, 5),
+              Dhuhr: t.Dhuhr.slice(0, 5),
+              Asr: t.Asr.slice(0, 5),
+              Maghrib: t.Maghrib.slice(0, 5),
+              Isha: t.Isha.slice(0, 5)
+            };
+            saveAdhanCache(prayerTimings);
+          }).catch(()=>{});
+      }
+    }, ()=>{}, {timeout: 5000});
   }
 }
 
@@ -254,7 +331,6 @@ function checkAdhanTime() {
   const today = now.toDateString();
   const currentTime = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
 
-  // Reset lastAdhanPlayed at midnight so Fajr can play again next day
   if (lastAdhanDate!== today) {
     lastAdhanPlayed = "";
     lastAdhanDate = today;
@@ -269,18 +345,20 @@ function checkAdhanTime() {
 }
 
 function triggerAdhan(prayer) {
-  stopAllAudio(); // stop other audio first
+  stopAllAudio();
 
-  if (adhanAudio) {
+  if (adhanAudio && audioUnlocked) {
     adhanAudio.currentTime = 0;
     adhanAudio.play().catch(e => console.log("Adhan blocked:", e));
   } else {
-    // Fallback if user never clicked
-    console.log("Adhan: user hasn't interacted yet, audio blocked");
+    console.log("Adhan time but audio not unlocked. Tap screen first.");
   }
 
   if (Notification.permission === "granted") {
-    new Notification("🕌 Prayer Time", { body: "It's time for " + prayer });
+    new Notification("🕌 Prayer Time", {
+      body: "It's time for " + prayer,
+      icon: "logo.png"
+    });
   }
 
   if (navigator.vibrate) {
@@ -294,8 +372,32 @@ function triggerAdhan(prayer) {
 const letters = [
   { a: "ا", name: "Alif", url: "REPLACE_ME" },
   { a: "ب", name: "Ba", url: "REPLACE_ME" },
-  //... rest of letters. islamcan.com links don't work.
-  // Use everyayah.com letter audios or host your own files
+  { a: "ت", name: "Ta", url: "REPLACE_ME" },
+  { a: "ث", name: "Tha", url: "REPLACE_ME" },
+  { a: "ج", name: "Jeem", url: "REPLACE_ME" },
+  { a: "ح", name: "Ha", url: "REPLACE_ME" },
+  { a: "خ", name: "Kha", url: "REPLACE_ME" },
+  { a: "د", name: "Dal", url: "REPLACE_ME" },
+  { a: "ذ", name: "Dhal", url: "REPLACE_ME" },
+  { a: "ر", name: "Ra", url: "REPLACE_ME" },
+  { a: "ز", name: "Zay", url: "REPLACE_ME" },
+  { a: "س", name: "Seen", url: "REPLACE_ME" },
+  { a: "ش", name: "Sheen", url: "REPLACE_ME" },
+  { a: "ص", name: "Sad", url: "REPLACE_ME" },
+  { a: "ض", name: "Dad", url: "REPLACE_ME" },
+  { a: "ط", name: "Taa", url: "REPLACE_ME" },
+  { a: "ظ", name: "Zaa", url: "REPLACE_ME" },
+  { a: "ع", name: "Ain", url: "REPLACE_ME" },
+  { a: "غ", name: "Ghain", url: "REPLACE_ME" },
+  { a: "ف", name: "Fa", url: "REPLACE_ME" },
+  { a: "ق", name: "Qaf", url: "REPLACE_ME" },
+  { a: "ك", name: "Kaf", url: "REPLACE_ME" },
+  { a: "ل", name: "Lam", url: "REPLACE_ME" },
+  { a: "م", name: "Meem", url: "REPLACE_ME" },
+  { a: "ن", name: "Noon", url: "REPLACE_ME" },
+  { a: "ه", name: "Ha", url: "REPLACE_ME" },
+  { a: "و", name: "Waw", url: "REPLACE_ME" },
+  { a: "ي", name: "Yaa", url: "REPLACE_ME" }
 ];
 
 let currentIndex = null;
@@ -325,7 +427,7 @@ function toggleLetter(i) {
 }
 
 function startLetter(i) {
-  stopAllAudio(); // stop ayah audio if playing
+  stopAllAudio();
   currentIndex = i;
   repeat = 0;
   playLetter();
@@ -359,4 +461,4 @@ function highlightLetter(i) {
   document.querySelectorAll(".lesson").forEach((el, index) => {
     el.style.border = index === i? "2px solid gold" : "none";
   });
-}
+                                               }
