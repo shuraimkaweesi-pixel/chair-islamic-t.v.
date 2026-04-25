@@ -657,3 +657,21 @@ function updateLetterProgress(){
     progress.textContent = `${dars.letters[currentLetterIndex].name} - Repeat ${letterRepeat + 1}/${letterRepeatCount}`;
   }
   }
+#darsTitle{
+  font-size: 24px;
+  margin: 10px 0 5px;
+  color: #FFD700;
+}
+
+#darsInfo{
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+#darsCounter{
+  text-align: center;
+  margin: 20px 0;
+  font-size: 14px;
+  color: #999;
+}
