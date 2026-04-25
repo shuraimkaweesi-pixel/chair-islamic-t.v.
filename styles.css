@@ -1,25 +1,136 @@
-<!-- =========================
-     YASARNAH BOOK SECTION
-     ========================= -->
-<div id="yasarnahSection" class="content-box">
-  <h2>📚 Yasarnah - Qaida Nooraniyah</h2>
+/* =========================
+   YASARNAH BOOK - COLORS FIXED
+   ========================= */
+#yasarnahSection{
+  margin-top: 30px;
+  padding: 20px 10px;
+  background: #0a0a0a!important;
+  border-radius: 15px;
+  border: 1px solid #222;
+}
 
-  <div id="darsTitle">Dars 1: Single Letters</div>
-  <div id="darsInfo">Alif to Khaa</div>
+#darsTitle{
+  font-size: 24px;
+  margin: 10px 0 5px;
+  color: #FFD700!important;
+  font-weight: bold;
+}
 
-  <div class="controls">
-    <button onclick="prevDars()">⬅️ Previous</button>
-    <button id="letterPlayBtn" onclick="toggleLetterSequence()">▶ Play Dars</button>
-    <button onclick="stopLetterLesson()">⏹ Stop</button>
-    <button onclick="nextDars()">Next ➡️</button>
-    <select onchange="letterRepeatCount = parseInt(this.value)">
-      <option value="1">Repeat 1x</option>
-      <option value="3" selected>Repeat 3x</option>
-      <option value="5">Repeat 5x</option>
-    </select>
-  </div>
+#darsInfo{
+  font-size: 16px;
+  color: #CCCCCC!important;
+  margin-bottom: 15px;
+}
 
-  <div id="letterProgress">Tap any letter to start</div>
-  <div id="lessonBox"></div>
-  <div id="darsCounter">Page 1 / 12</div>
-</div>
+#lessonBox{
+  display: grid!important;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  min-height: 200px;
+}
+
+.lesson{
+  background: #111111!important;
+  padding: 20px 10px;
+  border-radius: 12px;
+  transition: 0.2s;
+  cursor: pointer;
+  border: 2px solid #222!important;
+  text-align: center;
+}
+
+.lesson:hover{
+  background: #1a1a1a!important;
+  transform: scale(1.03);
+  border-color: #FFD700!important;
+}
+
+.lesson.active{
+  border: 2px solid #FFD700!important;
+  background: rgba(255,215,0,0.1)!important;
+  box-shadow: 0 0 20px rgba(255,215,0,0.4);
+}
+
+.lesson .arabic{
+  font-size: 42px;
+  margin-bottom: 8px;
+  font-family: 'Amiri', 'Scheherazade New', serif;
+  direction: rtl;
+  color: #FFD700!important;
+}
+
+.lesson p{
+  font-size: 14px;
+  color: #CCCCCC!important;
+  margin: 0;
+}
+
+#letterProgress{
+  text-align: center;
+  margin: 15px 0;
+  font-size: 16px;
+  color: #FFD700!important;
+}
+
+#darsCounter{
+  text-align: center;
+  margin: 20px 0;
+  font-size: 14px;
+  color: #999999!important;
+}
+
+.controls{
+  text-align: center;
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.controls button{
+  background: #FFD700!important;
+  color: #000000!important;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 10px 16px;
+  transition: 0.3s;
+}
+
+.controls button:hover{
+  opacity: 0.9;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255,215,0,0.6);
+}
+
+.controls select{
+  background: #111111!important;
+  color: #FFD700!important;
+  border: 2px solid #FFD700!important;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+@media (max-width: 600px){
+  #lessonBox{
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .lesson .arabic{
+    font-size: 36px;
+  }
+
+  .controls button,.controls select{
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
