@@ -3,247 +3,305 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Yasarnah - Learn Arabic Letters</title>
 
 <style>
-
 body{
-font-family:Arial;
-background:#000;
-color:#FFD700;
-margin:0;
-padding:20px;
-text-align:center;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #FFD700;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
 }
 
 h1{
-margin-bottom:20px;
-}
-
-#lessonBox{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-
-.lesson{
-background:#111;
-padding:15px;
-border-radius:12px;
-transition:0.3s;
-}
-
-.lesson.active{
-border:2px solid gold;
-background:#1a1a1a;
-}
-
-.arabic{
-font-size:42px;
-margin-bottom:10px;
-}
-
-button{
-background:#FFD700;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
+  margin-bottom: 10px;
 }
 
 .controls{
-margin-top:20px;
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
+.controls button,.controls select{
+  background: #FFD700;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.controls select{
+  background: #111;
+  color: #FFD700;
+  border: 1px solid #FFD700;
+}
+
+#progress{
+  margin: 15px 0;
+  font-size: 18px;
+  color: #ccc;
+}
+
+#lessonBox{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.lesson{
+  background: #111;
+  padding: 20px 15px;
+  border-radius: 12px;
+  transition: 0.2s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.lesson:hover{
+  background: #1a1a1a;
+  transform: scale(1.03);
+}
+
+.lesson.active{
+  border: 2px solid #FFD700;
+  background: rgba(255,215,0,0.1);
+  box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+.arabic{
+  font-size: 48px;
+  margin-bottom: 8px;
+  font-family: 'Amiri', 'Scheherazade', serif;
+  direction: rtl;
+}
+
+.name{
+  font-size: 14px;
+  color: #ccc;
+}
 </style>
 </head>
 
 <body>
 
-<h1>📖 Yasarnah (Alif → Yaa)</h1>
-
-<div id="lessonBox"></div>
+<h1>📖 Yasarnah - Alif to Yaa</h1>
 
 <div class="controls">
-<button onclick="stopLesson()">⏸ Stop</button>
+  <button id="playBtn" onclick="toggleSequence()">▶ Play All</button>
+  <button onclick="stopLesson()">⏹ Stop</button>
+  <select id="repeatSelect" onchange="repeatCount = parseInt(this.value)">
+    <option value="1">Repeat 1x</option>
+    <option value="3" selected>Repeat 3x</option>
+    <option value="5">Repeat 5x</option>
+  </select>
 </div>
 
+<div id="progress">Tap any letter to start</div>
+<div id="lessonBox"></div>
+
 <script>
-
 // =====================
-// LETTERS (REAL ARABIC)
+// ARABIC LETTERS
 // =====================
-
 const letters = [
-{a:"ا", name:"Alif"},
-{a:"ب", name:"Ba"},
-{a:"ت", name:"Ta"},
-{a:"ث", name:"Tha"},
-{a:"ج", name:"Jeem"},
-{a:"ح", name:"Ha"},
-{a:"خ", name:"Kha"},
-{a:"د", name:"Dal"},
-{a:"ذ", name:"Dhal"},
-{a:"ر", name:"Ra"},
-{a:"ز", name:"Zay"},
-{a:"س", name:"Seen"},
-{a:"ش", name:"Sheen"},
-{a:"ص", name:"Sad"},
-{a:"ض", name:"Dad"},
-{a:"ط", name:"Taa"},
-{a:"ظ", name:"Zaa"},
-{a:"ع", name:"Ain"},
-{a:"غ", name:"Ghain"},
-{a:"ف", name:"Fa"},
-{a:"ق", name:"Qaf"},
-{a:"ك", name:"Kaf"},
-{a:"ل", name:"Lam"},
-{a:"م", name:"Meem"},
-{a:"ن", name:"Noon"},
-{a:"ه", name:"Ha"},
-{a:"و", name:"Waw"},
-{a:"ي", name:"Yaa"}
+  {a:"ا", name:"Alif", sound:"alif"},
+  {a:"ب", name:"Ba", sound:"baa"},
+  {a:"ت", name:"Ta", sound:"taa"},
+  {a:"ث", name:"Tha", sound:"thaa"},
+  {a:"ج", name:"Jeem", sound:"jeem"},
+  {a:"ح", name:"Haa", sound:"haa"},
+  {a:"خ", name:"Kha", sound:"khaa"},
+  {a:"د", name:"Dal", sound:"daal"},
+  {a:"ذ", name:"Dhal", sound:"dhaal"},
+  {a:"ر", name:"Ra", sound:"raa"},
+  {a:"ز", name:"Zay", sound:"zaay"},
+  {a:"س", name:"Seen", sound:"seen"},
+  {a:"ش", name:"Sheen", sound:"sheen"},
+  {a:"ص", name:"Sad", sound:"saad"},
+  {a:"ض", name:"Dad", sound:"daad"},
+  {a:"ط", name:"Taa", sound:"taa"},
+  {a:"ظ", name:"Zaa", sound:"dhaa"},
+  {a:"ع", name:"Ain", sound:"ayn"},
+  {a:"غ", name:"Ghain", sound:"ghayn"},
+  {a:"ف", name:"Fa", sound:"faa"},
+  {a:"ق", name:"Qaf", sound:"qaaf"},
+  {a:"ك", name:"Kaf", sound:"kaaf"},
+  {a:"ل", name:"Lam", sound:"laam"},
+  {a:"م", name:"Meem", sound:"meem"},
+  {a:"ن", name:"Noon", sound:"noon"},
+  {a:"ه", name:"Ha", sound:"haa"},
+  {a:"و", name:"Waw", sound:"waaw"},
+  {a:"ي", name:"Yaa", sound:"yaa"}
 ];
-
-// =====================
-// SETTINGS
-// =====================
-
-let repeatCount = 3;
 
 // =====================
 // BUILD UI
 // =====================
-
 const box = document.getElementById("lessonBox");
+const progress = document.getElementById("progress");
+const playBtn = document.getElementById("playBtn");
 
 letters.forEach((l,i)=>{
-box.innerHTML += `
-<div class="lesson" onclick="startLetter(${i})">
-<div class="arabic">${l.a}</div>
-<div>${l.name}</div>
-<button>▶ Learn</button>
-</div>
-`;
+  box.innerHTML += `
+    <div class="lesson" id="letter-${i}" onclick="startLetter(${i})">
+      <div class="arabic">${l.a}</div>
+      <div class="name">${l.name}</div>
+    </div>
+  `;
 });
 
 // =====================
-// AUDIO SYSTEM
+// AUDIO SYSTEM - Web Speech API
 // =====================
-
-let currentAudio = null;
 let currentIndex = null;
 let repeat = 0;
-let isPlaying = false;
+let repeatCount = 3;
+let isPlayingSequence = false;
+let isPaused = false;
+
+// Unlock speech synthesis on first tap for mobile
+function unlockSpeech(){
+  if(window.speechSynthesis.speaking) return;
+  const u = new SpeechSynthesisUtterance("");
+  speechSynthesis.speak(u);
+}
+document.body.addEventListener('touchstart', unlockSpeech, {once: true});
+document.body.addEventListener('click', unlockSpeech, {once: true});
 
 // =====================
-// START / TOGGLE
+// PLAY SINGLE LETTER
 // =====================
-
 function startLetter(index){
-
-// toggle pause if same
-if(currentIndex === index && currentAudio){
-
-if(isPlaying){
-currentAudio.pause();
-isPlaying = false;
-return;
-}else{
-currentAudio.play();
-isPlaying = true;
-return;
+  stopLesson();
+  currentIndex = index;
+  repeat = 0;
+  isPlayingSequence = false;
+  playCurrentLetter();
 }
 
-}
+function playCurrentLetter(){
+  if(currentIndex === null || currentIndex >= letters.length){
+    stopLesson();
+    return;
+  }
 
-// new start
-stopLesson();
+  const letter = letters[currentIndex];
+  highlightLetter(currentIndex);
+  updateProgress();
 
-currentIndex = index;
-repeat = 0;
-isPlaying = true;
+  // Stop any previous speech
+  speechSynthesis.cancel();
 
-playLetter();
+  const utterance = new SpeechSynthesisUtterance(letter.a);
+  utterance.lang = 'ar-SA';
+  utterance.rate = 0.7; // Slower for learning
+  utterance.pitch = 1;
 
-}
+  utterance.onend = () => {
+    if(!isPlayingSequence &&!isPaused){
+      // Single letter mode - just stop
+      setTimeout(() => {
+        document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
+      }, 300);
+      return;
+    }
 
-// =====================
-// PLAY LETTER
-// =====================
+    if(isPaused) return;
 
-function playLetter(){
+    repeat++;
+    if(repeat < repeatCount){
+      setTimeout(playCurrentLetter, 500); // Pause between repeats
+    } else {
+      currentIndex++;
+      repeat = 0;
+      if(currentIndex < letters.length && isPlayingSequence){
+        setTimeout(playCurrentLetter, 800); // Pause between letters
+      } else {
+        stopLesson();
+        progress.textContent = "✅ Finished all letters!";
+      }
+    }
+  };
 
-const letter = letters[currentIndex];
+  utterance.onerror = () => {
+    console.log("Speech error for", letter.name);
+    // Skip to next if error
+    if(isPlayingSequence){
+      currentIndex++;
+      repeat = 0;
+      setTimeout(playCurrentLetter, 300);
+    }
+  };
 
-// Google TTS (Arabic pronunciation)
-const url =
-`https://translate.google.com/translate_tts?ie=UTF-8&q=${letter.a}&tl=ar&client=tw-ob`;
-
-currentAudio = new Audio(url);
-currentAudio.play();
-
-highlight(currentIndex);
-
-// on end
-currentAudio.onended = ()=>{
-
-if(!isPlaying) return;
-
-repeat++;
-
-if(repeat < repeatCount){
-playLetter();
-return;
-}
-
-// next letter
-currentIndex++;
-
-if(currentIndex < letters.length){
-repeat = 0;
-playLetter();
-}else{
-stopLesson();
-}
-
-};
-
+  speechSynthesis.speak(utterance);
 }
 
 // =====================
-// STOP
+// SEQUENCE CONTROL
 // =====================
+function toggleSequence(){
+  if(isPlayingSequence &&!isPaused){
+    // Pause
+    speechSynthesis.pause();
+    isPaused = true;
+    playBtn.textContent = "▶ Resume";
+  } else if(isPaused){
+    // Resume
+    speechSynthesis.resume();
+    isPaused = false;
+    playBtn.textContent = "⏸ Pause";
+  } else {
+    // Start from beginning
+    stopLesson();
+    currentIndex = 0;
+    repeat = 0;
+    isPlayingSequence = true;
+    playBtn.textContent = "⏸ Pause";
+    playCurrentLetter();
+  }
+}
 
 function stopLesson(){
-
-if(currentAudio){
-currentAudio.pause();
-}
-
-isPlaying = false;
-currentIndex = null;
-repeat = 0;
-
-document.querySelectorAll(".lesson").forEach(l=>{
-l.classList.remove("active");
-});
-
+  speechSynthesis.cancel();
+  isPlayingSequence = false;
+  isPaused = false;
+  currentIndex = null;
+  repeat = 0;
+  playBtn.textContent = "▶ Play All";
+  document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
+  progress.textContent = "Tap any letter to start";
 }
 
 // =====================
-// HIGHLIGHT
+// UI HELPERS
 // =====================
+function highlightLetter(index){
+  document.querySelectorAll(".lesson").forEach((el,i)=>{
+    el.classList.toggle("active", i === index);
+  });
 
-function highlight(index){
-
-document.querySelectorAll(".lesson").forEach((el,i)=>{
-el.classList.toggle("active", i === index);
-});
-
+  // Scroll into view on mobile
+  const activeEl = document.getElementById(`letter-${index}`);
+  if(activeEl){
+    activeEl.scrollIntoView({behavior:"smooth", block:"center"});
+  }
 }
 
+function updateProgress(){
+  if(currentIndex!== null){
+    progress.textContent = `Letter ${currentIndex + 1}/28 - ${letters[currentIndex].name} - Repeat ${repeat + 1}/${repeatCount}`;
+  }
+}
 </script>
 
 </body>
