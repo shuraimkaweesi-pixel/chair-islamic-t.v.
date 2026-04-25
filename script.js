@@ -505,32 +505,28 @@ function startLetter(i) {
   playLetter();
 }
 
-function playLetter() {
-  const l = letters[currentIndex];
-  if (l.url === "REPLACE_ME") {
-    console.log("Letter audio URL not set for", l.name);
-    return;
-  }
-  letterAudio = new Audio(l.url);
-  letterAudio.play().catch(e => console.log("Letter audio error:", e));
+function playCurrentLetter(){
+  if(currentIndex === null) return;
+
+  const letter = letters[currentIndex];
   highlightLetter(currentIndex);
+  updateProgress();
 
-  letterAudio.onended = () => {
-    repeat++;
-    if (repeat < repeatCount) {
-      playLetter();
-      return;
-    }
-    currentIndex++;
-    if (currentIndex < letters.length) {
-      repeat = 0;
-      playLetter();
-    }
+  // Use your own mp3 files: /audio/basit/Alif.mp3, /audio/basit/Ba.mp3, etc
+  const audioUrl = `audio/abdulbasit/${letter.name}.mp3`;
+  const audio = new Audio(audioUrl);
+
+  audio.onended = () => {
+    // same repeat logic as above
   };
-}
 
-function highlightLetter(i) {
-  document.querySelectorAll(".lesson").forEach((el, index) => {
-    el.style.border = index === i? "2px solid gold" : "none";
-  });
-    }
+  audio.onerror = () => {
+    console.log("Audio file missing:", audioUrl);
+    // Fall back to TTS if file missing
+    const utterance = new SpeechSynthesisUtterance(letter.a);
+    utterance.lang = 'ar-SA';
+    speechSynthesis.speak(utterance);
+  };
+
+  audio.play();
+}
