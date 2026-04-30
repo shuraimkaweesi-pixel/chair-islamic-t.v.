@@ -277,3 +277,31 @@ code {
   display: inline-block;
   margin: 5px 0;
   }
+/* Share Button - Special Gold Glow */
+.btn-share {
+  width: 100%;
+  background: linear-gradient(45deg, var(--gold), #FFA500);
+  color: #000;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 12px 0;
+  box-shadow: 0 4px 20px rgba(255,215,0,0.35);
+  transition: 0.2s;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-share:active { 
+  transform: scale(0.98);
+  box-shadow: 0 2px 10px rgba(255,215,0,0.25);
+}
+
+.btn-share::before {
+  content: '📤';
+  margin-right: 8px;
+}
