@@ -3,212 +3,334 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Hadith | Chair Islamic TV</title>
+<title>Arba'un Nawawi | Chair Islamic TV</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFD700">
+<meta name="theme-color" content="#0f0f0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="apple-touch-icon" href="logo.png">
 
-<!-- Main CSS -->
-<link rel="stylesheet" href="styles.css">
+<!-- Arabic Font - Amiri -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Hadith styles */
-.hadith-box {
-  background:#1a1a1a;
-  padding:20px;
-  border-radius:8px;
-  margin:20px 0;
-  line-height:1.6;
+body{
+  font-family: 'Poppins', Arial, sans-serif;
+  background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
   color:#fff;
-  text-align:right;
+  margin:0;
+  padding:20px;
+  padding-bottom:90px;
+  min-height:100vh;
+}
+
+.container { max-width: 600px; margin: 0 auto; }
+
+h1 {
+  color:#FFD700;
+  text-align:center;
+  font-weight:600;
+  margin-bottom:5px;
+  font-size: 28px;
+}
+
+.subtitle {
+  text-align:center;
+  color:#999;
+  font-size:14px;
+  margin-bottom:25px;
+}
+
+/* Premium Hadith Card */
+.hadith-card {
+  background: linear-gradient(145deg, #1e1e1e, #151515);
+  padding: 25px;
+  border-radius: 16px;
+  margin: 20px 0;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5),
+              inset 0 1px 0 rgba(255,215,0,0.1);
+  border: 1px solid rgba(255,215,0,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.hadith-card::before {
+  content: 'ﷺ';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 40px;
+  color: rgba(255,215,0,0.08);
+  font-family: 'Amiri', serif;
+}
+
+.hadith-number {
+  color:#FFD700;
+  font-size:13px;
+  margin-bottom:15px;
+  text-align:center;
+  font-weight:600;
+  letter-spacing: 1px;
 }
 
 .arabic {
-  font-size:24px;
-  direction:rtl;
-  text-align:right;
-  margin-bottom:15px;
+  font-family: 'Amiri', serif;
+  font-size: 28px;
+  line-height: 2;
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 20px;
+  color: #fff;
+  font-weight: 400;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+  margin: 20px 0;
 }
 
 .translation {
-  font-size:18px;
-  color:#ddd;
-  text-align:left;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #e0e0e0;
+  text-align: left;
+  font-weight: 300;
 }
 
-.source {
-  font-size:14px;
-  color:#FFD700;
-  margin-top:10px;
-  text-align:right;
+.source-badge {
+  display: inline-block;
+  background: rgba(255,215,0,0.15);
+  color: #FFD700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  margin-top: 15px;
+  font-weight: 600;
+  border: 1px solid rgba(255,215,0,0.3);
 }
 
-/* AI explanation */
-.ai-box{
-background:#111;
-padding:15px;
-border-radius:8px;
-margin-top:15px;
-color:#fff;
+/* Action Buttons */
+.hadith-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-.ai-btn{
-background:#FFD700;
-color:black;
-border:none;
-padding:10px 15px;
-border-radius:6px;
-cursor:pointer;
-margin-top:10px;
+.action-btn {
+  flex: 1;
+  min-width: 100px;
+  background: rgba(255,215,0,0.1);
+  color: #FFD700;
+  border: 1px solid rgba(255,215,0,0.3);
+  padding: 12px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.action-btn:active {
+  background: #FFD700;
+  color: #000;
+  transform: scale(0.95);
+}
+
+/* AI Box */
+.ai-box {
+  background: linear-gradient(145deg, #1a1a1a, #111);
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 15px;
+  border: 1px solid rgba(255,215,0,0.2);
+  color: #ddd;
+  line-height: 1.7;
+  display: none;
+}
+
+.ai-box.show { display: block; }
+
+.ai-title {
+  color: #FFD700;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+/* Refresh Button */
+.refresh-btn {
+  width: 100%;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  color: #000;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+}
+
+.refresh-btn:active { transform: scale(0.98); }
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #FFD700;
 }
 
 /* Bottom Navigation */
-
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#000;
-  display:flex;
-  justify-content:space-around;
-  padding:12px 0;
-  border-top:1px solid #333;
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,215,0,0.2);
 }
 
-.bottom-nav a{
-  color:#FFD700;
-  text-decoration:none;
-  font-size:14px;
-  flex:1;
-  text-align:center;
+.bottom-nav a {
+  color: #999;
+  text-decoration: none;
+  font-size: 12px;
+  flex: 1;
+  text-align: center;
+  transition: 0.2s;
 }
 
-.bottom-nav a:hover{ color:white; }
-
+.bottom-nav a.active { color: #FFD700; }
+.bottom-nav a:active { transform: scale(0.9); }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-<h1>Daily Hadith</h1>
-<p>Read authentic sayings of Prophet Muhammad ﷺ</p>
+  <h1>📜 Arba'un Nawawi</h1>
+  <p class="subtitle">40 Authentic Hadiths of Prophet Muhammad ﷺ</p>
 
-<div id="hadithBox" class="hadith-box">
-Loading Hadith...
+  <div id="hadithCard" class="hadith-card">
+    <div class="loading">Loading Hadith...</div>
+  </div>
+
+  <div class="hadith-actions">
+    <button class="action-btn" onclick="explainHadith()">💡 Lesson</button>
+    <button class="action-btn" onclick="shareHadith()">📤 Share</button>
+    <button class="action-btn" onclick="saveHadith()">🤍 Save</button>
+  </div>
+
+  <div id="hadithExplanation" class="ai-box">
+    <div class="ai-title">💡 Reflection</div>
+    <div id="explanationText"></div>
+  </div>
+
+  <button class="refresh-btn" onclick="nextHadith()">📖 Next Hadith</button>
+
 </div>
-
-<!-- AI Explain Button -->
-
-<button class="ai-btn" onclick="explainHadith()">
-🤖 Explain Hadith
-</button>
-
-<div id="hadithExplanation" class="ai-box">
-AI explanation will appear here...
-</div>
-
-</div>
-
 
 <!-- Bottom Navigation -->
-
 <div class="bottom-nav">
-
-<a href="index.html">🏠 Home</a>
-<a href="quran.html">📖 Quran</a>
-<a href="hadith.html">📜 Hadith</a>
-<a href="prayer.html">🕌 Prayer</a>
-<a href="videos.html">🎥 Videos</a>
-
+  <a href="index.html">🏠<br>Home</a>
+  <a href="quran.html">📖<br>Quran</a>
+  <a href="hadith.html" class="active">📜<br>Hadith</a>
+  <a href="prayer.html">🕌<br>Prayer</a>
+  <a href="videos.html">🎥<br>Videos</a>
 </div>
 
-
 <script>
+// Load all 40 hadiths from JSON file
+let hadiths = [];
+let currentHadith = null;
 
-// Small ready-to-use Hadith JSON array
-
-const hadiths = [
-
-{
-"arab":"عن أبي موسى الأشعري رضي الله عنه قال: دخلت على النبي ﷺ أنا ورجلان من بني عمي...",
-"en":"I called on the Prophet ﷺ with two of my cousins. One said: 'O Messenger of Allah, appoint me governor...' ",
-"book":"Riyad as-Salihin"
-},
-
-{
-"arab":"عن عائشة رضي الله عنها قالت: ما رأيت النبي ﷺ يغضب...",
-"en":"Aisha (RA) said: I never saw the Prophet ﷺ angry except for the cause of Allah.",
-"book":"Sahih Bukhari"
-},
-
-{
-"arab":"عن عبد الله بن عمر رضي الله عنهما قال: كان النبي ﷺ...",
-"en":"Abdullah ibn Umar (RA) said: The Prophet ﷺ used to pray at night...",
-"book":"Sahih Muslim"
-},
-
-{
-"arab":"عن أنس رضي الله عنه قال: قال رسول الله ﷺ...",
-"en":"Anas (RA) said: The Prophet ﷺ said: 'None of you truly believes until he loves for his brother what he loves for himself.'",
-"book":"Sahih Muslim"
-},
-
-{
-"arab":"عن جابر رضي الله عنه قال: قال النبي ﷺ...",
-"en":"Jabir (RA) said: The Prophet ﷺ said: 'The strong believer is better and more beloved to Allah than the weak believer.'",
-"book":"Sahih Muslim"
+async function initHadiths(){
+  try {
+    const res = await fetch('hadiths.json');
+    if(!res.ok) throw new Error('File not found');
+    hadiths = await res.json();
+    loadDailyHadith();
+  } catch(e){
+    document.getElementById("hadithCard").innerHTML = `
+      <div style="text-align:center; color:#ff6b6b;">
+        <p>Error loading hadiths.json</p>
+        <p style="font-size:13px; margin-top:10px;">Make sure you uploaded hadiths.json to GitHub</p>
+      </div>
+    `;
+  }
 }
 
-];
+// Daily hadith - same for everyone each day based on date
+function loadDailyHadith(){
+  if(hadiths.length === 0) return;
 
-// store current hadith
-let currentHadith = "";
-
-// Pick random Hadith
-
-function loadHadith(){
-
-const random = hadiths[Math.floor(Math.random()*hadiths.length)];
-
-currentHadith = random.en;
-
-document.getElementById("hadithBox").innerHTML = `
-
-<div class="arabic">${random.arab}</div>
-<hr>
-<div class="translation">${random.en}</div>
-<div class="source">${random.book}</div>
-
-`;
-
+  const day = Math.floor(Date.now() / 86400000);
+  const index = day % hadiths.length;
+  currentHadith = hadiths[index];
+  renderHadith();
 }
 
-// AI explanation (simple built-in explanation)
+// Random next hadith
+function nextHadith(){
+  if(hadiths.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * hadiths.length);
+  currentHadith = hadiths[randomIndex];
+  renderHadith();
+}
+
+function renderHadith(){
+  document.getElementById("hadithCard").innerHTML = `
+    <div class="hadith-number">HADITH ${currentHadith.id} OF 40</div>
+    <div class="arabic">${currentHadith.arab}</div>
+    <div class="divider"></div>
+    <div class="translation">${currentHadith.en}</div>
+    <div class="source-badge">${currentHadith.book}</div>
+  `;
+
+  document.getElementById("hadithExplanation").classList.remove('show');
+}
 
 function explainHadith(){
-
-const explanation = `
-This hadith teaches an important moral lesson in Islam.
-It encourages believers to follow the example of Prophet Muhammad ﷺ,
-show sincerity, good character, and strong faith in Allah.
-Reflect on the meaning and apply it in daily life.
-`;
-
-document.getElementById("hadithExplanation").innerText = explanation;
-
+  if(!currentHadith) return;
+  document.getElementById("explanationText").innerText = currentHadith.lesson;
+  document.getElementById("hadithExplanation").classList.add('show');
 }
 
-// Load Hadith on page load
+function shareHadith(){
+  if(!currentHadith) return;
+  const text = `Hadith ${currentHadith.id} - Arba'un Nawawi\n\n${currentHadith.arab}\n\n${currentHadith.en}\n\n— ${currentHadith.book}\n\nShared from Chair Islamic TV`;
 
-loadHadith();
+  if(navigator.share){
+    navigator.share({ title: 'Hadith of the Day', text: text });
+  } else {
+    navigator.clipboard.writeText(text);
+    alert('Hadith copied! Paste it in WhatsApp');
+  }
+}
 
+function saveHadith(){
+  if(!currentHadith) return;
+  let saved = JSON.parse(localStorage.getItem('savedHadiths') || '[]');
+  if(!saved.find(h => h.id === currentHadith.id)){
+    saved.push(currentHadith);
+    localStorage.setItem('savedHadiths', JSON.stringify(saved));
+    alert('Hadith saved 🤍 Check your saved list');
+  } else {
+    alert('Already saved');
+  }
+}
+
+// Start
+initHadiths();
 </script>
 
 </body>
