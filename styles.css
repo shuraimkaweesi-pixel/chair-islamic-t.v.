@@ -1,1 +1,279 @@
-1k
+/* styles.css - Chair Islamic TV - Exact Hadith Theme */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+  --gold: #FFD700;
+  --gold-dark: #E6B800;
+  --gold-bg: rgba(255,215,0,0.12);
+  --gold-border: rgba(255,215,0,0.4);
+  --bg-main: #0A0A0A;
+  --bg-card: #121212;
+  --bg-card-border: #2A2A2A;
+  --text-main: #FFFFFF;
+  --text-muted: #888888;
+  --text-body: #E0E0E0;
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  margin: 0;
+  padding: 20px 16px;
+  padding-bottom: 90px;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: 600px; 
+  margin: 0 auto; 
+}
+
+/* Page Headers */
+.page-header {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+h1 {
+  color: var(--gold);
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 26px;
+}
+
+h2 {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* Main Card - Exact Hadith Style */
+.card {
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: 18px;
+  margin: 18px 0;
+  border: 1.5px solid var(--gold-border);
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* Card title */
+.card-title {
+  color: var(--gold);
+  font-size: 13px;
+  margin-bottom: 18px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Arabic Text */
+.arabic {
+  font-family: 'Amiri', serif;
+  font-size: 26px;
+  line-height: 2.2;
+  direction: rtl;
+  text-align: right;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Gold Divider Line */
+.divider {
+  height: 1px;
+  background: var(--gold-border);
+  margin: 20px 0;
+}
+
+/* Translation/Body Text */
+.text-body {
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text-body);
+  font-weight: 300;
+}
+
+/* Badge - Like "Nawawi 14" */
+.badge {
+  display: inline-block;
+  background: var(--gold-bg);
+  color: var(--gold);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--gold-border);
+  margin-top: 15px;
+}
+
+/* Button Group - Lesson, Share, Save */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.btn-outline {
+  flex: 1;
+  min-width: 90px;
+  background: var(--gold-bg);
+  color: var(--gold);
+  border: 1.5px solid var(--gold-border);
+  padding: 13px 15px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-outline:active {
+  background: var(--gold);
+  color: #000;
+  transform: scale(0.96);
+}
+
+/* Primary Gold Button - Like "Next Hadith" */
+.btn-gold {
+  width: 100%;
+  background: var(--gold);
+  color: #000;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 12px 0;
+  box-shadow: 0 4px 15px rgba(255,215,0,0.25);
+  transition: 0.2s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-gold:active { 
+  transform: scale(0.98);
+  background: var(--gold-dark);
+}
+
+.btn-gold:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Inputs */
+label {
+  color: var(--gold);
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: block;
+  font-weight: 600;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 15px 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--gold-border);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-bg);
+  background: #111;
+}
+
+input::placeholder { color: #444; }
+
+/* Donation Grid */
+.donation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(10,10,10,0.98);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 14px;
+  border-top: 1px solid var(--bg-card-border);
+  z-index: 100;
+}
+
+.bottom-nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 11px;
+  flex: 1;
+  text-align: center;
+  transition: 0.2s;
+  padding: 4px 0;
+}
+
+.bottom-nav a.active { color: var(--gold); }
+.bottom-nav a:active { transform: scale(0.9); }
+
+/* Alert boxes */
+.alert {
+  padding: 15px;
+  border-radius: 12px;
+  margin: 15px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1.5px solid;
+}
+
+.alert-warning {
+  background: var(--gold-bg);
+  border-color: var(--gold-border);
+  color: var(--gold);
+}
+
+/* Code for USSD */
+code {
+  background: #000;
+  color: var(--gold);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  border: 1px solid var(--gold-border);
+  display: inline-block;
+  margin: 5px 0;
+  }
