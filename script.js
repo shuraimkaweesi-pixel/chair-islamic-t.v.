@@ -97,17 +97,27 @@ async function loadHadith() {
   if (!box) return;
 
   try {
-    const res = await fetch("hadith.json");
+    const res = await fetch("hadiths.json"); // Ensure this matches your filename
     if (!res.ok) throw new Error("HTTP " + res.status);
+    
     const data = await res.json();
-    const h = data.hadiths[Math.floor(Math.random() * data.hadiths.length)];
+    
+    // This line handles BOTH formats (if it's a list OR if it's wrapped in a 'hadiths' key)
+    const list = Array.isArray(data) ? data : data.hadiths;
+    
+    if (!list || list.length === 0) throw new Error("No data found");
+
+    const h = list[Math.floor(Math.random() * list.length)];
+    
+    // Use optional chaining or defaults to prevent "undefined" appearing on screen
     box.innerHTML = `
-      <div class="arabic">${h.arab}</div>
-      <div class="translation">${h.en}</div>
+      <div class="arabic" dir="rtl">${h.arabic || h.arab || ''}</div>
+      <div class="translation">${h.english || h.en || ''}</div>
+      <div class="reference" style="font-size: 0.8em; opacity: 0.7;">${h.reference || ''}</div>
     `;
   } catch (err) {
-    console.log("Hadith error:", err);
-    box.innerText = "Failed to load Hadith";
+    console.error("Hadith error:", err);
+    box.innerText = "Prophetic wisdom loading...";
   }
 }
 
