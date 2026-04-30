@@ -3,32 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qur'an | Chair Islamic TV</title>
+<title>Qur'an - Chair Islamic TV</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f0f0f">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="apple-touch-icon" href="logo.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="container">
   <h1>📖 Al-Qur'an Al-Kareem</h1>
-  <p class="subtitle">114 Surahs with Translation</p>
+  <p class="page-header">114 Surahs with Audio & Translation</p>
 
   <div class="card">
-    <label>Select Surah</label>
-    <select id="surahSelect" onchange="loadSurah()">
-      <option value="">Choose Surah...</option>
+    <div class="card-title">Select Surah & Reciter</div>
+    
+    <label>Search Surah</label>
+    <input id="surahSearch" placeholder="Type surah name or number...">
+    
+    <label style="margin-top:15px;">Choose Surah</label>
+    <select id="surahSelect"></select>
+
+    <label style="margin-top:15px;">Reciter</label>
+    <select id="reciterSelect">
+      <option value="Alafasy_128kbps">Mishary Alafasy</option>
+      <option value="Abdul_Basit_Murattal_128kbps">Abdul Basit</option>
+      <option value="Ghamdi_40kbps">Saad Al-Ghamdi</option>
     </select>
+
+    <button class="btn-gold" onclick="loadSurah()" style="margin-top:20px;">📖 Load Surah</button>
   </div>
 
-  <div id="surahContent" class="card" style="display:none;">
-    <h2 id="surahName"></h2>
-    <div class="badge" id="surahInfo" style="margin-bottom:15px;"></div>
-    <div class="divider"></div>
-    <div id="ayahContainer"></div>
-  </div>
+  <div id="quranText"></div>
 
 </div>
+
+<!-- Floating Download Button -->
+<button class="btn-gold" id="downloadBtn" onclick="downloadSurah()" style="position:fixed; bottom:90px; right:20px; width:60px; height:60px; border-radius:50%; font-size:24px; padding:0;">
+  ⬇️
+</button>
 
 <div class="bottom-nav">
   <a href="index.html">🏠<br>Home</a>
@@ -39,7 +52,136 @@
 </div>
 
 <script>
-// Add your Qur'an API logic here
+// =====================
+// SURAH LIST
+// =====================
+const surahNames = ["Al-Fatiha","Al-Baqarah","Aal-Imran","An-Nisa","Al-Ma'idah","Al-An'am","Al-A'raf","Al-Anfal","At-Tawbah","Yunus","Hud","Yusuf","Ar-Ra'd","Ibrahim","Al-Hijr","An-Nahl","Al-Isra","Al-Kahf","Maryam","Ta-Ha","Al-Anbiya","Al-Hajj","Al-Mu’minun","An-Nur","Al-Furqan","Ash-Shu'ara","An-Naml","Al-Qasas","Al-Ankabut","Ar-Rum","Luqman","As-Sajdah","Al-Ahzab","Saba","Fatir","Ya-Sin","As-Saffat","Sad","Az-Zumar","Ghafir","Fussilat","Ash-Shura","Az-Zukhruf","Ad-Dukhan","Al-Jathiyah","Al-Ahqaf","Muhammad","Al-Fath","Al-Hujurat","Qaf","Adh-Dhariyat","At-Tur","An-Najm","Al-Qamar","Ar-Rahman","Al-Waqi'ah","Al-Hadid","Al-Mujadila","Al-Hashr","Al-Mumtahanah","As-Saff","Al-Jumu’ah","Al-Munafiqun","At-Taghabun","At-Talaq","At-Tahrim","Al-Mulk","Al-Qalam","Al-Haqqah","Al-Ma'arij","Nuh","Al-Jinn","Al-Muzzammil","Al-Muddathir","Al-Qiyamah","Al-Insan","Al-Mursalat","An-Naba","An-Nazi'at","Abasa","At-Takwir","Al-Infitar","Al-Mutaffifin","Al-Inshiqaq","Al-Buruj","At-Tariq","Al-A'la","Al-Ghashiyah","Al-Fajr","Al-Balad","Ash-Shams","Al-Layl","Ad-Duha","Ash-Sharh","At-Tin","Al-Alaq","Al-Qadr","Al-Bayyinah","Az-Zalzalah","Al-Adiyat","Al-Qari'ah","At-Takathur","Al-Asr","Al-Humazah","Al-Fil","Quraysh","Al-Ma'un","Al-Kawthar","Al-Kafirun","An-Nasr","Al-Masad","Al-Ikhlas","Al-Falaq","An-Nas"];
+
+const select = document.getElementById("surahSelect");
+const searchInput = document.getElementById("surahSearch");
+
+surahNames.forEach((n,i)=>{
+  let o=document.createElement("option");
+  o.value=i+1;
+  o.textContent=(i+1)+" - "+n;
+  select.appendChild(o);
+});
+
+// Search filter
+searchInput.addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  Array.from(select.options).forEach(opt => {
+    const match = opt.textContent.toLowerCase().includes(term);
+    opt.style.display = match ? 'block' : 'none';
+  });
+});
+
+// =====================
+// LOAD SURAH
+// =====================
+async function loadSurah(){
+  const num = select.value;
+  if (!num) {
+    alert('Please select a Surah');
+    return;
+  }
+
+  document.getElementById("quranText").innerHTML = '<div class="card"><p class="text-body" style="text-align:center;">Loading...</p></div>';
+
+  const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}/editions/quran-uthmani,en.sahih`);
+  const data = await res.json();
+
+  const ar = data.data[0].ayahs;
+  const en = data.data[1].ayahs;
+  const surahName = data.data[0].englishName;
+
+  let html = `<div class="card"><div class="card-title">${num}. ${surahName}</div>`;
+
+  for(let i=0;i<ar.length;i++){
+    html+=`
+    <div class="ayah card" onclick="playAyah(${num},${i+1},this)" style="cursor:pointer; margin:15px 0;">
+      <div class="badge" style="margin-bottom:10px;">Ayah ${i+1}</div>
+      <p class="arabic">${ar[i].text}</p>
+      <div class="divider"></div>
+      <p class="text-body">${en[i].text}</p>
+    </div>`;
+  }
+
+  html += '</div>';
+  document.getElementById("quranText").innerHTML = html;
+}
+
+// =====================
+// AUDIO SYSTEM
+// =====================
+let currentAudio=null;
+let currentAyah=null;
+let ayahList=[];
+
+function playAyah(surah,ayah,el){
+  // toggle
+  if(currentAudio && currentAyah===ayah){
+    if(!currentAudio.paused){
+      currentAudio.pause();
+      el.style.borderColor = 'var(--gold-border)';
+      return;
+    }else{
+      currentAudio.play();
+      el.style.borderColor = 'var(--gold)';
+      return;
+    }
+  }
+
+  // stop old
+  if(currentAudio) currentAudio.pause();
+
+  // highlight
+  document.querySelectorAll(".ayah").forEach(a=>{
+    a.style.borderColor = 'var(--gold-border)';
+    a.style.background = 'var(--bg-card)';
+  });
+  el.style.borderColor = 'var(--gold)';
+  el.style.background = 'rgba(255,215,0,0.08)';
+  el.scrollIntoView({behavior:"smooth",block:"center"});
+
+  // save
+  currentAyah=ayah;
+  ayahList=document.querySelectorAll(".ayah");
+
+  // reciter
+  const reciter=document.getElementById("reciterSelect").value;
+  const s=String(surah).padStart(3,"0");
+  const a=String(ayah).padStart(3,"0");
+  const url=`https://everyayah.com/data/${reciter}/${s}${a}.mp3`;
+
+  currentAudio=new Audio(url);
+  currentAudio.play();
+
+  // auto next
+  currentAudio.onended=()=>{
+    let next=ayah+1;
+    if(ayahList[next-1]){
+      playAyah(surah,next,ayahList[next-1]);
+    }
+  };
+}
+
+// =====================
+// DOWNLOAD
+// =====================
+function downloadSurah(){
+  const num = select.value;
+  if (!num) {
+    alert('Load a Surah first');
+    return;
+  }
+  const code = String(num).padStart(3,"0");
+  const url = `https://server8.mp3quran.net/afs/${code}.mp3`;
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`surah-${num}.mp3`;
+  a.click();
+}
 </script>
 
 </body>
