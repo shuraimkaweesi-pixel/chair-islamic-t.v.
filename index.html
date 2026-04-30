@@ -14,75 +14,158 @@
 <body>
 
 <div class="container">
-  <h1>﷽ Chair Islamic TV</h1>
-  <p class="page-header">Learn Qur'an, Hadith & Prayer the Right Way</p>
 
-  <!-- Keep your existing bio/content sections - just wrap in .card -->
-  <div class="card">
-    <div class="card-title">About Chair Islamic TV</div>
-    <p class="text-body">
-      Assalamu Alaikum. Welcome to Chair Islamic TV — your companion for learning Qur'an, Hadith, and Islamic knowledge. 
-      We provide Yasarnah Qur'an lessons, authentic Hadith from Arba'un Nawawi, prayer times, and Qibla direction.
-      Our mission is to make Islamic education accessible to every Muslim in Uganda and beyond.
-    </p>
-    <div class="badge">Serving Kampala & Uganda</div>
-  </div>
+<h1>Chair Islamic TV</h1>
+<p class="page-header">Read Quran, view Hadith, check Prayer Times, and watch Islamic Videos.</p>
 
-  <div class="card">
-    <div class="card-title">Yasarnah Qur'an</div>
-    <p class="arabic" style="font-size:24px; margin:15px 0; text-align:center;">يَسِّرْنَا الْقُرْآنَ</p>
-    <div class="divider"></div>
-    <p class="text-body">
-      Start with Arabic letters and progress to reading Qur'an fluently. Perfect for beginners and children.
-      Audio pronunciation included for every lesson.
-    </p>
-    <div class="btn-group">
-      <button class="btn-outline" onclick="location.href='yasarnah.html'">💡 Lesson</button>
-      <button class="btn-outline" onclick="location.href='yasarnah.html'">📖 Continue</button>
-    </div>
-    <button class="btn-gold" onclick="location.href='yasarnah.html'">📖 Start Learning</button>
-  </div>
+<!-- INSTALL BUTTON -->
+<button class="btn-gold" id="installBtn" style="display:none;">
+Install Chair Islamic TV 📲
+</button>
 
-  <div class="card">
-    <div class="card-title">40 Hadith Nawawi</div>
-    <p class="text-body">
-      Study the 40 authentic hadiths compiled by Imam Nawawi. Each hadith includes Arabic text, 
-      English translation, source reference, and practical lessons for daily life.
-    </p>
-    <div class="badge">Bukhari & Muslim</div>
-    <button class="btn-gold" onclick="location.href='hadith.html'">📜 Read Hadith of the Day</button>
-  </div>
+<!-- FOUNDER BIO -->
+<div class="card">
+  <div class="card-title">Founder Biography</div>
+  <p class="text-body">Welcome to Chair Islamic TV, where faith meets innovation! I'm <b>KAWEESI SHURAIM</b>, the founder of this platform.</p>
+  <div class="divider"></div>
+  <p class="text-body">Born and raised in <b>Masajja, Kampala</b>, I was inspired by Islamic values of compassion, knowledge, and unity.</p>
+  <div class="divider"></div>
+  <p class="text-body">With a deep passion for Islamic media and technology, I created Chair Islamic TV to provide authentic Qur'an, Hadith, and educational content to Muslims everywhere.</p>
+  <div class="divider"></div>
+  <p class="text-body">This platform is dedicated to spreading knowledge, strengthening Iman, and uniting the Ummah through modern digital solutions.</p>
+  <div class="divider"></div>
+  <p class="text-body" style="text-align:center; color:var(--gold); font-weight:600;">
+    May Allah accept this effort and benefit many. Ameen. 🌙
+  </p>
+</div>
 
-  <div class="card">
-    <div class="card-title">Prayer & Qibla</div>
-    <p class="text-body">
-      Get accurate prayer times for Kampala with countdown to next Salah. 
-      Find Qibla direction from your exact location. Never miss a prayer again.
-    </p>
-    <div class="btn-group">
-      <button class="btn-outline" onclick="location.href='prayer.html'">🕌 Prayer Times</button>
-      <button class="btn-outline" onclick="location.href='prayer.html'">🧭 Qibla</button>
-    </div>
-  </div>
+<!-- DONATION -->
+<div class="card">
+  <div class="card-title">Support Chair Islamic TV</div>
+  
+  <p class="text-body" style="margin-bottom:15px;">Step 1: Copy our merchant number</p>
+  <button class="btn-outline" onclick="copyMerchant()">Copy 7037856</button>
 
-  <div class="card">
-    <div class="card-title">Support This Work</div>
-    <p class="text-body" style="margin-bottom:15px;">
-      Your donation helps us provide free Qur'an classes to orphans, print Islamic books, 
-      and maintain this app. May Allah reward you.
-    </p>
-    <button class="btn-gold" onclick="location.href='donate.html'">🤲 Donate via Airtel Money</button>
+  <div class="divider"></div>
+
+  <p class="text-body" style="margin-bottom:15px;">Step 2: Enter amount and donate</p>
+  <input type="number" id="amount" placeholder="Enter amount (min 1000)" min="1000">
+  <button class="btn-gold" id="donateBtn" onclick="donate()" style="display:none;">Donate via Airtel Money</button>
+  
+  <div class="alert alert-warning" style="margin-top:20px;">
+    📱 Your phone dialer will open with USSD code.<br>
+    Enter your MM PIN there to complete donation.
   </div>
+</div>
+
+<!-- FEATURES -->
+<div class="card">
+  <div class="card-title">Explore</div>
+  
+  <button class="btn-gold" onclick="location.href='quran.html'">📖 Quran Reader</button>
+  <button class="btn-gold" onclick="location.href='hadith.html'">📜 Daily Hadith</button>
+  <button class="btn-gold" onclick="location.href='prayer.html'">🕌 Prayer Times</button>
+  <button class="btn-gold" onclick="location.href='videos.html'">🎥 Videos</button>
+  <button class="btn-gold" onclick="location.href='yasarnah.html'">📘 Yasarnah Teach</button>
+</div>
+
+<!-- YOUTUBE -->
+<div class="card">
+  <div class="card-title">Latest Videos</div>
+  <div id="youtubeVideos"></div>
+</div>
 
 </div>
 
+<!-- NAVIGATION -->
 <div class="bottom-nav">
   <a href="index.html" class="active">🏠<br>Home</a>
-  <a href="quran.html">📖<br>Qur'an</a>
+  <a href="quran.html">📖<br>Quran</a>
   <a href="hadith.html">📜<br>Hadith</a>
   <a href="prayer.html">🕌<br>Prayer</a>
   <a href="videos.html">🎥<br>Videos</a>
 </div>
+
+<script>
+// ===============================
+// SERVICE WORKER
+// ===============================
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("Service Worker Registered"))
+      .catch(() => console.log("SW Failed"));
+  });
+}
+
+// ===============================
+// INSTALL BUTTON
+// ===============================
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+installBtn.style.display = "block";
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+installBtn.addEventListener("click", async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  } else {
+    alert("To install: Tap browser menu (⋮) → Add to Home Screen");
+  }
+});
+
+// ===============================
+// YOUTUBE VIDEOS
+// ===============================
+const videos = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
+const container = document.getElementById("youtubeVideos");
+
+let html = "";
+videos.forEach(v=>{
+  html += `<iframe src="https://www.youtube.com/embed/${v}" allowfullscreen style="width:100%;height:220px;border:none;border-radius:12px;margin-top:10px;"></iframe>`;
+});
+container.innerHTML = html;
+
+// ===============================
+// DONATION
+// ===============================
+let hasCopied = false;
+
+function copyMerchant() {
+  navigator.clipboard.writeText("7037856").then(() => {
+    hasCopied = true;
+    alert("✅ Merchant number copied. You can now donate.");
+    document.getElementById("donateBtn").style.display = "block";
+  }).catch(() => {
+    alert("Copy failed. Please copy manually: 7037856");
+  });
+}
+
+function donate() {
+  if (!hasCopied) {
+    alert("⚠️ Please copy the merchant number first");
+    return;
+  }
+
+  const amount = document.getElementById("amount").value;
+  if (!amount || amount < 1000) {
+    alert("Enter valid amount (minimum 1000 UGX)");
+    return;
+  }
+
+  const ussd = `*185*9*7037856*${amount}#`;
+  
+  const a = document.createElement('a');
+  a.href = "tel:" + encodeURIComponent(ussd);
+  a.click();
+}
+</script>
 
 </body>
 </html>
