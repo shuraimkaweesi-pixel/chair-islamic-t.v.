@@ -39,6 +39,20 @@ Install Chair Islamic TV 📲
   </p>
 </div>
 
+<!-- SHARE BUTTON - MOVED TO CORRECT PLACE -->
+<div class="card">
+  <div class="card-title">Share the Khayr</div>
+  <p class="arabic" style="font-size:20px; margin:15px 0; text-align:center;">الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ</p>
+  <div class="divider"></div>
+  <p class="text-body">
+    "Whoever guides to good has a reward similar to the doer of good" — Muslim
+  </p>
+  <p class="text-body" style="margin-top:15px; font-size:14px; color:#999;">
+    Share with family & friends. Every person who learns gets you reward.
+  </p>
+  <button class="btn-gold" onclick="shareApp()">📤 Share Chair Islamic TV</button>
+</div>
+
 <!-- DONATION -->
 <div class="card">
   <div class="card-title">Support Chair Islamic TV</div>
@@ -121,6 +135,29 @@ installBtn.addEventListener("click", async () => {
 });
 
 // ===============================
+// SHARE APP - UPGRADED
+// ===============================
+function shareApp(){
+  const shareData = {
+    title: 'Chair Islamic TV',
+    text: 'Assalamu Alaikum! I found this app to learn Qur\'an, Hadith & Prayer. Try it:',
+    url: window.location.origin
+  };
+
+  if (navigator.share && navigator.canShare(shareData)) {
+    navigator.share(shareData).catch(() => {});
+  } 
+  else {
+    const text = `${shareData.text}\n${shareData.url}`;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Link copied!\n\nPaste in WhatsApp, Facebook, or SMS to share the reward.');
+    }).catch(() => {
+      prompt('Copy this link to share:', shareData.url);
+    });
+  }
+}
+
+// ===============================
 // YOUTUBE VIDEOS
 // ===============================
 const videos = ["ZGwG7UBlFCc","zGIBIOMA0PQ"];
@@ -164,28 +201,6 @@ function donate() {
   const a = document.createElement('a');
   a.href = "tel:" + encodeURIComponent(ussd);
   a.click();
-}
-</script>
-<div class="card">
-  <div class="card-title">Share the Khayr</div>
-  <p class="text-body" style="margin-bottom:15px;">
-    "Whoever guides to good has like the reward of the doer" - Muslim
-  </p>
-  <button class="btn-gold" onclick="shareApp()">📤 Share Chair Islamic TV</button>
-</div>
-
-<script>
-function shareApp(){
-  if (navigator.share) {
-    navigator.share({
-      title: 'Chair Islamic TV',
-      text: 'Learn Qur\'an, Hadith & Prayer the easy way',
-      url: 'https://chairislamictv.netlify.app'
-    });
-  } else {
-    navigator.clipboard.writeText('https://chairislamictv.netlify.app');
-    alert('Link copied! Paste in WhatsApp groups ✅');
-  }
 }
 </script>
   
