@@ -85,6 +85,12 @@ margin:5px;
 button:active{
 background:#e6c200;
 }
+
+.debug{
+margin-top:15px;
+font-size:12px;
+color:#666;
+}
 </style>
 </head>
 
@@ -98,22 +104,30 @@ background:#e6c200;
 <div class="controls">
 <button onclick="stopLesson()">⏸ Stop</button>
 <button onclick="playAll()">▶ Play All</button>
-<button onclick="setRepeat(1)">1x</button>
-<button onclick="setRepeat(3)">3x</button>
+<button onclick="testVoice()">🔊 Test Voice</button>
 </div>
+
+<div class="debug" id="debug"></div>
 
 <script>
 // =====================
-// LETTERS - ARABIC ONLY
+// LETTERS
 // =====================
 const letters = [
-{a:"ا", name:"Alif"}, {a:"ب", name:"Ba"}, {a:"ت", name:"Ta"}, {a:"ث", name:"Tha"},
-{a:"ج", name:"Jeem"}, {a:"ح", name:"Ha"}, {a:"خ", name:"Kha"}, {a:"د", name:"Dal"},
-{a:"ذ", name:"Dhal"}, {a:"ر", name:"Ra"}, {a:"ز", name:"Zay"}, {a:"س", name:"Seen"},
-{a:"ش", name:"Sheen"}, {a:"ص", name:"Sad"}, {a:"ض", name:"Dad"}, {a:"ط", name:"Taa"},
-{a:"ظ", name:"Zaa"}, {a:"ع", name:"Ain"}, {a:"غ", name:"Ghain"}, {a:"ف", name:"Fa"},
-{a:"ق", name:"Qaf"}, {a:"ك", name:"Kaf"}, {a:"ل", name:"Lam"}, {a:"م", name:"Meem"},
-{a:"ن", name:"Noon"}, {a:"ه", name:"Ha"}, {a:"و", name:"Waw"}, {a:"ي", name:"Yaa"}
+{a:"ا", name:"Alif", sound:"alif"}, {a:"ب", name:"Ba", sound:"baa"}, 
+{a:"ت", name:"Ta", sound:"taa"}, {a:"ث", name:"Tha", sound:"thaa"},
+{a:"ج", name:"Jeem", sound:"jeem"}, {a:"ح", name:"Ha", sound:"haa"}, 
+{a:"خ", name:"Kha", sound:"khaa"}, {a:"د", name:"Dal", sound:"daal"},
+{a:"ذ", name:"Dhal", sound:"dhaal"}, {a:"ر", name:"Ra", sound:"raa"}, 
+{a:"ز", name:"Zay", sound:"zaay"}, {a:"س", name:"Seen", sound:"seen"},
+{a:"ش", name:"Sheen", sound:"sheen"}, {a:"ص", name:"Sad", sound:"saad"}, 
+{a:"ض", name:"Dad", sound:"daad"}, {a:"ط", name:"Taa", sound:"taa"},
+{a:"ظ", name:"Zaa", sound:"zaa"}, {a:"ع", name:"Ain", sound:"ayn"}, 
+{a:"غ", name:"Ghain", sound:"ghayn"}, {a:"ف", name:"Fa", sound:"faa"},
+{a:"ق", name:"Qaf", sound:"qaaf"}, {a:"ك", name:"Kaf", sound:"kaaf"}, 
+{a:"ل", name:"Lam", sound:"laam"}, {a:"م", name:"Meem", sound:"meem"},
+{a:"ن", name:"Noon", sound:"noon"}, {a:"ه", name:"Ha", sound:"haa"}, 
+{a:"و", name:"Waw", sound:"waaw"}, {a:"ي", name:"Yaa", sound:"yaa"}
 ];
 
 // =====================
@@ -124,7 +138,8 @@ let currentIndex = null;
 let repeat = 0;
 let isPlaying = false;
 let speech = window.speechSynthesis;
-let arabicVoice = null;
+let voices = [];
+let hasArabicVoice = false;
 
 // =====================
 // BUILD UI
@@ -140,31 +155,56 @@ letters.forEach((l,i)=>{
 });
 
 // =====================
-// FIND ARABIC VOICE
+// LOAD VOICES + DEBUG
 // =====================
 function loadVoices() {
-  const voices = speech.getVoices();
-  // Try to find Arabic voice, fallback to default
-  arabicVoice = voices.find(v => v.lang.startsWith('ar')) || voices[0];
-  console.log("Using voice:", arabicVoice?.name);
+  voices = speech.getVoices();
+  const arabicVoices = voices.filter(v => v.lang.startsWith('ar'));
+  hasArabicVoice = arabicVoices.length > 0;
+  
+  document.getElementById("debug").innerText = 
+    `Voices: ${voices.length} | Arabic: ${arabicVoices.length} | Using: ${hasArabicVoice ? 'Arabic' : 'English fallback'}`;
+  
+  console.log("Available voices:", voices.map(v => v.lang + " " + v.name));
 }
+
 speech.onvoiceschanged = loadVoices;
-loadVoices(); // Try immediately too
+setTimeout(loadVoices, 100); // Force load
 
 // =====================
-// SPEECH FUNCTION - WORKS EVERYWHERE
+// TEST VOICE BUTTON
 // =====================
-function speak(text, callback) {
-  if (speech.speaking) speech.cancel(); // Stop current speech
+function testVoice() {
+  speak("Alif", () => {
+    document.getElementById("status").innerText = "Voice test done. Tap a letter now.";
+  });
+  document.getElementById("status").innerText = "Testing voice...";
+}
 
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'ar-SA'; // Arabic Saudi
-  utter.rate = 0.8; // Slower for learning
-  utter.voice = arabicVoice;
+// =====================
+// SPEECH WITH FALLBACK
+// =====================
+function speak(letterObj, callback) {
+  if (speech.speaking) speech.cancel();
+
+  const utter = new SpeechSynthesisUtterance();
+  
+  // Try Arabic first, fallback to English pronunciation
+  if (hasArabicVoice) {
+    utter.text = letterObj.a; // Speak the actual Arabic letter
+    utter.lang = 'ar-SA';
+  } else {
+    utter.text = letterObj.sound; // Speak "baa", "taa" etc in English
+    utter.lang = 'en-US';
+  }
+  
+  utter.rate = 0.7; // Slower for learning
+  utter.volume = 1;
+  
   utter.onend = callback;
   utter.onerror = (e) => {
     console.log("Speech error:", e);
-    document.getElementById("status").innerText = "Voice error. Try again.";
+    document.getElementById("status").innerText = "Voice failed. Try Test Voice button first.";
     isPlaying = false;
   };
 
@@ -177,9 +217,6 @@ function speak(text, callback) {
 function setRepeat(num) {
   repeatCount = num;
   document.getElementById("status").innerText = `Repeat set to ${num}x`;
-  setTimeout(() => {
-    if (!isPlaying) document.getElementById("status").innerText = "Tap any letter to hear it";
-  }, 1500);
 }
 
 function stopLesson(){
@@ -205,7 +242,6 @@ function playAll() {
 // START / TOGGLE
 // =====================
 function startLetter(index){
-  // Toggle pause if same letter
   if(currentIndex === index && isPlaying){
     speech.cancel();
     isPlaying = false;
@@ -214,7 +250,6 @@ function startLetter(index){
     return;
   }
 
-  // New start
   stopLesson();
   currentIndex = index;
   repeat = 0;
@@ -236,19 +271,18 @@ function playLetter(){
   document.getElementById("status").innerText = `Playing: ${letter.name} (${repeat + 1}/${repeatCount})`;
   highlight(currentIndex);
 
-  speak(letter.a, () => {
+  speak(letter, () => {
     if (!isPlaying) return;
-
+    
     repeat++;
     if(repeat < repeatCount){
-      setTimeout(() => playLetter(), 300); // Small pause between repeats
+      setTimeout(() => playLetter(), 400);
       return;
     }
 
-    // Move to next letter
     currentIndex++;
     repeat = 0;
-    setTimeout(() => playLetter(), 500); // Pause between letters
+    setTimeout(() => playLetter(), 600);
   });
 }
 
