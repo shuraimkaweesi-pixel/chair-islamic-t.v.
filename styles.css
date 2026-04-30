@@ -1,224 +1,256 @@
-/* styles.css - Chair Islamic TV - Exact Hadith Theme */
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
+  --bg: #0A0A0A;
+  --card: #141414;
   --gold: #FFD700;
-  --gold-dark: #E6B800;
-  --gold-bg: rgba(255,215,0,0.12);
-  --gold-border: rgba(255,215,0,0.4);
-  --bg-main: #0A0A0A;
-  --bg-card: #121212;
-  --bg-card-border: #2A2A2A;
-  --text-main: #FFFFFF;
-  --text-muted: #888888;
-  --text-body: #E0E0E0;
+  --gold-dim: #B8860B;
+  --text: #FFFFFF;
+  --text-dim: #A0A0A0;
+  --text-muted: #6B6B6B;
+  --border: #2A2A2A;
+  --red: #ff6b6b;
+  --green: #51cf66;
 }
 
-* { 
-  box-sizing: border-box; 
-  margin: 0; 
-  padding: 0; 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  font-family: 'Poppins', Arial, sans-serif;
-  background: var(--bg-main);
-  color: var(--text-main);
-  margin: 0;
-  padding: 20px 16px;
-  padding-bottom: 90px;
-  min-height: 100vh;
+  padding-bottom: 80px;
 }
 
-.container { 
-  max-width: 600px; 
-  margin: 0 auto; 
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
 }
 
-/* Page Headers */
-.page-header {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 14px;
-  margin-bottom: 20px;
-  font-weight: 400;
-}
-
+/* Typography - Site Wide */
 h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
   color: var(--gold);
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 5px;
-  font-size: 26px;
+  line-height: 1.3;
 }
 
 h2 {
-  color: var(--gold);
-  font-weight: 600;
   font-size: 20px;
-  margin-bottom: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
 }
 
-.subtitle {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 13px;
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+.page-header {
+  font-size: 14px;
+  color: var(--text-dim);
   margin-bottom: 20px;
 }
 
-/* Main Card - Exact Hadith Style */
-.card {
-  background: var(--bg-card);
-  padding: 24px;
-  border-radius: 18px;
-  margin: 18px 0;
-  border: 1.5px solid var(--gold-border);
-  position: relative;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-}
-
-/* Card title */
-.card-title {
-  color: var(--gold);
+.page-subtitle {
   font-size: 13px;
-  margin-bottom: 18px;
-  text-align: center;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
 }
 
-/* Arabic Text */
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--gold);
+  line-height: 1.4;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+/* Arabic + Translations - Used in Quran + Hadith */
 .arabic {
   font-family: 'Amiri', serif;
-  font-size: 26px;
-  line-height: 2.2;
-  direction: rtl;
+  font-size: 20px;
+  line-height: 2;
   text-align: right;
-  color: #fff;
-  margin-bottom: 20px;
+  margin: 12px 0;
+  color: var(--text);
 }
 
-/* Gold Divider Line */
-.divider {
-  height: 1px;
-  background: var(--gold-border);
-  margin: 20px 0;
+.translation, .text-body {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
 }
 
-/* Translation/Body Text */
-.text-body {
-  font-size: 16px;
-  line-height: 1.9;
-  color: var(--text-body);
-  font-weight: 300;
-}
-
-/* Badge - Like "Nawawi 14" */
-.badge {
-  display: inline-block;
-  background: var(--gold-bg);
-  color: var(--gold);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid var(--gold-border);
-  margin-top: 15px;
-}
-
-/* Button Group - Lesson, Share, Save */
-.btn-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
-
-.btn-outline {
-  flex: 1;
-  min-width: 90px;
-  background: var(--gold-bg);
-  color: var(--gold);
-  border: 1.5px solid var(--gold-border);
-  padding: 13px 15px;
-  border-radius: 14px;
-  cursor: pointer;
+.transliteration {
   font-size: 14px;
-  font-weight: 600;
-  transition: 0.2s;
-  font-family: 'Poppins', sans-serif;
+  font-style: italic;
+  color: var(--text-dim);
+  margin: 8px 0;
 }
 
-.btn-outline:active {
-  background: var(--gold);
+.reference, .badge {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.badge {
+  background: var(--border);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.badge-gold {
+  background: var(--gold-dim);
   color: #000;
-  transform: scale(0.96);
 }
 
-/* Primary Gold Button - Like "Next Hadith" */
+/* Buttons */
 .btn-gold {
-  width: 100%;
   background: var(--gold);
   color: #000;
   border: none;
-  padding: 16px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 700;
-  margin: 12px 0;
-  box-shadow: 0 4px 15px rgba(255,215,0,0.25);
-  transition: 0.2s;
-  font-family: 'Poppins', sans-serif;
-}
-
-.btn-gold:active { 
-  transform: scale(0.98);
-  background: var(--gold-dark);
-}
-
-.btn-gold:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Inputs */
-label {
-  color: var(--gold);
-  font-size: 14px;
-  margin-bottom: 8px;
-  display: block;
-  font-weight: 600;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 15px 14px;
-  border-radius: 12px;
-  border: 1.5px solid var(--gold-border);
-  background: var(--bg-main);
-  color: var(--text-main);
-  font-family: 'Poppins', sans-serif;
+  padding: 12px 20px;
+  border-radius: 8px;
   font-size: 15px;
-  transition: 0.2s;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  text-decoration: none;
 }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-bg);
-  background: #111;
+.btn-outline {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  text-decoration: none;
 }
 
-input::placeholder { color: #444; }
+.btn-small {
+  padding: 8px 12px;
+  font-size: 13px;
+}
 
-/* Donation Grid */
-.donation-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.btn-group {
+  display: flex;
   gap: 10px;
-  margin: 20px 0;
+  margin-top: 12px;
+}
+
+.btn-group button, .btn-group a {
+  flex: 1;
+}
+
+/* Forms + Inputs */
+input[type="text"], 
+input[type="search"], 
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Lists */
+.list-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.list-item-subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.list-item-number {
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 600;
+  min-width: 30px;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
 }
 
 /* Bottom Navigation */
@@ -226,82 +258,102 @@ input::placeholder { color: #444; }
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
-  background: rgba(10,10,10,0.98);
-  backdrop-filter: blur(12px);
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-around;
-  padding: 10px 0 14px;
-  border-top: 1px solid var(--bg-card-border);
+  padding: 8px 0 12px;
   z-index: 100;
 }
 
 .bottom-nav a {
-  color: var(--text-muted);
+  color: var(--text-dim);
   text-decoration: none;
   font-size: 11px;
-  flex: 1;
   text-align: center;
-  transition: 0.2s;
-  padding: 4px 0;
+  padding: 6px 12px;
+  line-height: 1.3;
+  flex: 1;
 }
 
-.bottom-nav a.active { color: var(--gold); }
-.bottom-nav a:active { transform: scale(0.9); }
-
-/* Alert boxes */
-.alert {
-  padding: 15px;
-  border-radius: 12px;
-  margin: 15px 0;
-  font-size: 14px;
-  line-height: 1.6;
-  border: 1.5px solid;
-}
-
-.alert-warning {
-  background: var(--gold-bg);
-  border-color: var(--gold-border);
+.bottom-nav a.active {
   color: var(--gold);
 }
 
-/* Code for USSD */
-code {
-  background: #000;
-  color: var(--gold);
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-family: monospace;
-  font-size: 14px;
-  border: 1px solid var(--gold-border);
-  display: inline-block;
-  margin: 5px 0;
-  }
-/* Share Button - Special Gold Glow */
-.btn-share {
+.bottom-nav a span {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+/* Tables - Prayer Times */
+table {
   width: 100%;
-  background: linear-gradient(45deg, var(--gold), #FFA500);
-  color: #000;
-  border: none;
-  padding: 16px;
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 700;
-  margin: 12px 0;
-  box-shadow: 0 4px 20px rgba(255,215,0,0.35);
-  transition: 0.2s;
-  font-family: 'Poppins', sans-serif;
-  position: relative;
-  overflow: hidden;
+  border-collapse: collapse;
+  font-size: 14px;
 }
 
-.btn-share:active { 
-  transform: scale(0.98);
-  box-shadow: 0 2px 10px rgba(255,215,0,0.25);
+th, td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
 }
 
-.btn-share::before {
-  content: '📤';
-  margin-right: 8px;
+th {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+td:last-child {
+  text-align: right;
+  font-weight: 500;
+}
+
+/* Utility */
+.text-center { text-align: center; }
+.text-dim { color: var(--text-dim); }
+.text-gold { color: var(--gold); }
+.text-red { color: var(--red); }
+.text-green { color: var(--green); }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+
+/* Loading States */
+.loading {
+  color: var(--text-dim);
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Video Cards */
+.video-card {
+  margin-bottom: 16px;
+}
+
+.video-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 10px 0 6px;
+}
+
+.video-meta {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Small Phones */
+@media (max-width: 380px) {
+  body { font-size: 14px; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+  .arabic { font-size: 18px; }
+  .translation { font-size: 14px; }
+  .container { padding: 12px; }
+  .card { padding: 14px; }
+  .btn-gold, .btn-outline { padding: 10px 16px; font-size: 14px; }
 }
