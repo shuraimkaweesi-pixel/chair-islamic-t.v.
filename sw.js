@@ -2,72 +2,80 @@
 // CHAIR ISLAMIC TV SW V2
 // App Shell = Offline, API = Online only
 // =========================
-
-const CACHE_NAME = 'yasarnah-shell-v2';
-const APP_SHELL = [
-  '/',
-  '/index.html',
-  'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap'
+const CACHE_NAME = 'chair-islamic-v3';
+const URLS_TO_CACHE = [
+  '/chair-islamic/',
+  '/chair-islamic/index.html',
+  '/chair-islamic/hadith.html',
+  '/chair-islamic/quran.html',
+  '/chair-islamic/prayer.html',
+  '/chair-islamic/videos.html',
+  '/chair-islamic/styles.css',
+  '/chair-islamic/hadiths.json',
+  '/chair-islamic/manifest.json',
+  '/chair-islamic/logo.png'
 ];
 
-// URLs that should NEVER be cached - always go online
-const NETWORK_ONLY = [
-  'everyayah.com',           // Quran audio
-  'youtube.com',             // YouTube videos
-  'api.alquran.cloud',       // Quran text API
-  'api.aladhan.com',         // Adhan times
-  'cdn.islamic.network'      // Adhan audio
-];
-
-// Install - cache only the app shell
+// Install - cache all files
 self.addEventListener('install', event => {
-  console.log('[SW] Installing app shell...');
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
+      .then(cache => {
+        console.log('Caching app shell');
+        return cache.addAll(URLS_TO_CACHE);
+      })
+      .then(() => self.skipWaiting())
   );
 });
 
-// Activate - delete old caches
+// Activate - clean old caches
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating...');
   event.waitUntil(
-    caches.keys().then(keys => 
-      Promise.all(keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      }))
-    ).then(() => self.clients.claim())
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
   );
 });
 
-// Fetch strategy
+// Fetch - serve from cache first, then network
 self.addEventListener('fetch', event => {
-  const url = event.request.url;
-
-  // 1. NETWORK-ONLY: Quran audio, YouTube, APIs must be online
-  if (NETWORK_ONLY.some(domain => url.includes(domain))) {
-    console.log('[SW] Network only:', url);
-    event.respondWith(fetch(event.request).catch(() => {
-      // If offline, return empty response so app doesn't crash
-      return new Response('', { status: 503, statusText: 'Offline' });
-    }));
-    return;
-  }
-
-  // 2. CACHE-FIRST FOR APP SHELL: HTML/CSS/Fonts work offline
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) {
-        console.log('[SW] Cache hit:', url);
-        return cached;
-      }
-      
-      // Not in cache, try network
-      return fetch(event.request).then(response => {
-        // Cache new app shell files only
-        if (response.status === 200 && event.request.method === 'GET') {
-          const responseClone = response.clone();
+    caches.match(event.request)
+      .then(response => {
+        // Return cache if found
+        if (response) {
+          return response;
+        }
+        // Otherwise fetch from network
+        return fetch(event.request).then(response => {
+          // Don't cache if not a valid response
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+          // Clone and cache new requests
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          return response;
+        });
+      })
+      .catch(() => {
+        // Offline fallback
+        if (event.request.destination === 'document') {
+          return caches.match('/chair-islamic/index.html');
+        }
+      })
+  );
+});
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseClone);
           });
