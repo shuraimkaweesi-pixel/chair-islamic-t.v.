@@ -1,270 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yasarnah - Learn Arabic Letters</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yasarnah - Full Lessons</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f0f0f;
+            color: #FFD700;
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 40px;
+            text-align: center;
+        }
 
-<style>
-body{
-font-family:Arial;
-background:#0f0f0f;
-color:#FFD700;
-margin:0;
-padding:20px;
-padding-bottom:90px;
-text-align:center;
-}
+        .header {
+            margin-bottom: 20px;
+        }
 
-h1{margin-bottom:10px;color:#FFD700;}
-#status{margin-bottom:20px;color:#999;font-size:14px;min-height:20px;}
+        #darsTitle {
+            font-size: 28px;
+            margin: 10px 0 5px;
+            color: #FFD700;
+        }
 
-#lessonBox{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-max-width:500px;
-margin:0 auto;
-}
+        #darsInfo {
+            font-size: 16px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
 
-.lesson{
-background:#1a1a1a;
-padding:15px 5px;
-border-radius:12px;
-transition:0.2s;
-cursor:pointer;
-border:2px solid transparent;
-}
+        #letterProgress {
+            color: #999;
+            font-size: 14px;
+            min-height: 20px;
+        }
 
-.lesson:active{transform:scale(0.95);}
-.lesson.active{
-border:2px solid gold;
-background:#252525;
-box-shadow:0 0 15px rgba(255,215,0,0.3);
-}
+        #lessonBox {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+            direction: rtl; /* Arabic right-to-left flow */
+        }
 
-.arabic{font-size:44px;margin-bottom:5px;line-height:1;}
-.name{font-size:12px;color:#ddd;}
+        .lesson {
+            background: #1a1a1a;
+            padding: 20px 5px;
+            border-radius: 12px;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
 
-.controls{margin-top:25px;}
+        .lesson:active { transform: scale(0.95); }
 
-button{
-background:#FFD700;
-color:black;
-border:none;
-padding:12px 20px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-font-size:15px;
-margin:5px;
-}
-button:active{background:#e6c200;}
-</style>
+        .lesson.active {
+            border: 2px solid #FFD700;
+            background: #252525;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .arabic {
+            font-size: 48px;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .name {
+            font-size: 13px;
+            color: #ddd;
+        }
+
+        #darsCounter {
+            margin: 20px 0;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .controls {
+            margin-top: 15px;
+        }
+
+        button {
+            background: #FFD700;
+            color: black;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 5px;
+            transition: 0.2s;
+        }
+
+        button:active { background: #e6c200; transform: translateY(2px); }
+        
+        button#letterPlayBtn { background: #4CAF50; color: white; }
+    </style>
 </head>
-
 <body>
 
-<h1>📖 Yasarnah (Alif → Yaa)</h1>
-<p id="status">Tap any letter to hear it</p>
+<div class="header">
+    <h1 id="darsTitle">Loading...</h1>
+    <p id="darsInfo">Please wait</p>
+    <div id="letterProgress">Tap any letter to start</div>
+</div>
 
 <div id="lessonBox"></div>
 
+<div id="darsCounter">Page 0 / 0</div>
+
 <div class="controls">
-<button onclick="stopLesson()">⏸ Stop</button>
-<button onclick="playAll()">▶ Play All</button>
-<button onclick="setRepeat(1)">1x</button>
-<button onclick="setRepeat(3)">3x</button>
+    <button onclick="changeDars(-1)">⬅ Previous</button>
+    <button id="letterPlayBtn" onclick="toggleLetterSequence()">▶ Play All</button>
+    <button onclick="changeDars(1)">Next ➡</button>
+</div>
+
+<div class="controls">
+    <button onclick="setRepeat(1)" style="background:#555; color:white;">1x</button>
+    <button onclick="setRepeat(3)" style="background:#555; color:white;">3x</button>
+    <button onclick="stopLetterLesson()" style="background:#f44336; color:white;">⏸ Stop</button>
 </div>
 
 <script>
-// =====================
-// LETTERS WITH YOUR MP3 PATHS - UPDATED TO blog/
-// =====================
-const letters = [
-{a:"ا", name:"Alif", file:"blog/alif.mp3"},
-{a:"ب", name:"Ba", file:"blog/baa.mp3"},
-{a:"ت", name:"Ta", file:"blog/taa.mp3"},
-{a:"ث", name:"Tha", file:"blog/thaa.mp3"},
-{a:"ج", name:"Jim", file:"blog/jeem.mp3"},
-{a:"ح", name:"Ha", file:"blog/haa.mp3"},
-{a:"خ", name:"Kha", file:"blog/khaa.mp3"},
-{a:"د", name:"Dal", file:"blog/daal.mp3"},
-{a:"ذ", name:"Dhal", file:"blog/dhaal.mp3"},
-{a:"ر", name:"Ra", file:"blog/raa.mp3"},
-{a:"ز", name:"Zay", file:"blog/zaay.mp3"},
-{a:"س", name:"Sin", file:"blog/seen.mp3"},
-{a:"ش", name:"Shin", file:"blog/sheen.mp3"},
-{a:"ص", name:"Swad", file:"blog/saad.mp3"},
-{a:"ض", name:"Dthwad", file:"blog/daad.mp3"},
-{a:"ط", name:"Twaa", file:"blog/twa.mp3"},
-{a:"ظ", name:"thwa", file:"blog/thwa.mp3"},
-{a:"ع", name:"Ain", file:"blog/ayn.mp3"},
-{a:"غ", name:"Ghain", file:"blog/ghayn.mp3"},
-{a:"ف", name:"Fa", file:"blog/faa.mp3"},
-{a:"ق", name:"Qaf", file:"blog/qaaf.mp3"},
-{a:"ك", name:"Kaf", file:"blog/kaaf.mp3"},
-{a:"ل", name:"Lam", file:"blog/laam.mp3"},
-{a:"م", name:"Mim", file:"blog/meem.mp3"},
-{a:"ن", name:"Noon", file:"blog/noon.mp3"},
-{a:"ه", name:"HHa", file:"blog/hha.mp3"},
-{a:"و", name:"Waw", file:"blog/waaw.mp3"},
-{a:"ي", name:"Yaa", file:"blog/yaa.mp3"}
+// ==========================================
+// FULL DATA: ADD ALL YOUR PAGES HERE
+// ==========================================
+const yasarnahPages = [
+  {
+    title: "Dars 1: Alif - Yaa",
+    info: "Individual Letters",
+    letters: [
+      {a:"ا", name:"Alif", file:"blog/alif.mp3"},
+      {a:"ب", name:"Ba", file:"blog/baa.mp3"},
+      {a:"ت", name:"Ta", file:"blog/taa.mp3"},
+      {a:"ث", name:"Tha", file:"blog/thaa.mp3"},
+      {a:"ج", name:"Jim", file:"blog/jeem.mp3"},
+      {a:"ح", name:"Ha", file:"blog/haa.mp3"},
+      {a:"خ", name:"Kha", file:"blog/khaa.mp3"},
+      {a:"د", name:"Dal", file:"blog/daal.mp3"},
+      {a:"ذ", name:"Dhal", file:"blog/dhaal.mp3"},
+      {a:"ر", name:"Ra", file:"blog/raa.mp3"},
+      {a:"ز", name:"Zay", file:"blog/zaay.mp3"},
+      {a:"س", name:"Sin", file:"blog/seen.mp3"},
+      {a:"ش", name:"Shin", file:"blog/sheen.mp3"},
+      {a:"ص", name:"Swad", file:"blog/saad.mp3"},
+      {a:"ض", name:"Dthwad", file:"blog/daad.mp3"},
+      {a:"ط", name:"Twaa", file:"blog/twa.mp3"},
+      {a:"ظ", name:"thwa", file:"blog/thwa.mp3"},
+      {a:"ع", name:"Ain", file:"blog/ayn.mp3"},
+      {a:"غ", name:"Ghain", file:"blog/ghayn.mp3"},
+      {a:"ف", name:"Fa", file:"blog/faa.mp3"},
+      {a:"ق", name:"Qaf", file:"blog/qaaf.mp3"},
+      {a:"ك", name:"Kaf", file:"blog/kaaf.mp3"},
+      {a:"ل", name:"Lam", file:"blog/laam.mp3"},
+      {a:"م", name:"Mim", file:"blog/meem.mp3"},
+      {a:"ن", name:"Noon", file:"blog/noon.mp3"},
+      {a:"ه", name:"HHa", file:"blog/hha.mp3"},
+      {a:"و", name:"Waw", file:"blog/waaw.mp3"},
+      {a:"ي", name:"Yaa", file:"blog/yaa.mp3"}
+    ]
+  },
+  {
+    title: "Dars 2: Fatha",
+    info: "Short Vowel: Zabar",
+    letters: [
+      {a:"اَ", name:"Alif Fatha", file:"blog/alif_fatha.mp3"},
+      {a:"بَ", name:"Ba Fatha", file:"blog/ba_fatha.mp3"},
+      {a:"تَ", name:"Ta Fatha", file:"blog/ta_fatha.mp3"}
+      // Add more for Dars 2...
+    ]
+  }
 ];
 
 // =====================
-// SETTINGS
+// APP STATE
 // =====================
-let repeatCount = 3;
+let currentDarsIndex = 0;
+let currentLetterIndex = null;
+let letterRepeat = 0;
+let letterRepeatCount = 1;
+let isPlayingSequence = false;
 let currentAudio = null;
-let currentIndex = null;
-let repeat = 0;
-let isPlaying = false;
-let audioUnlocked = false;
 
 // =====================
-// BUILD UI
+// CORE LOGIC
 // =====================
-const box = document.getElementById("lessonBox");
-letters.forEach((l,i)=>{
-  box.innerHTML += `
-  <div class="lesson" onclick="startLetter(${i})">
-    <div class="arabic">${l.a}</div>
-    <div class="name">${l.name}</div>
-  </div>
-  `;
-});
 
-// =====================
-// AUDIO UNLOCK - FOR CHROME
-// =====================
-function unlockAudio() {
-  if (audioUnlocked) return Promise.resolve(true);
+function loadDars(index) {
+    stopLetterLesson();
+    currentDarsIndex = index;
+    const dars = yasarnahPages[index];
 
-  const testAudio = new Audio();
-  testAudio.volume = 0;
-  testAudio.src = letters[0].file;
+    // Update UI Elements
+    document.getElementById("darsTitle").innerText = dars.title;
+    document.getElementById("darsInfo").innerText = dars.info;
+    document.getElementById("darsCounter").innerText = `Page ${index + 1} / ${yasarnahPages.length}`;
+    document.getElementById("letterProgress").innerText = "Tap any letter to hear it";
 
-  return testAudio.play().then(() => {
-    testAudio.pause();
-    audioUnlocked = true;
-    document.getElementById("status").innerText = "Audio ready. Tap any letter.";
-    return true;
-  }).catch(e => {
-    console.log("Unlock failed:", e);
-    document.getElementById("status").innerText = "Tap again to enable audio";
-    return false;
-  });
+    // Build Grid
+    const box = document.getElementById("lessonBox");
+    box.innerHTML = "";
+    dars.letters.forEach((l, i) => {
+        const div = document.createElement("div");
+        div.className = "lesson";
+        div.id = `letter-${i}`;
+        div.onclick = () => startLetter(i);
+        div.innerHTML = `<div class="arabic">${l.a}</div><div class="name">${l.name}</div>`;
+        box.appendChild(div);
+    });
 }
 
-// Unlock on any tap
-document.body.addEventListener("click", unlockAudio, {once: true});
-document.body.addEventListener("touchstart", unlockAudio, {once: true});
-
-// =====================
-// CONTROLS
-// =====================
-function setRepeat(num) {
-  repeatCount = num;
-  document.getElementById("status").innerText = `Repeat set to ${num}x`;
+function startLetter(i) {
+    stopLetterLesson();
+    currentLetterIndex = i;
+    letterRepeat = 0;
+    isPlayingSequence = false;
+    playCurrentLetter();
 }
 
-function stopLesson(){
-  if(currentAudio){
-    currentAudio.pause();
-    currentAudio = null;
-  }
-  isPlaying = false;
-  currentIndex = null;
-  repeat = 0;
-  document.querySelectorAll(".lesson").forEach(l=>{
-    l.classList.remove("active");
-  });
-  document.getElementById("status").innerText = "Stopped";
-}
-
-function playAll() {
-  stopLesson();
-  currentIndex = 0;
-  repeat = 0;
-  isPlaying = true;
-  playLetter();
-}
-
-// =====================
-// START / TOGGLE
-// =====================
-async function startLetter(index){
-  if (!audioUnlocked) {
-    const unlocked = await unlockAudio();
-    if (!unlocked) return;
-  }
-
-  if(currentIndex === index && isPlaying && currentAudio){
-    currentAudio.pause();
-    isPlaying = false;
-    document.getElementById("status").innerText = "Paused";
-    document.querySelectorAll(".lesson")[index].classList.remove("active");
-    return;
-  }
-
-  stopLesson();
-  currentIndex = index;
-  repeat = 0;
-  isPlaying = true;
-  playLetter();
-}
-
-// =====================
-// PLAY LETTER
-// =====================
-function playLetter(){
-  if (!isPlaying || currentIndex === null || currentIndex >= letters.length) {
-    stopLesson();
-    document.getElementById("status").innerText = "Finished! Alhamdulillah";
-    return;
-  }
-
-  const letter = letters[currentIndex];
-  document.getElementById("status").innerText = `Playing: ${letter.name} (${repeat + 1}/${repeatCount})`;
-  highlight(currentIndex);
-
-  currentAudio = new Audio(letter.file);
-
-  currentAudio.onended = () => {
-    if (!isPlaying) return;
-
-    repeat++;
-    if(repeat < repeatCount){
-      setTimeout(() => playLetter(), 300);
-      return;
+function playCurrentLetter() {
+    const dars = yasarnahPages[currentDarsIndex];
+    if (currentLetterIndex === null || currentLetterIndex >= dars.letters.length) {
+        stopLetterLesson();
+        document.getElementById("letterProgress").innerText = "Dars complete! Alhamdulillah";
+        return;
     }
 
-    currentIndex++;
-    repeat = 0;
-    setTimeout(() => playLetter(), 600);
-  };
+    const letter = dars.letters[currentLetterIndex];
+    highlightLetter(currentLetterIndex);
+    document.getElementById("letterProgress").innerText = `Playing: ${letter.name} (${letterRepeat + 1}/${letterRepeatCount})`;
 
-  currentAudio.onerror = () => {
-    document.getElementById("status").innerText = `Error: ${letter.file} not found`;
-    isPlaying = false;
-  };
+    // Audio Setup
+    if (currentAudio) currentAudio.pause();
+    currentAudio = new Audio(letter.file);
 
-  currentAudio.play().catch(e => {
-    console.log("Play error:", e);
-    document.getElementById("status").innerText = "Tap again to enable audio";
-    isPlaying = false;
-  });
+    currentAudio.onended = () => {
+        letterRepeat++;
+        if (letterRepeat < letterRepeatCount) {
+            setTimeout(playCurrentLetter, 400);
+        } else {
+            if (isPlayingSequence) {
+                currentLetterIndex++;
+                letterRepeat = 0;
+                setTimeout(playCurrentLetter, 600);
+            } else {
+                // Done playing single letter
+                setTimeout(() => {
+                    document.getElementById(`letter-${currentLetterIndex}`).classList.remove("active");
+                }, 500);
+            }
+        }
+    };
+
+    currentAudio.play().catch(e => {
+        console.error("Audio error:", e);
+        // Fallback to browser Speech Synthesis if file is missing
+        useSpeechFallback(letter.a);
+    });
+}
+
+function useSpeechFallback(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'ar-SA';
+    utter.rate = 0.8;
+    utter.onend = () => {
+        if (isPlayingSequence) {
+            currentLetterIndex++;
+            letterRepeat = 0;
+            setTimeout(playCurrentLetter, 600);
+        }
+    };
+    speechSynthesis.speak(utter);
 }
 
 // =====================
-// HIGHLIGHT
+// NAVIGATION & CONTROLS
 // =====================
-function highlight(index){
-  document.querySelectorAll(".lesson").forEach((el,i)=>{
-    el.classList.toggle("active", i === index);
-  });
+
+function changeDars(step) {
+    let newIndex = currentDarsIndex + step;
+    if (newIndex >= 0 && newIndex < yasarnahPages.length) {
+        loadDars(newIndex);
+    }
 }
+
+function toggleLetterSequence() {
+    const btn = document.getElementById("letterPlayBtn");
+    if (isPlayingSequence) {
+        stopLetterLesson();
+    } else {
+        currentLetterIndex = 0;
+        letterRepeat = 0;
+        isPlayingSequence = true;
+        btn.innerText = "⏸ Stop All";
+        btn.style.background = "#f44336";
+        playCurrentLetter();
+    }
+}
+
+function stopLetterLesson() {
+    if (currentAudio) currentAudio.pause();
+    isPlayingSequence = false;
+    currentLetterIndex = null;
+    letterRepeat = 0;
+    
+    const btn = document.getElementById("letterPlayBtn");
+    btn.innerText = "▶ Play All";
+    btn.style.background = "#4CAF50";
+    
+    document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
+}
+
+function setRepeat(num) {
+    letterRepeatCount = num;
+    document.getElementById("letterProgress").innerText = `Repeat set to ${num}x`;
+}
+
+function highlightLetter(i) {
+    document.querySelectorAll(".lesson").forEach((el, index) => {
+        el.classList.toggle("active", index === i);
+    });
+    const activeEl = document.getElementById(`letter-${i}`);
+    if (activeEl) activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// Load First Dars on Start
+window.onload = () => loadDars(0);
 </script>
 
 </body>
