@@ -362,107 +362,32 @@ function stopAdhan() {
     if(stopBtn) stopBtn.style.display = "none";
 }
 
-// ===============================
-// YASARNAH - PAGINATED QAIDA BOOK
-// ===============================
-
-// Split into pages/dars like real Qaida Nooraniyah
+// =====================
+// DATA: ALL YASARNAH PAGES
+// =====================
 const yasarnahPages = [
   {
-    title: "Dars 1: Single Letters",
-    info: "Alif to Khaa",
+    title: "Dars 1: Alif - Yaa",
+    info: "Single Letters",
     letters: [
-      {a:"ا", name:"Alif"}, {a:"ب", name:"Ba"}, {a:"ت", name:"Ta"},
-      {a:"ث", name:"Tha"}, {a:"ج", name:"Jeem"}, {a:"ح", name:"Haa"}, {a:"خ", name:"Kha"}
+      {a:"ا", name:"Alif", file:"blog/alif.mp3"},
+      {a:"ب", name:"Ba", file:"blog/baa.mp3"},
+      {a:"ت", name:"Ta", file:"blog/taa.mp3"},
+      {a:"ث", name:"Tha", file:"blog/thaa.mp3"},
+      {a:"ج", name:"Jim", file:"blog/jeem.mp3"},
+      {a:"ح", name:"Ha", file:"blog/haa.mp3"},
+      {a:"خ", name:"Kha", file:"blog/khaa.mp3"},
+      {a:"د", name:"Dal", file:"blog/daal.mp3"}
+      // ... Add all letters for Page 1
     ]
   },
   {
-    title: "Dars 2: Single Letters",
-    info: "Dal to Seen",
+    title: "Dars 2: Fatha",
+    info: "Short Vowels (Zabar)",
     letters: [
-      {a:"د", name:"Dal"}, {a:"ذ", name:"Dhal"}, {a:"ر", name:"Ra"},
-      {a:"ز", name:"Zay"}, {a:"س", name:"Seen"}, {a:"ش", name:"Sheen"}
-    ]
-  },
-  {
-    title: "Dars 3: Single Letters",
-    info: "Sad to Ain",
-    letters: [
-      {a:"ص", name:"Sad"}, {a:"ض", name:"Dad"}, {a:"ط", name:"Taa"},
-      {a:"ظ", name:"Zaa"}, {a:"ع", name:"Ain"}, {a:"غ", name:"Ghain"}
-    ]
-  },
-  {
-    title: "Dars 4: Single Letters",
-    info: "Fa to Yaa",
-    letters: [
-      {a:"ف", name:"Fa"}, {a:"ق", name:"Qaf"}, {a:"ك", name:"Kaf"},
-      {a:"ل", name:"Lam"}, {a:"م", name:"Meem"}, {a:"ن", name:"Noon"},
-      {a:"ه", name:"Ha"}, {a:"و", name:"Waw"}, {a:"ي", name:"Yaa"}
-    ]
-  },
-  {
-    title: "Dars 5: Harakat - Fatha",
-    info: "Letters with Zabar",
-    letters: [
-      {a:"اَ", name:"Alif Fatha"}, {a:"بَ", name:"Ba Fatha"}, {a:"تَ", name:"Ta Fatha"},
-      {a:"ثَ", name:"Tha Fatha"}, {a:"جَ", name:"Jeem Fatha"}, {a:"حَ", name:"Haa Fatha"}
-    ]
-  },
-  {
-    title: "Dars 6: Harakat - Kasra",
-    info: "Letters with Zer",
-    letters: [
-      {a:"اِ", name:"Alif Kasra"}, {a:"بِ", name:"Ba Kasra"}, {a:"تِ", name:"Ta Kasra"},
-      {a:"ثِ", name:"Tha Kasra"}, {a:"جِ", name:"Jeem Kasra"}, {a:"حِ", name:"Haa Kasra"}
-    ]
-  },
-  {
-    title: "Dars 7: Harakat - Damma",
-    info: "Letters with Pesh",
-    letters: [
-      {a:"اُ", name:"Alif Damma"}, {a:"بُ", name:"Ba Damma"}, {a:"تُ", name:"Ta Damma"},
-      {a:"ثُ", name:"Tha Damma"}, {a:"جُ", name:"Jeem Damma"}, {a:"حُ", name:"Haa Damma"}
-    ]
-  },
-  {
-    title: "Dars 8: Sukoon/Jazm",
-    info: "Letters with Sukoon",
-    letters: [
-      {a:"اَبْ", name:"Ab"}, {a:"اَتْ", name:"At"}, {a:"اَثْ", name:"Ath"},
-      {a:"اَجْ", name:"Aj"}, {a:"اَحْ", name:"Ah"}, {a:"اَخْ", name:"Akh"}
-    ]
-  },
-  {
-    title: "Dars 9: Shaddah",
-    info: "Letters with Tashdeed",
-    letters: [
-      {a:"اَبَّ", name:"Abba"}, {a:"اَتَّ", name:"Atta"}, {a:"اَثَّ", name:"Aththa"},
-      {a:"اَجَّ", name:"Ajja"}, {a:"اَحَّ", name:"Ahha"}, {a:"اَخَّ", name:"Akhkha"}
-    ]
-  },
-  {
-    title: "Dars 10: Tanween - Fathatain",
-    info: "Two Zabar",
-    letters: [
-      {a:"بً", name:"Ban"}, {a:"تً", name:"Tan"}, {a:"ثً", name:"Than"},
-      {a:"جً", name:"Jan"}, {a:"حً", name:"Han"}, {a:"خً", name:"Khan"}
-    ]
-  },
-  {
-    title: "Dars 11: Tanween - Kasratain",
-    info: "Two Zer",
-    letters: [
-      {a:"بٍ", name:"Bin"}, {a:"تٍ", name:"Tin"}, {a:"ثٍ", name:"Thin"},
-      {a:"جٍ", name:"Jin"}, {a:"حٍ", name:"Hin"}, {a:"خٍ", name:"Khin"}
-    ]
-  },
-  {
-    title: "Dars 12: Tanween - Dammatain",
-    info: "Two Pesh",
-    letters: [
-      {a:"بٌ", name:"Bun"}, {a:"تٌ", name:"Tun"}, {a:"ثٌ", name:"Thun"},
-      {a:"جٌ", name:"Jun"}, {a:"حٌ", name:"Hun"}, {a:"خٌ", name:"Khun"}
+      {a:"اَ", name:"Alif Fatha", file:"blog/a_fatha.mp3"},
+      {a:"بَ", name:"Ba Fatha", file:"blog/ba_fatha.mp3"},
+      {a:"تَ", name:"Ta Fatha", file:"blog/ta_fatha.mp3"}
     ]
   }
 ];
@@ -471,60 +396,54 @@ let currentDarsIndex = 0;
 let currentLetterIndex = null;
 let letterRepeat = 0;
 let letterRepeatCount = 3;
+let isPlayingSequence = false;
+let isLetterPaused = false;
 
-function initLetters() {
-  loadDars(currentDarsIndex);
-}
+// =====================
+// CORE FUNCTIONS
+// =====================
 
 function loadDars(index) {
-  if(index < 0 || index >= yasarnahPages.length) return;
-
-  currentDarsIndex = index;
   stopLetterLesson();
-
+  currentDarsIndex = index;
   const dars = yasarnahPages[index];
-  document.getElementById("darsTitle").textContent = dars.title;
-  document.getElementById("darsInfo").textContent = dars.info;
-  document.getElementById("darsCounter").textContent = `Page ${index + 1} / ${yasarnahPages.length}`;
-
+  
+  // Update Header
+  document.getElementById("darsTitle").innerText = dars.title;
+  document.getElementById("darsInfo").innerText = dars.info;
+  document.getElementById("darsCounter").innerText = `Page ${index + 1} / ${yasarnahPages.length}`;
+  
+  // Build Grid
   const box = document.getElementById("lessonBox");
-  if (!box) return;
-
-  box.innerHTML = "";
+  box.innerHTML = ""; 
   dars.letters.forEach((l, i) => {
     box.innerHTML += `
-    <div class="lesson" id="letter-${i}" onclick="startLetter(${i})">
-      <div class="arabic">${l.a}</div>
-      <p>${l.name}</p>
-    </div>`;
+      <div class="lesson" id="letter-${i}" onclick="startLetter(${i})">
+        <div class="arabic">${l.a}</div>
+        <div class="name">${l.name}</div>
+      </div>
+    `;
   });
-
-  document.getElementById("letterProgress").textContent = "Tap any letter to start";
 }
 
-function nextDars() {
-  if(currentDarsIndex < yasarnahPages.length - 1) {
-    loadDars(currentDarsIndex + 1);
-  }
-}
-
-function prevDars() {
-  if(currentDarsIndex > 0) {
-    loadDars(currentDarsIndex - 1);
+function changeDars(step) {
+  let newIndex = currentDarsIndex + step;
+  if (newIndex >= 0 && newIndex < yasarnahPages.length) {
+    loadDars(newIndex);
   }
 }
 
 function startLetter(i) {
-  stopAllAudio();
+  stopLetterLesson();
   currentLetterIndex = i;
   letterRepeat = 0;
-  isPlayingSequence = false;
+  isPlayingSequence = false; // Playing only one letter
   playCurrentLetter();
 }
 
-function playCurrentLetter(){
+function playCurrentLetter() {
   const dars = yasarnahPages[currentDarsIndex];
-  if(currentLetterIndex === null || currentLetterIndex >= dars.letters.length){
+  if (currentLetterIndex === null || currentLetterIndex >= dars.letters.length) {
     stopLetterLesson();
     return;
   }
@@ -533,113 +452,88 @@ function playCurrentLetter(){
   highlightLetter(currentLetterIndex);
   updateLetterProgress();
 
-  speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(letter.a);
-  utterance.lang = 'ar-SA';
-  utterance.rate = 0.7;
-  utterance.pitch = 1;
-
-  utterance.onend = () => {
-    if(isLetterPaused) return;
-
-    if(!isPlayingSequence){
-      setTimeout(() => {
-        document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
-      }, 300);
-      return;
+  // AUDIO LOGIC: Playing MP3 file
+  const audio = new Audio(letter.file);
+  
+  audio.onended = () => {
+    if (!isPlayingSequence && letterRepeat === 0) {
+        // Just one tap play
+        setTimeout(() => {
+             document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
+        }, 500);
+        return;
     }
 
     letterRepeat++;
-    if(letterRepeat < letterRepeatCount){
+    if (letterRepeat < letterRepeatCount) {
       setTimeout(playCurrentLetter, 500);
     } else {
-      currentLetterIndex++;
-      letterRepeat = 0;
-      if(currentLetterIndex < dars.letters.length && isPlayingSequence){
+      if (isPlayingSequence) {
+        currentLetterIndex++;
+        letterRepeat = 0;
         setTimeout(playCurrentLetter, 800);
       } else {
         stopLetterLesson();
-        document.getElementById("letterProgress").textContent = "✅ Dars complete! Press Next for next page";
       }
     }
   };
 
-  utterance.onerror = () => {
-    console.log("Speech error for", letter.name);
-    if(isPlayingSequence){
-      currentLetterIndex++;
-      letterRepeat = 0;
-      setTimeout(playCurrentLetter, 300);
-    }
-  };
-
-  speechSynthesis.speak(utterance);
+  audio.play().catch(e => {
+      console.error("Audio error:", e);
+      // Fallback to Speech Synthesis if MP3 fails
+      useSpeechFallback(letter.a);
+  });
 }
 
-function toggleLetterSequence(){
-  const playBtn = document.getElementById("letterPlayBtn");
-  if(isPlayingSequence &&!isLetterPaused){
-    speechSynthesis.pause();
-    isLetterPaused = true;
-    if(playBtn) playBtn.textContent = "▶ Resume";
-  } else if(isLetterPaused){
-    speechSynthesis.resume();
-    isLetterPaused = false;
-    if(playBtn) playBtn.textContent = "⏸ Pause";
-  } else {
-    stopAllAudio();
-    currentLetterIndex = 0;
-    letterRepeat = 0;
-    isPlayingSequence = true;
-    if(playBtn) playBtn.textContent = "⏸ Pause";
-    playCurrentLetter();
-  }
+function useSpeechFallback(text) {
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar-SA';
+    utterance.onend = () => { /* repeat logic here if needed */ };
+    speechSynthesis.speak(utterance);
 }
 
-function stopLetterLesson(){
-  speechSynthesis.cancel();
-  isPlayingSequence = false;
-  isLetterPaused = false;
-  currentLetterIndex = null;
-  letterRepeat = 0;
-  const playBtn = document.getElementById("letterPlayBtn");
-  if(playBtn) playBtn.textContent = "▶ Play Dars";
-  document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
-  const progress = document.getElementById("letterProgress");
-  if(progress) progress.textContent = "Tap any letter to start";
-}
+// =====================
+// UI HELPERS
+// =====================
 
 function highlightLetter(i) {
   document.querySelectorAll(".lesson").forEach((el, index) => {
     el.classList.toggle("active", index === i);
   });
-  const activeEl = document.getElementById(`letter-${i}`);
-  if(activeEl) activeEl.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
-function updateLetterProgress(){
+function setRepeat(num) {
+  letterRepeatCount = num;
+  document.getElementById("letterProgress").textContent = `Repeat set to ${num}x`;
+}
+
+function toggleLetterSequence() {
+  if (isPlayingSequence) {
+    stopLetterLesson();
+  } else {
+    currentLetterIndex = 0;
+    letterRepeat = 0;
+    isPlayingSequence = true;
+    document.getElementById("letterPlayBtn").textContent = "⏸ Stop All";
+    playCurrentLetter();
+  }
+}
+
+function stopLetterLesson() {
+  isPlayingSequence = false;
+  currentLetterIndex = null;
+  document.getElementById("letterPlayBtn").textContent = "▶ Play All";
+  document.querySelectorAll(".lesson").forEach(l => l.classList.remove("active"));
+}
+
+function updateLetterProgress() {
   const progress = document.getElementById("letterProgress");
   const dars = yasarnahPages[currentDarsIndex];
-  if(progress && currentLetterIndex!== null){
-    progress.textContent = `${dars.letters[currentLetterIndex].name} - Repeat ${letterRepeat + 1}/${letterRepeatCount}`;
+  if (progress && currentLetterIndex !== null) {
+    progress.textContent = `Playing: ${dars.letters[currentLetterIndex].name}`;
   }
-  }
-#darsTitle{
-  font-size: 24px;
-  margin: 10px 0 5px;
-  color: #FFD700;
 }
 
-#darsInfo{
-  font-size: 16px;
-  color: #ccc;
-  margin-bottom: 15px;
-}
-
-#darsCounter{
-  text-align: center;
-  margin: 20px 0;
-  font-size: 14px;
-  color: #999;
-}
+// Initial Load
+loadDars(0);
